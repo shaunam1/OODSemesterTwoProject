@@ -25,6 +25,7 @@ namespace project
     /// </summary>
     public partial class MainWindow : Window
     {
+        int cartCount = 0;
         string authorAPI = "https://openlibrary.org/search/authors.json?q=suzanne%20collins";
         string bookSearchAPI = "https://openlibrary.org/search.json?q=the+lord+of+the+rings";
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
@@ -40,8 +41,13 @@ namespace project
         private async void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             //Set ItemSources of filter listboxes
+            tblkCartCount.Text = cartCount.ToString();
+            tblkShelfCartCount.Text = cartCount.ToString();
+            tblkCount.Text = cartCount.ToString();
             lbxGenre.ItemsSource = genres;
             lbxAuthor.ItemsSource = authors;
+            lbxShelfGenre.ItemsSource = genres;
+            lbxShelfAuthor.ItemsSource = authors;
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
@@ -176,6 +182,13 @@ namespace project
             tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
         }
 
-       
+        //NOT WORKING
+        private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
+        {
+            cartCount++;
+            tblkCartCount.Text = cartCount.ToString();
+            tblkShelfCartCount.Text = cartCount.ToString();
+            tblkCount.Text = cartCount.ToString();
+        }
     }
 }
