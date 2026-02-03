@@ -29,10 +29,14 @@ namespace project
         string authorAPI = "https://openlibrary.org/search/authors.json?q=suzanne%20collins";
         string bookSearchAPI = "https://openlibrary.org/search.json?q=the+lord+of+the+rings";
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
-        string[] authors = { "Suzanne Collins", "R.F. Kuang", "Stephen King", "George R. R. Martin" };
+        string[] authors = { "Suzanne Collins", "R.F. Kuang", "Stephen King", "Donna Tartt", "Madelline Miller", "S.E. Hinton" };
         string[] releaseYears = { "2026", "2025", "2024", "2023" };
         string coverAPI = "https://covers.openlibrary.org/b/id/14627564-M.jpg";
+        string[] images = { "img1", "img2", "img3", "img4", "img5", "img6"};
+        string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
+        
         List<Book> allBookRecords = new List<Book>();
+        List<Book> allBooks = new List<Book>();
         public MainWindow()
         {
             InitializeComponent();
@@ -70,11 +74,7 @@ namespace project
 
 
 
-                //tblkFilter.Text = allAuthorRecords[0].name;
-
-
-
-                
+                CreateBooks();
 
 
                 //Get covers and set as the sources for the images
@@ -91,13 +91,23 @@ namespace project
         private void lbxGenre_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string selectedGenre = lbxGenre.SelectedItem as string;
+
         }
 
 
         //Update selected author
         private void lbxAuthor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            int i = 0;
             string selectedAuthor = lbxAuthor.SelectedItem as string;
+            foreach(Book book in allBooks)
+            {
+                if (book.author_name[0] != selectedAuthor)
+                {
+                    
+                }
+            }
+            
         }
 
         
@@ -173,7 +183,9 @@ namespace project
 
 
                 var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
+                
                 allBookRecords = bookResult.docs;
+                allBooks.Add(bookResult.docs[0]);
 
             }
             tblkTitle.Text = allBookRecords[0].title;
@@ -186,9 +198,43 @@ namespace project
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {
             cartCount++;
-            tblkCartCount.Text = cartCount.ToString();
+           tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
+        }
+
+
+        private async void CreateBooks()
+        {
+            for (int i = 0; i < chosenBooks.Length; i++)
+            {
+                tblkTitle.Text = "";
+                var bookClient = new HttpClient();
+                var bookRequest = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={chosenBooks[i]}"),
+                    Headers =
+                {
+
+                }
+                    ,
+                };
+                using (var bookResponse = await bookClient.SendAsync(bookRequest))
+                {
+                    bookResponse.EnsureSuccessStatusCode();
+                    var bookBody = await bookResponse.Content.ReadAsStringAsync();
+
+
+                    var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
+
+                    allBookRecords = bookResult.docs;
+                    allBooks.Add(bookResult.docs[0]);
+
+                }
+            }
+            imgCover.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{allBookRecords[0].cover_i}-M.jpg", UriKind.Absolute));
+            tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
         }
     }
 }
