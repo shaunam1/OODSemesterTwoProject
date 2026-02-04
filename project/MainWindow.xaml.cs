@@ -132,7 +132,7 @@ namespace project
             MyControl.SelectedItem = TabBookInfo;
             string bookName = "babel+or+the+necessity+of+violence";
             string coverCode = "14619878";
-            ShowInfo(bookName, coverCode);
+            //ShowInfo(bookName, coverCode);
 
         }
 
@@ -141,7 +141,7 @@ namespace project
             MyControl.SelectedItem = TabBookInfo;
             string bookName = "ballad+of+songbirds+and+snakes";
             string coverCode = "0014421833";
-            ShowInfo(bookName, coverCode);
+           // ShowInfo(bookName, coverCode);
 
         }
         private void img3_MouseUp(object sender, MouseButtonEventArgs e)
@@ -149,7 +149,7 @@ namespace project
             MyControl.SelectedItem = TabBookInfo;
             string bookName = "the+song+of+achilles";
             string coverCode = "7098465";
-            ShowInfo(bookName, coverCode);
+           // ShowInfo(bookName, coverCode);
         }
 
         private void img4_MouseUp(object sender, MouseButtonEventArgs e)
@@ -157,7 +157,7 @@ namespace project
             MyControl.SelectedItem = TabBookInfo;
             string bookName = "the+outsiders";
             string coverCode = "7263662";
-            ShowInfo(bookName, coverCode);
+            //ShowInfo(bookName, coverCode);
         }
 
         private void img5_MouseUp(object sender, MouseButtonEventArgs e)
@@ -165,7 +165,7 @@ namespace project
             MyControl.SelectedItem = TabBookInfo;
             string bookName = "the+secret+history";
             string coverCode = "744854";
-            ShowInfo(bookName, coverCode);
+           // ShowInfo(bookName, coverCode);
         }
 
         private void img6_MouseUp(object sender, MouseButtonEventArgs e)
@@ -173,40 +173,43 @@ namespace project
             MyControl.SelectedItem = TabBookInfo;
             string bookName = "mr.+mercedes";
             string coverCode = "14653120";
-            ShowInfo(bookName, coverCode);
+           // ShowInfo(bookName, coverCode);
         }
 
-        private async void ShowInfo(string bookName, string coverCode)
+
+
+        //How can I make this display info about the book I click???
+        private async void ShowInfo()
         {
-            tblkTitle.Text = "";
-           var bookClient = new HttpClient();
-            var bookRequest = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://openlibrary.org/search.json?q={bookName}"),
-                Headers =
-                {
+           tblkFilter.Text = "Hello";
+        //   var bookClient = new HttpClient();
+        //    var bookRequest = new HttpRequestMessage
+        //    {
+        //        Method = HttpMethod.Get,
+        //        RequestUri = new Uri($"https://openlibrary.org/search.json?q={bookName}"),
+        //        Headers =
+        //        {
 
-                }
-                ,
-            };
-            using (var bookResponse = await bookClient.SendAsync(bookRequest))
-            {
-                bookResponse.EnsureSuccessStatusCode();
-                var bookBody = await bookResponse.Content.ReadAsStringAsync();
+        //        }
+        //        ,
+        //    };
+        //    using (var bookResponse = await bookClient.SendAsync(bookRequest))
+        //    {
+        //        bookResponse.EnsureSuccessStatusCode();
+        //        var bookBody = await bookResponse.Content.ReadAsStringAsync();
 
 
-                var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
+        //        var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
                 
-                allBookRecords = bookResult.docs;
-                allBooks.Add(bookResult.docs[0]);
-                selectedBook = bookResult.docs[0];
+        //        allBookRecords = bookResult.docs;
+        //        allBooks.Add(bookResult.docs[0]);
+        //        selectedBook = bookResult.docs[0];
 
-            }
-            tblkTitle.Text = allBookRecords[0].title;
+        //    }
+        //    tblkTitle.Text = allBookRecords[0].title;
 
-            imgCover.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{coverCode}-M.jpg", UriKind.Absolute));
-            tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
+        //    imgCover.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{coverCode}-M.jpg", UriKind.Absolute));
+        //    tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
         }
 
       
@@ -227,7 +230,6 @@ namespace project
         }
 
 
-        //HOw can I dynamically populate images???
         private async void CreateBooks()
         {
             for (int i = 0; i < chosenBooks.Length; i++)
@@ -255,20 +257,14 @@ namespace project
                     allBookRecords = bookResult.docs;
                     allBooks.Add(bookResult.docs[0]);
                     Entries.Add(bookResult.docs[0]);
-                    //tblkBookInfo.Text = Entries[i].title;
-                    //Image image = new Image();
-                    //image.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{Entries[i].cover_i}-M.jpg", UriKind.Absolute));
-                    //myGrid.Children.Add(image);
 
                 }
-
-
-
             }
+        }
 
-
-            //imgCover.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{allBookRecords[0].cover_i}-M.jpg", UriKind.Absolute));
-            //tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
+        private void spBook_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ShowInfo();
         }
     }
 }

@@ -44,10 +44,10 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text ="{Binding title}"></TextBlock>
-                                <Image Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
-                                <TextBlock Text="{Binding author_name[0]}"></TextBlock>
+                            <StackPanel x:Name="spBook" MouseUp="spBook_MouseUp">
+                                <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}"></TextBlock>
+                                <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
+                                <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
                             </StackPanel>
 
                         </DataTemplate>
