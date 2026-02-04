@@ -1,5 +1,9 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -14,8 +18,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MaterialDesignThemes.Wpf;
-using Newtonsoft.Json;
 using static System.Net.WebRequestMethods;
 
 namespace project
@@ -34,21 +36,33 @@ namespace project
         string coverAPI = "https://covers.openlibrary.org/b/id/14627564-M.jpg";
         string[] images = { "img1", "img2", "img3", "img4", "img5", "img6"};
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
-        
+        Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         List<Book> allBooks = new List<Book>();
         public MainWindow()
         {
+            DataContext = this;
+            entries = new ObservableCollection<Book>();
             InitializeComponent();
+
+            ;
+        }
+
+        private ObservableCollection<Book> entries;
+
+        public ObservableCollection<Book> Entries
+        {
+            get { return entries; }
+            set { entries = value; }
         }
 
         private async void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
+            CreateBooks();
             //Set ItemSources of filter listboxes
             tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
-            lbxGenre.ItemsSource = genres;
             lbxAuthor.ItemsSource = authors;
             lbxShelfGenre.ItemsSource = genres;
             lbxShelfAuthor.ItemsSource = authors;
@@ -74,7 +88,7 @@ namespace project
 
 
 
-                CreateBooks();
+                
 
 
                 //Get covers and set as the sources for the images
@@ -90,7 +104,7 @@ namespace project
         //Update selected genre
         private void lbxGenre_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selectedGenre = lbxGenre.SelectedItem as string;
+            
 
         }
 
@@ -186,6 +200,7 @@ namespace project
                 
                 allBookRecords = bookResult.docs;
                 allBooks.Add(bookResult.docs[0]);
+                selectedBook = bookResult.docs[0];
 
             }
             tblkTitle.Text = allBookRecords[0].title;
@@ -194,21 +209,30 @@ namespace project
             tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
         }
 
-        //NOT WORKING
+      
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {
             cartCount++;
            tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
+
+            
+
+            
+            //add chosen books to JSON file of books in the cart
+            string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
+            System.IO.File.AppendAllText("cartItems.json", jsonString);
+
         }
 
 
+        //HOw can I dynamically populate images???
         private async void CreateBooks()
         {
             for (int i = 0; i < chosenBooks.Length; i++)
             {
-                tblkTitle.Text = "";
+                //tblkTitle.Text = "";
                 var bookClient = new HttpClient();
                 var bookRequest = new HttpRequestMessage
                 {
@@ -230,11 +254,21 @@ namespace project
 
                     allBookRecords = bookResult.docs;
                     allBooks.Add(bookResult.docs[0]);
+                    Entries.Add(bookResult.docs[0]);
+                    //tblkBookInfo.Text = Entries[i].title;
+                    //Image image = new Image();
+                    //image.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{Entries[i].cover_i}-M.jpg", UriKind.Absolute));
+                    //myGrid.Children.Add(image);
 
                 }
+
+
+
             }
-            imgCover.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{allBookRecords[0].cover_i}-M.jpg", UriKind.Absolute));
-            tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
+
+
+            //imgCover.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{allBookRecords[0].cover_i}-M.jpg", UriKind.Absolute));
+            //tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
         }
     }
 }

@@ -11,48 +11,48 @@
         <TabItem x:Name="TabHome">
             <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="House"
-                                             Width="25"
-                                             Height="25"
-                                             VerticalAlignment="Center"
-                                             Margin="0,0,10,0"
-                                             Foreground="Black"/>
 
                     <TextBlock Text="Home"
-                               VerticalAlignment="Center"
-                               FontSize="16"
-                               Foreground="Black"/>
+                     VerticalAlignment="Center"
+                     FontSize="16"
+                     Foreground="Black"/>
                 </StackPanel>
             </TabItem.Header>
-            <Grid>
+            <Grid Name="myGrid">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="75"></RowDefinition>
                     <RowDefinition></RowDefinition>
-                    <RowDefinition Height="170"></RowDefinition>
-                    <RowDefinition Height="170"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="300*"></ColumnDefinition>
+                    <ColumnDefinition Width="300*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0"></materialDesign:PackIcon>
-                <TextBlock x:Name="tblkCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
-                <materialDesign:PackIcon Kind="Magnify" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,10,30,0"></materialDesign:PackIcon>
-                <TextBox x:Name="tbxSearch" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxSearch_GotFocus"/>
-                <ListBox x:Name="lbxGenre" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="22,33,22,10" SelectionChanged="lbxGenre_SelectionChanged" Grid.Row="1"/>
-                <ListBox x:Name="lbxAuthor" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,33,21,10" Grid.Row="2" SelectionChanged="lbxAuthor_SelectionChanged"/>
+                <TextBlock x:Name="tblkCartCount"  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0" Height="16" Width="0"/>
+                <TextBox x:Name="tbxSearch" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="161" Height="25"/>
+                <ListBox x:Name="lbxAuthor" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,33,21,10" Grid.Row="1"/>
+                <TextBlock FontSize="16" x:Name="tblkFilter" HorizontalAlignment="Left" Margin="10,6,0,0" TextWrapping="Wrap" Text="Filter" VerticalAlignment="Top" Height="21" Width="35"/>
+                <TextBlock x:Name="tblkAuthor" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Author" VerticalAlignment="Top" Height="16" Width="37"/>
+                <TextBlock Name="tblkBookInfo2"></TextBlock>
 
-                <Image Source="https://covers.openlibrary.org/b/id/14619878-M.jpg" x:Name="img1" Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="47,32,0,0" Grid.Row="1" VerticalAlignment="Top" Width="100" MouseUp="img1_MouseUp"/>
-                <Image Source="https://covers.openlibrary.org/b/id/0014421833-M.jpg" x:Name="img2" Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="47,32,0,0" Grid.Row="2" VerticalAlignment="Top" Width="100" MouseUp="img2_MouseUp"/>
-                <Image Source="https://covers.openlibrary.org/b/id/7098465-M.jpg" x:Name="img3" Grid.Column="2" HorizontalAlignment="Left" Height="100" Margin="47,32,0,0" Grid.Row="1" VerticalAlignment="Top" Width="100" MouseUp="img3_MouseUp"/>
-                <Image Source="https://covers.openlibrary.org/b/id/7263662-M.jpg" x:Name="img4" Grid.Column="2" HorizontalAlignment="Left" Height="100" Margin="47,32,0,0" Grid.Row="2" VerticalAlignment="Top" Width="100" MouseUp="img4_MouseUp"/>
-                <Image Source="https://covers.openlibrary.org/b/id/744854-M.jpg" x:Name="img5" Grid.Column="3" HorizontalAlignment="Left" Height="100" Margin="47,32,0,0" Grid.Row="1" VerticalAlignment="Top" Width="100" MouseUp="img5_MouseUp"/>
-                <Image Source="https://covers.openlibrary.org/b/id/14653120-M.jpg" x:Name="img6" Grid.Column="3" HorizontalAlignment="Left" Height="100" Margin="47,32,0,0" Grid.Row="2" VerticalAlignment="Top" Width="100" MouseUp="img6_MouseUp"/>
-                <TextBlock FontSize="16" x:Name="tblkFilter" HorizontalAlignment="Left" Margin="10,6,0,0" TextWrapping="Wrap" Text="Filter" VerticalAlignment="Top"/>
-                <TextBlock x:Name="tblkGenre" HorizontalAlignment="Left" Margin="22,12,0,0" TextWrapping="Wrap" Text="Genre" VerticalAlignment="Top" Grid.Row="1"/>
-                <TextBlock x:Name="tblkAuthor" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Author" VerticalAlignment="Top"/>
+                <ItemsControl Name="selectedBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding Entries}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"></UniformGrid>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text ="{Binding title}"></TextBlock>
+                                <Image Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
+                                <TextBlock Text="{Binding author_name[0]}"></TextBlock>
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
             </Grid>
 

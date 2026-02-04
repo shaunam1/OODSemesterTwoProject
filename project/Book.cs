@@ -21,7 +21,15 @@ namespace project
         public bool public_scan_b { get; set; }
         public string subtitle { get; set; }
         public string title { get; set; }
+        public string Cover_URL
+        {
+            get
+            {
+                return $"https://covers.openlibrary.org/b/id/{cover_i}-M.jpg";
+            }
+        }
     }
+
 
     public class BookRoot
     {
