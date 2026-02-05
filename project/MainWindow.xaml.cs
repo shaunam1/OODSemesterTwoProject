@@ -179,40 +179,19 @@ namespace project
 
 
         //How can I make this display info about the book I click???
-        private async void ShowInfo()
+        private void ShowInfo(Book book)
         {
-           tblkFilter.Text = "Hello";
-        //   var bookClient = new HttpClient();
-        //    var bookRequest = new HttpRequestMessage
-        //    {
-        //        Method = HttpMethod.Get,
-        //        RequestUri = new Uri($"https://openlibrary.org/search.json?q={bookName}"),
-        //        Headers =
-        //        {
-
-        //        }
-        //        ,
-        //    };
-        //    using (var bookResponse = await bookClient.SendAsync(bookRequest))
-        //    {
-        //        bookResponse.EnsureSuccessStatusCode();
-        //        var bookBody = await bookResponse.Content.ReadAsStringAsync();
+            //Change tab to TabBookInfo
+            MyControl.SelectedItem = TabBookInfo;
+            //Display information about the selected book
+            tblkTitle.Text = book.title;
+            imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
+            tblkBookInfo.Text = "Author: " + book.author_name[0];
 
 
-        //        var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
-                
-        //        allBookRecords = bookResult.docs;
-        //        allBooks.Add(bookResult.docs[0]);
-        //        selectedBook = bookResult.docs[0];
-
-        //    }
-        //    tblkTitle.Text = allBookRecords[0].title;
-
-        //    imgCover.Source = new BitmapImage(new Uri($"https://covers.openlibrary.org/b/id/{coverCode}-M.jpg", UriKind.Absolute));
-        //    tblkBookInfo.Text = "Author: " + allBookRecords[0].author_name[0];
         }
 
-      
+
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {
             cartCount++;
@@ -264,7 +243,26 @@ namespace project
 
         private void spBook_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            ShowInfo();
+            //how can I do this so that I don't need the button
+            //  ShowInfo();
+        }
+
+        private void btnMoreInfo_Click(object sender, RoutedEventArgs e)
+        {
+            //this just gets me the main window
+            //this - refers to main window
+            //Book obj = this.DataContext as Book;
+            //MessageBox.Show(obj.title);
+
+            //sender - is the button
+            Button button = sender as Button;
+            //the datacontext of the button is the object in the data template
+            Book book = button.DataContext as Book;
+
+
+            ShowInfo(book);
+
+
         }
     }
 }
