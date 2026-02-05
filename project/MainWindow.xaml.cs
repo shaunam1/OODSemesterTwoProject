@@ -32,9 +32,6 @@ namespace project
         string bookSearchAPI = "https://openlibrary.org/search.json?q=the+lord+of+the+rings";
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
         string[] authors = { "Suzanne Collins", "R.F. Kuang", "Stephen King", "Donna Tartt", "Madelline Miller", "S.E. Hinton" };
-        string[] releaseYears = { "2026", "2025", "2024", "2023" };
-        string coverAPI = "https://covers.openlibrary.org/b/id/14627564-M.jpg";
-        string[] images = { "img1", "img2", "img3", "img4", "img5", "img6"};
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
@@ -258,7 +255,7 @@ namespace project
             Button button = sender as Button;
             //the datacontext of the button is the object in the data template
             Book book = button.DataContext as Book;
-
+            
 
             ShowInfo(book);
 
