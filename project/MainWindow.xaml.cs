@@ -38,6 +38,7 @@ namespace project
         List<Book> allBooks = new List<Book>();
         public MainWindow()
         {
+            //this - main window
             DataContext = this;
             entries = new ObservableCollection<Book>();
             InitializeComponent();
@@ -55,41 +56,16 @@ namespace project
 
         private async void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
+            //display the selected books
             CreateBooks();
             //Set ItemSources of filter listboxes
             tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
+
+            //Set ItemsSource of listboxes
             lbxAuthor.ItemsSource = authors;
-            lbxShelfGenre.ItemsSource = genres;
             lbxShelfAuthor.ItemsSource = authors;
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri("https://openlibrary.org/search/authors.json?q=suzanne%20collins"),
-                Headers =
-                {
-
-                }
-                ,
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-
-
-                var result = JsonConvert.DeserializeObject<Root>(body);
-                List<Author> allAuthorRecords = result.docs;
-
-
-
-                
-
-
-                //Get covers and set as the sources for the images
-            }
         }
 
         //Clear search bar when clicked
@@ -98,84 +74,12 @@ namespace project
             tbxSearch.Text = "";
         }
 
-        //Update selected genre
-        private void lbxGenre_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void tbxShelfSearch_GotFocus(object sender, RoutedEventArgs e)
         {
-            
-
+            tbxShelfSearch.Text = "";
         }
 
 
-        //Update selected author
-        private void lbxAuthor_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            int i = 0;
-            string selectedAuthor = lbxAuthor.SelectedItem as string;
-            foreach(Book book in allBooks)
-            {
-                if (book.author_name[0] != selectedAuthor)
-                {
-                    
-                }
-            }
-            
-        }
-
-        
-
-        private void img1_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            
-            MyControl.SelectedItem = TabBookInfo;
-            string bookName = "babel+or+the+necessity+of+violence";
-            string coverCode = "14619878";
-            //ShowInfo(bookName, coverCode);
-
-        }
-
-        private void img2_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MyControl.SelectedItem = TabBookInfo;
-            string bookName = "ballad+of+songbirds+and+snakes";
-            string coverCode = "0014421833";
-           // ShowInfo(bookName, coverCode);
-
-        }
-        private void img3_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MyControl.SelectedItem = TabBookInfo;
-            string bookName = "the+song+of+achilles";
-            string coverCode = "7098465";
-           // ShowInfo(bookName, coverCode);
-        }
-
-        private void img4_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MyControl.SelectedItem = TabBookInfo;
-            string bookName = "the+outsiders";
-            string coverCode = "7263662";
-            //ShowInfo(bookName, coverCode);
-        }
-
-        private void img5_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MyControl.SelectedItem = TabBookInfo;
-            string bookName = "the+secret+history";
-            string coverCode = "744854";
-           // ShowInfo(bookName, coverCode);
-        }
-
-        private void img6_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            MyControl.SelectedItem = TabBookInfo;
-            string bookName = "mr.+mercedes";
-            string coverCode = "14653120";
-           // ShowInfo(bookName, coverCode);
-        }
-
-
-
-        //How can I make this display info about the book I click???
         private void ShowInfo(Book book)
         {
             //Change tab to TabBookInfo
@@ -184,21 +88,18 @@ namespace project
             tblkTitle.Text = book.title;
             imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
             tblkBookInfo.Text = "Author: " + book.author_name[0];
-
-
         }
 
 
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {
+            //When add to cart is clicked
+            //Increase the cart count on all tabs
             cartCount++;
-           tblkCartCount.Text = cartCount.ToString();
+            tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
 
-            
-
-            
             //add chosen books to JSON file of books in the cart
             string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
             System.IO.File.AppendAllText("cartItems.json", jsonString);
@@ -208,9 +109,10 @@ namespace project
 
         private async void CreateBooks()
         {
+            //for each book in the array of selected books
             for (int i = 0; i < chosenBooks.Length; i++)
             {
-                //tblkTitle.Text = "";
+                //Get API response
                 var bookClient = new HttpClient();
                 var bookRequest = new HttpRequestMessage
                 {
@@ -226,12 +128,11 @@ namespace project
                 {
                     bookResponse.EnsureSuccessStatusCode();
                     var bookBody = await bookResponse.Content.ReadAsStringAsync();
-
-
                     var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
 
+                    //add books with this title to allBookRecords
                     allBookRecords = bookResult.docs;
-                    allBooks.Add(bookResult.docs[0]);
+                    //add the first returned book to the observable collection Entries
                     Entries.Add(bookResult.docs[0]);
 
                 }
@@ -255,11 +156,9 @@ namespace project
             Button button = sender as Button;
             //the datacontext of the button is the object in the data template
             Book book = button.DataContext as Book;
-            
-
             ShowInfo(book);
-
-
         }
+
+
     }
 }
