@@ -36,6 +36,7 @@ namespace project
         Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         List<Book> allBooks = new List<Book>();
+        string[] bookSearch = new string[1];
         public MainWindow()
         {
             //this - main window
@@ -43,6 +44,7 @@ namespace project
             entries = new ObservableCollection<Book>();
             shelvedEntries= new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
+            search = new ObservableCollection<Book>();
             InitializeComponent();
 
             ;
@@ -72,10 +74,18 @@ namespace project
             set { cart = value; }
         }
 
+        private ObservableCollection<Book> search;
+
+        public ObservableCollection<Book> Search
+        {
+            get { return search; }
+            set { search = value; }
+        }
+
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             //display the selected books
-            CreateBooks();
+            CreateBooks(chosenBooks);
             //Set ItemSources of filter listboxes
             tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
@@ -128,17 +138,17 @@ namespace project
         }
 
 
-        private async void CreateBooks()
+        private async void CreateBooks(string[] array)
         {
             //for each book in the array of selected books
-            for (int i = 0; i < chosenBooks.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
                 //Get API response
                 var bookClient = new HttpClient();
                 var bookRequest = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={chosenBooks[i]}"),
+                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={array[i]}"),
                     Headers =
                 {
 
@@ -153,8 +163,16 @@ namespace project
 
                     //add books with this title to allBookRecords
                     allBookRecords = bookResult.docs;
-                    //add the first returned book to the observable collection Entries
-                    Entries.Add(bookResult.docs[0]);
+                    if(allBookRecords.Count > 0)
+                    {
+                        //add the first returned book to the selected observable collection
+                        Entries.Add(bookResult.docs[0]);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No results found");
+                    }
+
 
                 }
             }
@@ -192,6 +210,27 @@ namespace project
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {
             MyControl.SelectedItem = TabCheckout;
+        }
+        
+
+        //I want to display 6 results
+        //I want the chosenBooks to be displayed if there are no results
+        private void tbxSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            //If the enter key is pressed
+            if (e.Key == Key.Enter)
+            {
+                //clear the Observable collection of entries
+                Entries.Clear();
+                string searchTerm = tbxSearch.Text;
+                //Replace spaces with +
+                searchTerm.Replace(" ", "+");
+                //Set this search term as the only string in bookSearch array
+                Array.Clear(bookSearch, 0, 1);
+                bookSearch[0] = searchTerm;
+                //Display the search result 
+                CreateBooks(bookSearch);
+            }
         }
     }
 }
