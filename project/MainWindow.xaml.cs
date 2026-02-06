@@ -41,6 +41,8 @@ namespace project
             //this - main window
             DataContext = this;
             entries = new ObservableCollection<Book>();
+            shelvedEntries= new ObservableCollection<Book>();
+            cart = new ObservableCollection<Book>();
             InitializeComponent();
 
             ;
@@ -54,7 +56,23 @@ namespace project
             set { entries = value; }
         }
 
-        private async void MainWindow1_Loaded(object sender, RoutedEventArgs e)
+        private ObservableCollection<Book> shelvedEntries;
+
+        public ObservableCollection<Book> ShelvedEntries
+        {
+            get { return shelvedEntries; }
+            set { shelvedEntries = value; }
+        }
+
+        private ObservableCollection<Book> cart;
+
+        public ObservableCollection<Book> Cart
+        {
+            get { return cart; }
+            set { cart = value; }
+        }
+
+        private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             //display the selected books
             CreateBooks();
@@ -82,6 +100,7 @@ namespace project
 
         private void ShowInfo(Book book)
         {
+            selectedBook = book;
             //Change tab to TabBookInfo
             MyControl.SelectedItem = TabBookInfo;
             //Display information about the selected book
@@ -103,6 +122,8 @@ namespace project
             //add chosen books to JSON file of books in the cart
             string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
             System.IO.File.AppendAllText("cartItems.json", jsonString);
+
+            Cart.Add(selectedBook);
 
         }
 
@@ -160,5 +181,17 @@ namespace project
         }
 
 
+        private void btnShelve_Click(object sender, RoutedEventArgs e)
+        {
+            //When Add to Bookshelf is clicked 
+            //The book is added to the observable collection ShevedEntries so that it will be displayed
+            //on the Bookshelf tab
+            ShelvedEntries.Add(selectedBook);
+        }
+
+        private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            MyControl.SelectedItem = TabCheckout;
+        }
     }
 }

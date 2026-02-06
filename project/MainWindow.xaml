@@ -11,7 +11,6 @@
         <TabItem x:Name="TabHome">
             <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
-
                     <TextBlock Text="Home"
                      VerticalAlignment="Center"
                      FontSize="16"
@@ -28,7 +27,7 @@
                     <ColumnDefinition Width="300*"></ColumnDefinition>
                     <ColumnDefinition Width="300*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0"/>
+                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
                 <TextBlock x:Name="tblkCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <TextBox x:Name="tbxSearch" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="161" Height="25" GotFocus="tbxSearch_GotFocus"/>
                 <ListBox x:Name="lbxAuthor" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,33,21,10" Grid.Row="1"/>
@@ -87,7 +86,7 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0"></materialDesign:PackIcon>
+                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"></materialDesign:PackIcon>
 
                 <TextBlock x:Name="tblkShelfCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <materialDesign:PackIcon Kind="Magnify" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,10,30,0"></materialDesign:PackIcon>
@@ -100,6 +99,25 @@
                 <TextBlock FontSize="16" x:Name="tblkShelfFilter" HorizontalAlignment="Left" Margin="10,6,0,0" TextWrapping="Wrap" Text="Filter" VerticalAlignment="Top"/>
                 <TextBlock x:Name="tblkShelfAuthor" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Author" VerticalAlignment="Top"/>
 
+                <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ShelvedEntries}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"></UniformGrid>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel x:Name="spBook" MouseUp="spBook_MouseUp">
+                                <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}"></TextBlock>
+                                <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
+                                <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
+                                <Button x:Name="btnMoreInfo" Content="More Info" Click="btnMoreInfo_Click"></Button>
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
             </Grid>
         </TabItem>
@@ -119,6 +137,26 @@
              Foreground="Black"/>
                 </StackPanel>
             </TabItem.Header>
+
+            <ItemsControl Name="cartBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding Cart}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="3"></UniformGrid>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel x:Name="spBook" MouseUp="spBook_MouseUp">
+                            <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}"></TextBlock>
+                            <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="50" Width="50"></Image>
+                            <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
+                        </StackPanel>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
 
         </TabItem>
         <TabItem x:Name="TabBookInfo" Width="0" Visibility="Hidden">
@@ -140,9 +178,9 @@
                 <TextBlock x:Name="tblkTitle" Grid.Row="0" Grid.Column="0"></TextBlock>
                 <Image Name="imgCover" Grid.Row="1" Grid.Column="0" Width="100px" Height="100px"></Image>
                 <TextBlock Name="tblkBookInfo" Grid.Row="2" Grid.Column="0"></TextBlock>
-                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,20,0"></materialDesign:PackIcon>
+                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"></materialDesign:PackIcon>
                 <TextBlock x:Name="tblkCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"></TextBlock>
-                <Button Name="btnShelve" Content="Add to Bookshelf" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0"></Button>
+                <Button Name="btnShelve" Content="Add to Bookshelf" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0" Click="btnShelve_Click"></Button>
                 <Button Name="btnAddtoCart" Content="Add to Cart" Grid.Row="2" Grid.Column="1" Margin="0,100,10,0" Click="btnAddtoCart_Click"></Button>
 
 
