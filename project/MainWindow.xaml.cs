@@ -45,6 +45,7 @@ namespace project
             shelvedEntries= new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
             search = new ObservableCollection<Book>();
+            allShelves = new ObservableCollection<Shelf>();
             InitializeComponent();
 
             ;
@@ -64,6 +65,14 @@ namespace project
         {
             get { return shelvedEntries; }
             set { shelvedEntries = value; }
+        }
+
+        private ObservableCollection<Shelf> allShelves;
+
+        public ObservableCollection<Shelf> AllShelves
+        {
+            get { return allShelves; }
+            set { allShelves = value; }
         }
 
         private ObservableCollection<Book> cart;
@@ -93,7 +102,13 @@ namespace project
 
             //Set ItemsSource of listboxes
             lbxAuthor.ItemsSource = authors;
-            lbxShelfAuthor.ItemsSource = authors;
+            //Shelf allBooks = new Shelf("All Books", ShelvedEntries);
+            
+            //for (int i = 0; i< allShelves.Count; i++)
+            //{
+            //    lbxShelves.ItemsSource += allShelves[i].ShelfName;
+            //}
+            
         }
 
         //Clear search bar when clicked
@@ -155,6 +170,7 @@ namespace project
                 }
                     ,
                 };
+                //getting error while making request
                 using (var bookResponse = await bookClient.SendAsync(bookRequest))
                 {
                     bookResponse.EnsureSuccessStatusCode();
@@ -205,6 +221,12 @@ namespace project
             //The book is added to the observable collection ShevedEntries so that it will be displayed
             //on the Bookshelf tab
             ShelvedEntries.Add(selectedBook);
+            
+
+           // for (int i = 0; i < allShelves.Count; i++)
+            //{
+              //  lbxShelves.ItemsSource += allShelves[i].ShelfName;
+            //}
         }
 
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
