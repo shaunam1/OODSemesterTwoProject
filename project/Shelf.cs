@@ -12,7 +12,7 @@ namespace project
     {
         //Properties
         public string ShelfName { get; set; }
-        ObservableCollection<Book> Books { get; set; }
+        public ObservableCollection<Book> Books { get; set; }
 
         //Constructors
         public Shelf()

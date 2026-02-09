@@ -102,12 +102,12 @@ namespace project
 
             //Set ItemsSource of listboxes
             lbxAuthor.ItemsSource = authors;
-            //Shelf allBooks = new Shelf("All Books", ShelvedEntries);
+            Shelf allBooks = new Shelf("All Books", ShelvedEntries);
+            AllShelves.Add(allBooks);
+            //Need to check if this works when clicked
+            lbxShelves.ItemsSource = AllShelves;
             
-            //for (int i = 0; i< allShelves.Count; i++)
-            //{
-            //    lbxShelves.ItemsSource += allShelves[i].ShelfName;
-            //}
+            
             
         }
 
@@ -253,6 +253,76 @@ namespace project
                 //Display the search result 
                 CreateBooks(bookSearch);
             }
+        }
+
+        private void lbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
+            DisplayShelf(selectedShelf.Books);
+        }
+
+
+        //This is the same as CreateBook apart from the data type it takes in
+        //Can I combine these???
+        private async void DisplayShelf(ObservableCollection<Book> books)
+        {
+            //for each book in the array of selected books
+            for (int i = 0; i < books.Count; i++)
+            {
+                //Get API response
+                var bookClient = new HttpClient();
+                var bookRequest = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={books[i]}"),
+                    Headers =
+                {
+
+                }
+                    ,
+                };
+                //getting error while making request
+                using (var bookResponse = await bookClient.SendAsync(bookRequest))
+                {
+                    bookResponse.EnsureSuccessStatusCode();
+                    var bookBody = await bookResponse.Content.ReadAsStringAsync();
+                    var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
+
+                    //add books with this title to allBookRecords
+                    allBookRecords = bookResult.docs;
+                    if (allBookRecords.Count > 0)
+                    {
+                        //add the first returned book to the selected observable collection
+                        Entries.Add(bookResult.docs[0]);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No results found");
+                    }
+
+
+                }
+            }
+        }
+
+        private void btnAddShelf_Click(object sender, RoutedEventArgs e)
+        {
+            //Open new window
+
+            //Add shelf name
+
+            //Add to ObservableCollection of Shelves
+
+            //When add to bookshelf is clicked
+            //Added to all books shelf
+            //If no of shelves > 1
+            //new window
+            //Select shelf
+            //added to selected shelf
+            //Dropdown???
+            
+
+
         }
     }
 }
