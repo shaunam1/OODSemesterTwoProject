@@ -33,7 +33,7 @@ namespace project
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
         string[] authors = { "Suzanne Collins", "R.F. Kuang", "Stephen King", "Donna Tartt", "Madelline Miller", "S.E. Hinton" };
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
-        Book selectedBook;
+        public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         List<Book> allBooks = new List<Book>();
         string[] bookSearch = new string[1];
@@ -50,6 +50,10 @@ namespace project
 
             ;
         }
+
+        //ADVICE FROM KEITH:
+        //Instead of all the observable collections
+        //Could Enums be used to filter?
 
         private ObservableCollection<Book> entries;
 
@@ -104,7 +108,6 @@ namespace project
             lbxAuthor.ItemsSource = authors;
             Shelf allBooks = new Shelf("All Books", ShelvedEntries);
             AllShelves.Add(allBooks);
-            //Need to check if this works when clicked
             lbxShelves.ItemsSource = AllShelves;
             
             
@@ -221,12 +224,13 @@ namespace project
             //The book is added to the observable collection ShevedEntries so that it will be displayed
             //on the Bookshelf tab
             ShelvedEntries.Add(selectedBook);
-            
 
-           // for (int i = 0; i < allShelves.Count; i++)
-            //{
-              //  lbxShelves.ItemsSource += allShelves[i].ShelfName;
-            //}
+            if (allShelves.Count > 1)
+            {
+                ChooseShelfWindow thirdWindow = new ChooseShelfWindow();
+                thirdWindow.Owner = this;
+                thirdWindow.ShowDialog();
+            }
         }
 
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
@@ -283,20 +287,7 @@ namespace project
             AddShelfWindow secondWindow = new AddShelfWindow();
             secondWindow.Owner = this;
             secondWindow.ShowDialog();
-            //Add shelf name
-
-            //Add to ObservableCollection of Shelves
-
-            //When add to bookshelf is clicked
-            //Added to all books shelf
-            //If no of shelves > 1
-            //new window
-            //Select shelf
-            //added to selected shelf
-            //Dropdown???
-            
-
-
+           
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,11 +27,23 @@ namespace project
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            //Add shelf name
             string shelfName = tbxShelfName.Text;
 
             MainWindow main = this.Owner as MainWindow;
-
+            //Add to ObservableCollection of Shelves
             main.AllShelves.Add(new Shelf(shelfName));
+
+            //Close window when shelf added
+            this.Close();
+           
+            //If no of shelves > 1
+            //new window
+            //Select shelf
+            //added to selected shelf
+            //Dropdown???
+
+            
         }
     }
 }
