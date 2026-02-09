@@ -20,6 +20,11 @@ namespace project
 
         }//Default constructor
 
+        public Shelf(string shelfName)
+        {
+            ShelfName = shelfName;
+        }//Default constructor
+
         public Shelf(string shelfName, ObservableCollection<Book> books)
         {
             ShelfName = shelfName;

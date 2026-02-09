@@ -258,57 +258,31 @@ namespace project
         private void lbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
-            DisplayShelf(selectedShelf.Books);
+            //If the selected shelf has books in it
+            //Show the books
+            if (selectedShelf.Books != null)
+            {
+                shelfBooks.ItemsSource = selectedShelf.Books;
+            }
+            //If not display nothing
+            else
+            {
+                shelfBooks.ItemsSource = null;
+            }
+            
         }
 
 
         //This is the same as CreateBook apart from the data type it takes in
         //Can I combine these???
-        private async void DisplayShelf(ObservableCollection<Book> books)
-        {
-            //for each book in the array of selected books
-            for (int i = 0; i < books.Count; i++)
-            {
-                //Get API response
-                var bookClient = new HttpClient();
-                var bookRequest = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={books[i]}"),
-                    Headers =
-                {
-
-                }
-                    ,
-                };
-                //getting error while making request
-                using (var bookResponse = await bookClient.SendAsync(bookRequest))
-                {
-                    bookResponse.EnsureSuccessStatusCode();
-                    var bookBody = await bookResponse.Content.ReadAsStringAsync();
-                    var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
-
-                    //add books with this title to allBookRecords
-                    allBookRecords = bookResult.docs;
-                    if (allBookRecords.Count > 0)
-                    {
-                        //add the first returned book to the selected observable collection
-                        Entries.Add(bookResult.docs[0]);
-                    }
-                    else
-                    {
-                        MessageBox.Show("No results found");
-                    }
-
-
-                }
-            }
-        }
+        
 
         private void btnAddShelf_Click(object sender, RoutedEventArgs e)
         {
             //Open new window
-
+            AddShelfWindow secondWindow = new AddShelfWindow();
+            secondWindow.Owner = this;
+            secondWindow.ShowDialog();
             //Add shelf name
 
             //Add to ObservableCollection of Shelves

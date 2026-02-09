@@ -69,7 +69,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddShelfWindow.xaml.cs">
+      <DependentUpon>AddShelfWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shelf.cs" />
+    <Page Include="AddShelfWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="BookInfoWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
