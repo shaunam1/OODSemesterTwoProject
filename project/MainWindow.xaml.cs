@@ -44,7 +44,7 @@ namespace project
             entries = new ObservableCollection<Book>();
             shelvedEntries= new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
-            search = new ObservableCollection<Book>();
+            //search = new ObservableCollection<Book>();
             allShelves = new ObservableCollection<Shelf>();
             InitializeComponent();
 
@@ -55,6 +55,8 @@ namespace project
         //Instead of all the observable collections
         //Could Enums be used to filter?
 
+
+        //Used for books being displayed on screen in Home tab
         private ObservableCollection<Book> entries;
 
         public ObservableCollection<Book> Entries
@@ -63,6 +65,8 @@ namespace project
             set { entries = value; }
         }
 
+
+        //For all the books that have been shelved
         private ObservableCollection<Book> shelvedEntries;
 
         public ObservableCollection<Book> ShelvedEntries
@@ -71,6 +75,7 @@ namespace project
             set { shelvedEntries = value; }
         }
 
+        //For all the shelves that have been created
         private ObservableCollection<Shelf> allShelves;
 
         public ObservableCollection<Shelf> AllShelves
@@ -79,6 +84,8 @@ namespace project
             set { allShelves = value; }
         }
 
+
+        //For all books added to the cart
         private ObservableCollection<Book> cart;
 
         public ObservableCollection<Book> Cart
@@ -87,19 +94,21 @@ namespace project
             set { cart = value; }
         }
 
-        private ObservableCollection<Book> search;
+        //DO I NEED THIS???
+        //private ObservableCollection<Book> search;
 
-        public ObservableCollection<Book> Search
-        {
-            get { return search; }
-            set { search = value; }
-        }
+        //public ObservableCollection<Book> Search
+        //{
+        //    get { return search; }
+        //    set { search = value; }
+        //}
 
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             //display the selected books
             CreateBooks(chosenBooks);
-            //Set ItemSources of filter listboxes
+
+            //Set cart counts on each tab
             tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
@@ -109,19 +118,19 @@ namespace project
             Shelf allBooks = new Shelf("All Books", ShelvedEntries);
             AllShelves.Add(allBooks);
             lbxShelves.ItemsSource = AllShelves;
-            
-            
-            
         }
 
-        //Clear search bar when clicked
+        
         private void tbxSearch_GotFocus(object sender, RoutedEventArgs e)
         {
+            //Clear search bar when clicked
             tbxSearch.Text = "";
         }
 
+        //Could I remove search bar from Bookshelf Tab
         private void tbxShelfSearch_GotFocus(object sender, RoutedEventArgs e)
         {
+            //Clear search bar when clicked on BookShelf Tab
             tbxShelfSearch.Text = "";
         }
 
@@ -151,6 +160,7 @@ namespace project
             string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
             System.IO.File.AppendAllText("cartItems.json", jsonString);
 
+            //Add the selected book to the ObservableCollection Cart
             Cart.Add(selectedBook);
 
         }
@@ -173,7 +183,6 @@ namespace project
                 }
                     ,
                 };
-                //getting error while making request
                 using (var bookResponse = await bookClient.SendAsync(bookRequest))
                 {
                     bookResponse.EnsureSuccessStatusCode();
@@ -255,7 +264,7 @@ namespace project
             if (e.Key == Key.Enter)
             {
                 //clear the Observable collection of entries
-                Entries.Clear();
+                //Entries.Clear();
                 string searchTerm = tbxSearch.Text;
                 //Replace spaces with +
                 searchTerm.Replace(" ", "+");
@@ -263,7 +272,7 @@ namespace project
                 Array.Clear(bookSearch, 0, 1);
                 bookSearch[0] = searchTerm;
                 //Display the search result 
-                CreateBooks(bookSearch);
+                GetBookSearchResults(bookSearch);
             }
         }
 
@@ -296,6 +305,52 @@ namespace project
             secondWindow.Owner = this;
             secondWindow.ShowDialog();
            
+        }
+
+        private async void GetBookSearchResults(string[] array)
+        {
+            List<Book> searchResults = new List<Book>();
+            //for each book in the array of selected books
+            for (int i = 0; i < array.Length; i++)
+            {
+                //Get API response
+                var bookClient = new HttpClient();
+                var bookRequest = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={array[i]}"),
+                    Headers =
+                {
+
+                }
+                    ,
+                };
+                using (var bookResponse = await bookClient.SendAsync(bookRequest))
+                {
+                    bookResponse.EnsureSuccessStatusCode();
+                    var bookBody = await bookResponse.Content.ReadAsStringAsync();
+                    var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
+
+                    //add books with this title to allBookRecords
+                    allBookRecords = bookResult.docs;
+                    if (allBookRecords.Count > 0)
+                    {
+                        for (int j = 0; j < 6; j++)
+                            //I want to add a scroll bar so I can add more results
+                        {
+                            searchResults.Add(bookResult.docs[j]);
+                        }
+                        selectedBooks.ItemsSource = searchResults;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No results found");
+                        selectedBooks.ItemsSource = Entries;
+                    }
+
+
+                }
+            }
         }
     }
 }
