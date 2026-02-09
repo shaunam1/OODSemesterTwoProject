@@ -36,22 +36,18 @@ namespace project
             }
             else
             {
-                if (selectedShelf.ShelfName != "All Books")
+                if (selectedShelf.ShelfName != "All Books" && !selectedShelf.Books.Contains(selectedBook))
                 {
                     selectedShelf.Books.Add(selectedBook);
-
+                    this.Close();
                 }
-                this.Close();
+                else
+                {
+                    MessageBox.Show("This shelf already contains this book");
+                }
+                    
             }
-            //I didn't assign any books so Books is null
             
-
-
-            
-                
-            
-
-                
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -59,14 +55,11 @@ namespace project
             MainWindow main = this.Owner as MainWindow;
             cbxShelves.ItemsSource = main.AllShelves;
 
-
-            
         }
 
         private void cbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectedShelf = cbxShelves.SelectedItem as Shelf;
-
         }
     }
 }
