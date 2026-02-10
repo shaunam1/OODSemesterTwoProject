@@ -352,5 +352,22 @@ namespace project
                 }
             }
         }
+
+        private void btnRemoveShelf_Click(object sender, RoutedEventArgs e)
+        {
+            //If All Books is not the only shelf
+            if(AllShelves.Count > 1)
+            {
+                //Open new window
+                DeleteShelfWindow thirdWindow = new DeleteShelfWindow();
+                thirdWindow.Owner = this;
+                thirdWindow.ShowDialog();
+            }
+            else
+            {
+                //Display message to user
+                MessageBox.Show("There are no shelves to delete");
+            }
+        }
     }
 }
