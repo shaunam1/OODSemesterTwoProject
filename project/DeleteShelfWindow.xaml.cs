@@ -30,7 +30,12 @@ namespace project
             MainWindow main = this.Owner as MainWindow;
             //How remove All Books shelf???
             //Populate combobox with shelves
-            cbxDeleteShelves.ItemsSource = main.AllShelves;
+            List<Shelf> deletableShelves = new List<Shelf>();
+            for (int i = 1; i< main.AllShelves.Count; i++)
+            {
+                deletableShelves.Add(main.AllShelves[i]);
+            }
+            cbxDeleteShelves.ItemsSource = deletableShelves;
 
         }
 
