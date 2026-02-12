@@ -48,7 +48,6 @@
                                 <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}"></TextBlock>
                                 <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
                                 <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
-                                <Button x:Name="btnMoreInfo" Content="More Info" Click="btnMoreInfo_Click"></Button>
                             </StackPanel>
 
                         </DataTemplate>
@@ -114,7 +113,7 @@
                                 <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}"></TextBlock>
                                 <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
                                 <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
-                                <Button x:Name="btnMoreInfo" Content="More Info" Click="btnMoreInfo_Click"></Button>
+                               
                             </StackPanel>
 
                         </DataTemplate>

@@ -210,21 +210,12 @@ namespace project
         {
             //how can I do this so that I don't need the button
             //  ShowInfo();
-        }
-
-        private void btnMoreInfo_Click(object sender, RoutedEventArgs e)
-        {
-            //this just gets me the main window
-            //this - refers to main window
-            //Book obj = this.DataContext as Book;
-            //MessageBox.Show(obj.title);
-
-            //sender - is the button
-            Button button = sender as Button;
+            StackPanel button = sender as StackPanel;
             //the datacontext of the button is the object in the data template
             Book book = button.DataContext as Book;
             ShowInfo(book);
         }
+
 
 
         private void btnShelve_Click(object sender, RoutedEventArgs e)
