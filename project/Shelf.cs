@@ -32,6 +32,11 @@ namespace project
             Books = books;
 
         }//Default constructor
+
+        public override string ToString()
+        {
+            return ShelfName;
+        }
     }
 
 }
