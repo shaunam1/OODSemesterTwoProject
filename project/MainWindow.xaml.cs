@@ -232,14 +232,7 @@ namespace project
             //When Add to Bookshelf is clicked 
             //The book is added to the observable collection ShevedEntries so that it will be displayed
             //on the Bookshelf tab
-            if (!ShelvedEntries.Contains(selectedBook))
-            {
-                ShelvedEntries.Add(selectedBook);
-            }
-            else
-            {
-                MessageBox.Show("This book is already shelved");
-            }
+            
 
 
             if (allShelves.Count > 1)
@@ -247,6 +240,17 @@ namespace project
                 ChooseShelfWindow thirdWindow = new ChooseShelfWindow();
                 thirdWindow.Owner = this;
                 thirdWindow.ShowDialog();
+            }
+            else
+            {
+                if (!ShelvedEntries.Contains(selectedBook))
+                {
+                    ShelvedEntries.Add(selectedBook);
+                }
+                else
+                {
+                    MessageBox.Show("This book is already shelved");
+                }
             }
         }
 

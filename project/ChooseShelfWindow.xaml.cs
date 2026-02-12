@@ -36,12 +36,21 @@ namespace project
             }
             else
             {
-                if (selectedShelf.ShelfName != "All Books" && !selectedShelf.Books.Contains(selectedBook))
+                if (!selectedShelf.Books.Contains(selectedBook))
                 {
                     selectedShelf.Books.Add(selectedBook);
                     this.Close();
+
+                    if(selectedShelf.ShelfName != "All Books")
+                    {
+                        if (!main.ShelvedEntries.Contains(selectedBook))
+                        {
+                            main.ShelvedEntries.Add(selectedBook);
+                        }
+                    }
+                    
                 }
-                else
+                else 
                 {
                     MessageBox.Show("This shelf already contains this book");
                 }
