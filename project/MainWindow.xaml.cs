@@ -35,8 +35,11 @@ namespace project
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
-        List<Book> allBooks = new List<Book>();
-        string[] bookSearch = new string[1];
+        Shelf allBooks;
+
+        //List<Book> allBooks = new List<Book>();
+        //string[] bookSearch = new string[1];
+        string bookSearch = "";
         public MainWindow()
         {
             //this - main window
@@ -102,6 +105,8 @@ namespace project
         //    get { return search; }
         //    set { search = value; }
         //}
+
+        
 
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
@@ -258,14 +263,10 @@ namespace project
             //If the enter key is pressed
             if (e.Key == Key.Enter)
             {
-                //clear the Observable collection of entries
-                //Entries.Clear();
                 string searchTerm = tbxSearch.Text;
                 //Replace spaces with +
                 searchTerm.Replace(" ", "+");
-                //Set this search term as the only string in bookSearch array
-                Array.Clear(bookSearch, 0, 1);
-                bookSearch[0] = searchTerm;
+                bookSearch = searchTerm;
                 //Display the search result 
                 GetBookSearchResults(bookSearch);
             }
@@ -302,18 +303,17 @@ namespace project
            
         }
 
-        private async void GetBookSearchResults(string[] array)
+        private async void GetBookSearchResults(string bookSearch)
         {
             List<Book> searchResults = new List<Book>();
             //for each book in the array of selected books
-            for (int i = 0; i < array.Length; i++)
-            {
+            
                 //Get API response
                 var bookClient = new HttpClient();
                 var bookRequest = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={array[i]}"),
+                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={bookSearch}"),
                     Headers =
                 {
 
@@ -345,24 +345,54 @@ namespace project
 
 
                 }
-            }
+            
         }
 
         private void btnRemoveShelf_Click(object sender, RoutedEventArgs e)
         {
+            Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
             //If All Books is not the only shelf
-            if(AllShelves.Count > 1)
+            if (selectedShelf.ShelfName != "All Books")
             {
-                //Open new window
-                DeleteShelfWindow thirdWindow = new DeleteShelfWindow();
-                thirdWindow.Owner = this;
-                thirdWindow.ShowDialog();
+                MessageBox.Show("Please exit this shelf before removing a shelf");
             }
             else
             {
-                //Display message to user
-                MessageBox.Show("There are no shelves to delete");
+                if (AllShelves.Count > 1)
+                {
+                    //Open new window
+                    DeleteShelfWindow thirdWindow = new DeleteShelfWindow();
+                    thirdWindow.Owner = this;
+                    thirdWindow.ShowDialog();
+                }
+                else
+                {
+                    //Display message to user
+                    MessageBox.Show("There are no shelves to delete");
+                }
             }
+            
+        }
+
+       private void tbxShelfSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            //List<Book> searchResults = new List<Book>();
+            //if (e.Key == Key.Enter)
+            //{
+            //    string searchTerm = tbxSearch.Text;
+            //    for (int i = 0; i < allBooks.Books.Count; i++)
+            //    {
+            //        if (allBooks.Books[i].title.Contains(searchTerm))
+            //        {
+            //            searchResults.Add(allBooks.Books[i]);
+            //        }
+            //        selectedBooks.ItemsSource = searchResults;
+            //    }
+
+
+
+
+            //}
         }
     }
 }
