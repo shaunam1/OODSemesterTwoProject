@@ -75,14 +75,17 @@ namespace project
                 {
                     //remove it from that shelf 
                     selectedShelf.Books.Remove(selectedBook);
-                    this.Close();
+                    
 
 
                 }
 
             }
 
+            this.Close();
+
         }
+
 
     }
 }
