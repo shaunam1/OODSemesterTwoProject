@@ -36,9 +36,6 @@ namespace project
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         Shelf allBooks;
-
-        //List<Book> allBooks = new List<Book>();
-        //string[] bookSearch = new string[1];
         string bookSearch = "";
         public MainWindow()
         {
@@ -47,7 +44,6 @@ namespace project
             entries = new ObservableCollection<Book>();
             shelvedEntries= new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
-            //search = new ObservableCollection<Book>();
             allShelves = new ObservableCollection<Shelf>();
             InitializeComponent();
 
@@ -97,17 +93,7 @@ namespace project
             set { cart = value; }
         }
 
-        //DO I NEED THIS???
-        //private ObservableCollection<Book> search;
-
-        //public ObservableCollection<Book> Search
-        //{
-        //    get { return search; }
-        //    set { search = value; }
-        //}
-
-        
-
+       
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             //display the selected books
@@ -171,17 +157,17 @@ namespace project
         }
 
 
-        private async void CreateBooks(string[] array)
+        private async void CreateBooks(string[] chosenBooks)
         {
             //for each book in the array of selected books
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < chosenBooks.Length; i++)
             {
                 //Get API response
                 var bookClient = new HttpClient();
                 var bookRequest = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={array[i]}"),
+                    RequestUri = new Uri($"https://openlibrary.org/search.json?q={chosenBooks[i]}"),
                     Headers =
                 {
 
@@ -198,6 +184,7 @@ namespace project
                     allBookRecords = bookResult.docs;
                     if(allBookRecords.Count > 0)
                     {
+                        
                         //add the first returned book to the selected observable collection
                         Entries.Add(bookResult.docs[0]);
                     }
@@ -297,9 +284,14 @@ namespace project
         private void btnAddShelf_Click(object sender, RoutedEventArgs e)
         {
             //Open new window
-            AddShelfWindow secondWindow = new AddShelfWindow();
-            secondWindow.Owner = this;
-            secondWindow.ShowDialog();
+            
+                AddShelfWindow secondWindow = new AddShelfWindow();
+                secondWindow.Owner = this;
+                secondWindow.ShowDialog();
+            
+            
+
+            
            
         }
 
@@ -374,8 +366,28 @@ namespace project
             
         }
 
-       private void tbxShelfSearch_KeyDown(object sender, KeyEventArgs e)
+       private void tbxShelfSearch_KeyUp(object sender, KeyEventArgs e)
         {
+            string searchTerm = tbxShelfSearch.Text.ToLower();
+            List<Book> searchResults = new List<Book>();
+            for (int i = 0; i < ShelvedEntries.Count; i++)
+            {
+                if (ShelvedEntries[i].title.ToLower().Contains(searchTerm))
+                {
+                    searchResults.Add(ShelvedEntries[i]);
+                }
+
+                
+            }
+
+            shelfBooks.ItemsSource = searchResults;
+            //    {
+            //        if (allBooks.Books[i].title.Contains(searchTerm))
+            //        {
+            //            searchResults.Add(allBooks.Books[i]);
+            //        }
+            //        selectedBooks.ItemsSource = searchResults;
+            //    }
             //List<Book> searchResults = new List<Book>();
             //if (e.Key == Key.Enter)
             //{

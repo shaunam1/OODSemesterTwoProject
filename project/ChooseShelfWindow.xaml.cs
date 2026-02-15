@@ -30,19 +30,23 @@ namespace project
         {
             MainWindow main = this.Owner as MainWindow;
             Book selectedBook = main.selectedBook;
+            //If no shelf has been selected
             if (selectedShelf == null)
             {
                 MessageBox.Show("Please choose a shelf");
             }
             else
             {
+                //If the shelf already contains the selected book
                 if (!selectedShelf.Books.Contains(selectedBook))
                 {
                     selectedShelf.Books.Add(selectedBook);
                     this.Close();
 
+                    //if not the all books shelf
                     if(selectedShelf.ShelfName != "All Books")
                     {
+                        //add to Observable collection if not already added
                         if (!main.ShelvedEntries.Contains(selectedBook))
                         {
                             main.ShelvedEntries.Add(selectedBook);

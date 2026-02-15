@@ -28,6 +28,8 @@ namespace project
                 return $"https://covers.openlibrary.org/b/id/{cover_i}-M.jpg";
             }
         }
+
+        
     }
 
 

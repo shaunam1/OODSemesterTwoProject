@@ -89,7 +89,7 @@
 
                 <TextBlock x:Name="tblkShelfCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <materialDesign:PackIcon Kind="Magnify" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,10,30,0"></materialDesign:PackIcon>
-                <TextBox x:Name="tbxShelfSearch" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxShelfSearch_GotFocus" KeyDown="tbxShelfSearch_KeyDown" />
+                <TextBox x:Name="tbxShelfSearch" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxShelfSearch_GotFocus" KeyUp="tbxShelfSearch_KeyUp" />
 
                 <ListBox x:Name="lbxShelves" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,33,21,131" Grid.Row="1" Grid.RowSpan="2" DisplayMemberPath="ShelfName" SelectionChanged="lbxShelves_SelectionChanged"/>
 
