@@ -1,0 +1,26 @@
+﻿<Window x:Class="project.RemoveFromShelfWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:project"
+        mc:Ignorable="d"
+        Title="RemoveFromShelfWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*"></RowDefinition>
+            <RowDefinition Height="70*"></RowDefinition>
+            <RowDefinition Height="15*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label Name="lblTitle" Content="Remove from Shelf" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Grid.Row="0" Grid.Column="0"></Label>
+        <Label Name="lblShelfName" Content="Select Shelf:" Grid.Row="1" Grid.Column="0" Height="25px" Width="100px" ></Label>
+        <ComboBox Name="cbxShelves" Grid.Row="1" Grid.Column="1" Height="30" Width="200" SelectionChanged="cbxShelves_SelectionChanged"></ComboBox>
+        <Button Name="btnRemoveFrom" Content="Remove from Shelf" Grid.Row="2" Grid.Column="1" Click="btnRemoveFrom_Click"></Button>
+    </Grid>
+</Window>

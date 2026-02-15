@@ -20,7 +20,6 @@ namespace project
     public partial class ChooseShelfWindow : Window
     {
         Shelf selectedShelf;
-        Book selectedBook;
         public ChooseShelfWindow()
         {
             InitializeComponent();
@@ -38,27 +37,17 @@ namespace project
             else
             {
                 //If the shelf already contains the selected book
-                if (!selectedShelf.Books.Contains(selectedBook))
+               selectedShelf.Books.Add(selectedBook);
+                if (selectedShelf.ShelfName != "All Books")
                 {
-                    selectedShelf.Books.Add(selectedBook);
-                    this.Close();
-
-                    //if not the all books shelf
-                    if(selectedShelf.ShelfName != "All Books")
+                    //add to Observable collection if not already added
+                    if (!main.ShelvedEntries.Contains(selectedBook))
                     {
-                        //add to Observable collection if not already added
-                        if (!main.ShelvedEntries.Contains(selectedBook))
-                        {
-                            main.ShelvedEntries.Add(selectedBook);
-                        }
+                        main.ShelvedEntries.Add(selectedBook);
                     }
-                    
                 }
-                else 
-                {
-                    MessageBox.Show("This shelf already contains this book");
-                }
-                    
+
+                this.Close(); 
             }
             
         }
@@ -66,7 +55,16 @@ namespace project
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
-            cbxShelves.ItemsSource = main.AllShelves;
+            List<Shelf> potentialShelves = new List<Shelf>();
+            Book selectedBook = main.selectedBook;
+            foreach (Shelf s in main.AllShelves)
+            {
+                if (!s.Books.Contains(selectedBook))
+                {
+                    potentialShelves.Add(s);
+                }
+            }
+            cbxShelves.ItemsSource = potentialShelves;
 
         }
 

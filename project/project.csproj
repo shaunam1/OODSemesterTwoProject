@@ -78,6 +78,9 @@
     <Compile Include="DeleteShelfWindow.xaml.cs">
       <DependentUpon>DeleteShelfWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RemoveFromShelfWindow.xaml.cs">
+      <DependentUpon>RemoveFromShelfWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shelf.cs" />
     <Page Include="AddShelfWindow.xaml">
       <SubType>Designer</SubType>
@@ -112,6 +115,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RemoveFromShelfWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

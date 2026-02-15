@@ -381,30 +381,28 @@ namespace project
             }
 
             shelfBooks.ItemsSource = searchResults;
-            //    {
-            //        if (allBooks.Books[i].title.Contains(searchTerm))
-            //        {
-            //            searchResults.Add(allBooks.Books[i]);
-            //        }
-            //        selectedBooks.ItemsSource = searchResults;
-            //    }
-            //List<Book> searchResults = new List<Book>();
-            //if (e.Key == Key.Enter)
-            //{
-            //    string searchTerm = tbxSearch.Text;
-            //    for (int i = 0; i < allBooks.Books.Count; i++)
-            //    {
-            //        if (allBooks.Books[i].title.Contains(searchTerm))
-            //        {
-            //            searchResults.Add(allBooks.Books[i]);
-            //        }
-            //        selectedBooks.ItemsSource = searchResults;
-            //    }
+        }
 
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+            if (allShelves.Count > 1)
+            {
+                RemoveFromShelfWindow fourthWindow = new RemoveFromShelfWindow();
+                fourthWindow.Owner = this;
+                fourthWindow.ShowDialog();
+            }
+            else
+            {
+                if (ShelvedEntries.Contains(selectedBook))
+                {
+                    ShelvedEntries.Remove(selectedBook);
+                }
+                else
+                {
+                    MessageBox.Show("This book hasn't been added to a shelf");
+                }
+            }
 
-
-
-            //}
         }
     }
 }
