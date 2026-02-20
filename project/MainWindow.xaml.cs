@@ -313,6 +313,8 @@ namespace project
 
         private async void GetBookSearchResults(string bookSearch)
         {
+            authorNames.Clear();
+
             List<Book> searchResults = new List<Book>();
             //for each book in the array of selected books
             
@@ -342,7 +344,9 @@ namespace project
                             //I want to add a scroll bar so I can add more results
                         {
                             searchResults.Add(bookResult.docs[j]);
-                        }
+                            authorNames.Add(bookResult.docs[j].author_name[0].ToString());
+
+                    }
                         selectedBooks.ItemsSource = searchResults;
                     }
                     else
@@ -352,8 +356,10 @@ namespace project
                     }
 
 
+
                 }
-            
+
+            authorNames.Add("All");
         }
 
         private void btnRemoveShelf_Click(object sender, RoutedEventArgs e)
@@ -429,7 +435,7 @@ namespace project
             {
                 //if one author is selected
                 //Add books by that author to authorResults
-                foreach (Book b in Entries)
+                foreach (Book b in selectedBooks.ItemsSource)
                 {
                     if (b.author_name[0] == selectedAuthor)
                     {
