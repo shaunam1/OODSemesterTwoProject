@@ -32,13 +32,15 @@ namespace project
         string bookSearchAPI = "https://openlibrary.org/search.json?q=the+lord+of+the+rings";
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
         List<string> authors = new List<string>();
-        //string[] authors = {  };
+        string[] originalAuthors = { "R. F. Kuang", "Madeline Miller", "Donna Tartt", "Suzanne Collins", "S. E. Hinton", "Stephen King", "All"  };
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "b ad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         Shelf allBooks;
         string bookSearch = "";
         string selectedAuthor = "";
+        bool isSearchAuthors = false;
+            List<Book> searchResults = new List<Book>();
         public MainWindow()
         {
             //this - main window
@@ -314,8 +316,10 @@ namespace project
         private async void GetBookSearchResults(string bookSearch)
         {
             authorNames.Clear();
-
-            List<Book> searchResults = new List<Book>();
+            searchResults.Clear();
+            
+            isSearchAuthors = true;
+            
             //for each book in the array of selected books
             
                 //Get API response
@@ -340,19 +344,33 @@ namespace project
                     allBookRecords = bookResult.docs;
                     if (allBookRecords.Count > 0)
                     {
-                        for (int j = 0; j < 6; j++)
+                        authorNames.Clear();
+                    for (int j = 0; j < 6; j++)
                             //I want to add a scroll bar so I can add more results
                         {
                             searchResults.Add(bookResult.docs[j]);
+                            if (!authorNames.Contains(bookResult.docs[j].author_name[0].ToString()))
+                            {
                             authorNames.Add(bookResult.docs[j].author_name[0].ToString());
+                            }
+                            
+                            //Set authors in listbox as authors of these books
+                            lbxAuthor.ItemsSource = authorNames;
 
                     }
-                        selectedBooks.ItemsSource = searchResults;
+                    //Display the new results
+                    selectedBooks.ItemsSource = null;
+                    selectedBooks.ItemsSource = searchResults;
                     }
                     else
                     {
+                    //If no book found 
+                    //Display Entries and originalAuthors
                         MessageBox.Show("No results found");
                         selectedBooks.ItemsSource = Entries;
+                        isSearchAuthors = false;
+                        lbxAuthor.ItemsSource = originalAuthors;
+
                     }
 
 
@@ -366,25 +384,27 @@ namespace project
         {
             Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
             //If All Books is not the only shelf
-            if (selectedShelf.ShelfName != "All Books")
-            {
-                MessageBox.Show("Please exit this shelf before removing a shelf");
-            }
-            else
-            {
-                if (AllShelves.Count > 1)
+                if (selectedShelf.ShelfName != "All Books")
                 {
-                    //Open new window
-                    DeleteShelfWindow thirdWindow = new DeleteShelfWindow();
-                    thirdWindow.Owner = this;
-                    thirdWindow.ShowDialog();
+                    MessageBox.Show("Please exit this shelf before removing a shelf");
                 }
                 else
                 {
-                    //Display message to user
-                    MessageBox.Show("There are no shelves to delete");
+                    if (AllShelves.Count > 1)
+                    {
+                        //Open new window
+                        DeleteShelfWindow thirdWindow = new DeleteShelfWindow();
+                        thirdWindow.Owner = this;
+                        thirdWindow.ShowDialog();
+                    }
+                    else
+                    {
+                        //Display message to user
+                        MessageBox.Show("There are no shelves to delete");
+                    }
                 }
-            }
+            
+            
             
         }
 
@@ -431,30 +451,60 @@ namespace project
         {
             List<Book> authorResults = new List<Book>();
             selectedAuthor = lbxAuthor.SelectedItem as string;
-            if (selectedAuthor != null && selectedAuthor != "All")
+
+            //If filtering Entries
+            if (isSearchAuthors == false)
             {
-                //if one author is selected
-                //Add books by that author to authorResults
-                foreach (Book b in selectedBooks.ItemsSource)
+                if (selectedAuthor != null && selectedAuthor != "All")
                 {
-                    if (b.author_name[0] == selectedAuthor)
+                    //if one author is selected
+                    //Add books by that author to authorResults
+                    foreach (Book b in Entries)
                     {
-                        authorResults.Add(b);
+                        if (b.author_name[0] == selectedAuthor)
+                        {
+                            authorResults.Add(b);
+                        }
+
                     }
 
+                    //set this filtered list as the ItemsSource
+                    selectedBooks.ItemsSource = authorResults;
                 }
-
-                //set this filtered list as the ItemsSource
-                selectedBooks.ItemsSource = authorResults;
+                else
+                {
+                    //If All or no author is selected Entries is the ItemsSource
+                    selectedBooks.ItemsSource = Entries;
+                }
             }
             else
             {
-                //If All or no author is selected Entries is the ItemsSource
-                selectedBooks.ItemsSource = Entries;
+                //If filtering search results
+                if (selectedAuthor != null && selectedAuthor != "All")
+                {
+                    //if one author is selected
+                    //Add books by that author to authorResults
+                    foreach (Book b in searchResults)
+                    {
+                        if (b.author_name[0] == selectedAuthor)
+                        {
+                            authorResults.Add(b);
+                        }
+
+                    }
+
+                    //set this filtered list as the ItemsSource
+                    selectedBooks.ItemsSource = authorResults;
+                }
+                else
+                {
+                    //If All or no author is selected Entries is the ItemsSource
+                    selectedBooks.ItemsSource = searchResults;
+                }
             }
-            
+
         }
 
-      
+
     }
 }
