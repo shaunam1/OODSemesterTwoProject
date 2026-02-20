@@ -30,7 +30,7 @@
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
                 <TextBlock x:Name="tblkCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <TextBox x:Name="tbxSearch" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="161" Height="25" GotFocus="tbxSearch_GotFocus" KeyDown="tbxSearch_KeyDown"/>
-                <ListBox x:Name="lbxAuthor" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,33,21,10" Grid.Row="1"/>
+                <ListBox x:Name="lbxAuthor" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,33,21,10" Grid.Row="1" SelectionChanged="FilterAuthors"/>
                 <TextBlock FontSize="16" x:Name="tblkFilter" HorizontalAlignment="Left" Margin="10,6,0,0" TextWrapping="Wrap" Text="Filter" VerticalAlignment="Top" Height="21" Width="35"/>
                 <TextBlock x:Name="tblkAuthor" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Author" VerticalAlignment="Top" Height="16" Width="37"/>
                 <TextBlock Name="tblkBookInfo2"></TextBlock>

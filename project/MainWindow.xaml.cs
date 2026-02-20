@@ -31,12 +31,14 @@ namespace project
         string authorAPI = "https://openlibrary.org/search/authors.json?q=suzanne%20collins";
         string bookSearchAPI = "https://openlibrary.org/search.json?q=the+lord+of+the+rings";
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
-        string[] authors = { "Suzanne Collins", "R.F. Kuang", "Stephen King", "Donna Tartt", "Madelline Miller", "S.E. Hinton" };
-        string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
+        List<string> authors = new List<string>();
+        //string[] authors = {  };
+        string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "b ad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         Shelf allBooks;
         string bookSearch = "";
+        string selectedAuthor = "";
         public MainWindow()
         {
             //this - main window
@@ -45,6 +47,7 @@ namespace project
             shelvedEntries= new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
             allShelves = new ObservableCollection<Shelf>();
+            authorNames = new ObservableCollection<string>();
             InitializeComponent();
 
             ;
@@ -93,7 +96,15 @@ namespace project
             set { cart = value; }
         }
 
-       
+
+        private ObservableCollection<string> authorNames;
+
+        public ObservableCollection<string> AuthorNames
+        {
+            get { return authorNames; }
+            set { authorNames = value; }
+        }
+
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             //display the selected books
@@ -105,7 +116,7 @@ namespace project
             tblkCount.Text = cartCount.ToString();
 
             //Set ItemsSource of listboxes
-            lbxAuthor.ItemsSource = authors;
+            lbxAuthor.ItemsSource = authorNames;
             Shelf allBooks = new Shelf("All Books", ShelvedEntries);
             AllShelves.Add(allBooks);
             lbxShelves.ItemsSource = AllShelves;
@@ -159,6 +170,7 @@ namespace project
 
         private async void CreateBooks(string[] chosenBooks)
         {
+            authorNames.Clear();
             //for each book in the array of selected books
             for (int i = 0; i < chosenBooks.Length; i++)
             {
@@ -187,6 +199,7 @@ namespace project
                         
                         //add the first returned book to the selected observable collection
                         Entries.Add(bookResult.docs[0]);
+                        authorNames.Add(bookResult.docs[0].author_name[0].ToString());
                     }
                     else
                     {
@@ -195,7 +208,10 @@ namespace project
 
 
                 }
+
+
             }
+            authorNames.Add("All");
         }
 
         private void spBook_MouseUp(object sender, MouseButtonEventArgs e)
@@ -404,5 +420,35 @@ namespace project
             }
 
         }
+
+        private void FilterAuthors(object sender, SelectionChangedEventArgs e)
+        {
+            List<Book> authorResults = new List<Book>();
+            selectedAuthor = lbxAuthor.SelectedItem as string;
+            if (selectedAuthor != null && selectedAuthor != "All")
+            {
+                //if one author is selected
+                //Add books by that author to authorResults
+                foreach (Book b in Entries)
+                {
+                    if (b.author_name[0] == selectedAuthor)
+                    {
+                        authorResults.Add(b);
+                    }
+
+                }
+
+                //set this filtered list as the ItemsSource
+                selectedBooks.ItemsSource = authorResults;
+            }
+            else
+            {
+                //If All or no author is selected Entries is the ItemsSource
+                selectedBooks.ItemsSource = Entries;
+            }
+            
+        }
+
+      
     }
 }
