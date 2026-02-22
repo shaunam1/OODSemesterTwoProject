@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,14 +34,14 @@ namespace project
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
         List<string> authors = new List<string>();
         string[] originalAuthors = { "R. F. Kuang", "Madeline Miller", "Donna Tartt", "Suzanne Collins", "S. E. Hinton", "Stephen King", "All"  };
-        string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "b ad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
+        string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         Shelf allBooks;
         string bookSearch = "";
         string selectedAuthor = "";
         bool isSearchAuthors = false;
-            List<Book> searchResults = new List<Book>();
+        List<Book> searchResults = new List<Book>();
         public MainWindow()
         {
             //this - main window
@@ -173,6 +174,7 @@ namespace project
         private async void CreateBooks(string[] chosenBooks)
         {
             authorNames.Clear();
+            authorNames.Add("All");
             //for each book in the array of selected books
             for (int i = 0; i < chosenBooks.Length; i++)
             {
@@ -213,7 +215,7 @@ namespace project
 
 
             }
-            authorNames.Add("All");
+            
         }
 
         private void spBook_MouseUp(object sender, MouseButtonEventArgs e)
@@ -315,15 +317,12 @@ namespace project
 
         private async void GetBookSearchResults(string bookSearch)
         {
-            authorNames.Clear();
+            
             searchResults.Clear();
-            
             isSearchAuthors = true;
-            
-            //for each book in the array of selected books
-            
-                //Get API response
-                var bookClient = new HttpClient();
+
+            //Get API response
+            var bookClient = new HttpClient();
                 var bookRequest = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
@@ -345,19 +344,26 @@ namespace project
                     if (allBookRecords.Count > 0)
                     {
                         authorNames.Clear();
-                    for (int j = 0; j < 6; j++)
+                        authorNames.Add("All");
+
+                    for (int j = 0; j < allBookRecords.Count; j++)
                             //I want to add a scroll bar so I can add more results
+                    {
+                        searchResults.Add(bookResult.docs[j]);
+                        //if there is an author
+                        if(bookResult.docs[j].author_name != null)
                         {
-                            searchResults.Add(bookResult.docs[j]);
+                            //Add the author to authorNames
                             if (!authorNames.Contains(bookResult.docs[j].author_name[0].ToString()))
                             {
-                            authorNames.Add(bookResult.docs[j].author_name[0].ToString());
+                                authorNames.Add(bookResult.docs[j].author_name[0].ToString());
                             }
-                            
-                            //Set authors in listbox as authors of these books
-                            lbxAuthor.ItemsSource = authorNames;
+                        }
 
                     }
+                    //Set authors in listbox as authors of these books
+                    lbxAuthor.ItemsSource = authorNames;
+
                     //Display the new results
                     selectedBooks.ItemsSource = null;
                     selectedBooks.ItemsSource = searchResults;
@@ -372,12 +378,7 @@ namespace project
                         lbxAuthor.ItemsSource = originalAuthors;
 
                     }
-
-
-
                 }
-
-            authorNames.Add("All");
         }
 
         private void btnRemoveShelf_Click(object sender, RoutedEventArgs e)
@@ -403,9 +404,6 @@ namespace project
                         MessageBox.Show("There are no shelves to delete");
                     }
                 }
-            
-            
-            
         }
 
        private void tbxShelfSearch_KeyUp(object sender, KeyEventArgs e)
@@ -486,10 +484,14 @@ namespace project
                     //Add books by that author to authorResults
                     foreach (Book b in searchResults)
                     {
-                        if (b.author_name[0] == selectedAuthor)
+                        if(b.author_name != null)
                         {
-                            authorResults.Add(b);
+                            if (b.author_name[0] == selectedAuthor)
+                            {
+                                authorResults.Add(b);
+                            }
                         }
+                        
 
                     }
 
