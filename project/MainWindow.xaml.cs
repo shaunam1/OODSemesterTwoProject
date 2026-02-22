@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 
 namespace project
@@ -142,6 +143,7 @@ namespace project
 
         private void ShowInfo(Book book)
         {
+            string languages = "";
             selectedBook = book;
             //Change tab to TabBookInfo
             MyControl.SelectedItem = TabBookInfo;
@@ -149,6 +151,17 @@ namespace project
             tblkTitle.Text = book.title;
             imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
             tblkBookInfo.Text = "Author: " + book.author_name[0];
+            tblkPublished.Text = "First Published: " + book.first_publish_year;
+            tblkEditions.Text = "Current Editions: " + book.edition_count;
+            tblkLanguages.Text = "Available in: ";
+
+            foreach (string l in book.language)
+            {
+                languages += l + ", ";
+            }
+
+            languages = languages.Trim();
+            tblkLanguages.Text += languages.TrimEnd(',');
         }
 
 
@@ -491,10 +504,7 @@ namespace project
                                 authorResults.Add(b);
                             }
                         }
-                        
-
                     }
-
                     //set this filtered list as the ItemsSource
                     selectedBooks.ItemsSource = authorResults;
                 }
@@ -506,7 +516,6 @@ namespace project
             }
 
         }
-
 
     }
 }
