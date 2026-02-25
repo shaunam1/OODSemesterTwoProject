@@ -38,11 +38,14 @@ namespace project
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
+        List<Work> allWorks = new List<Work>();
         Shelf allBooks;
         string bookSearch = "";
         string selectedAuthor = "";
         bool isSearchAuthors = false;
         List<Book> searchResults = new List<Book>();
+        string description = "";
+        bool isDescription = false;
         public MainWindow()
         {
             //this - main window
@@ -151,8 +154,18 @@ namespace project
             tblkTitle.Text = book.title;
             imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
             tblkBookInfo.Text = "Author: " + book.author_name[0];
+            tblkPrice.Text = "Price: " + book.price;
             tblkPublished.Text = "First Published: " + book.first_publish_year;
-            tblkEditions.Text = "Current Editions: " + book.edition_count;
+            CheckForDescription(book);
+            if (isDescription == true)
+            {
+                tblkDescription.Text = "Description: " + description;
+            }
+            else
+            {
+                tblkDescription.Text = "Description: Unavailable";
+            }
+                tblkEditions.Text = "Current Editions: " + book.edition_count;
             tblkLanguages.Text = "Available in: ";
 
             foreach (string l in book.language)
@@ -169,17 +182,25 @@ namespace project
         {
             //When add to cart is clicked
             //Increase the cart count on all tabs
-            cartCount++;
-            tblkCartCount.Text = cartCount.ToString();
-            tblkShelfCartCount.Text = cartCount.ToString();
-            tblkCount.Text = cartCount.ToString();
+            if(selectedBook.price != "Not for sale")
+            {
+                cartCount++;
+                tblkCartCount.Text = cartCount.ToString();
+                tblkShelfCartCount.Text = cartCount.ToString();
+                tblkCount.Text = cartCount.ToString();
 
-            //add chosen books to JSON file of books in the cart
-            string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
-            System.IO.File.AppendAllText("cartItems.json", jsonString);
+                //add chosen books to JSON file of books in the cart
+                string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
+                System.IO.File.AppendAllText("cartItems.json", jsonString);
 
-            //Add the selected book to the ObservableCollection Cart
-            Cart.Add(selectedBook);
+                //Add the selected book to the ObservableCollection Cart
+                Cart.Add(selectedBook);
+            }
+            else
+            {
+                MessageBox.Show("Sorry this book is not for sale");
+            }
+            
 
         }
 
@@ -215,6 +236,11 @@ namespace project
                     {
 
                         //add the first returned book to the selected observable collection
+                        if (bookResult.docs[0].price == null)
+                        {
+                            bookResult.docs[0].price = "Not for sale";
+                        }
+                        
                         Entries.Add(bookResult.docs[0]);
                         authorNames.Add(bookResult.docs[0].author_name[0].ToString());
                     }
@@ -515,6 +541,67 @@ namespace project
                 }
             }
 
+        }
+
+        private async void CheckForDescription(Book book)
+        {
+           
+            if(book.author_key != null)
+            {
+                string authorKey = book.author_key[0];
+
+                var worksClient = new HttpClient();
+                var worksRequest = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    //how do I include the {} in the URL???
+                    RequestUri = new Uri($"https://openlibrary.org/authors/{authorKey}/works.json"),
+                    Headers =
+                {
+
+                }
+                    ,
+                };
+                using (var worksResponse = await worksClient.SendAsync(worksRequest))
+                {
+                    worksResponse.EnsureSuccessStatusCode();
+                    var workBody = await worksResponse.Content.ReadAsStringAsync();
+                    var workResult = JsonConvert.DeserializeObject<WorkRoot>(workBody);
+
+                    //add books with this title to allBookRecords
+                    allWorks = workResult.works;
+                    if (allWorks.Count > 0)
+                    {
+                        for (int i = 0; i < allWorks.Count; i++)
+                        {
+                            if (allWorks[i].title == book.title)
+                            {
+                                if (allWorks[i].description != null)
+                                {
+                                    description = allWorks[i].description.ToString();
+                                    isDescription = true;
+                                }
+                                else
+                                {
+                                    isDescription = false;
+                                }
+                            }
+                        }
+                        //add the first returned book to the selected observable collection
+                      
+                    }
+                    else
+                    {
+                        //do i need this???
+                        MessageBox.Show("No results found");
+                    }
+
+
+                }
+
+            }
+
+            
         }
 
     }

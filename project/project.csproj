@@ -82,6 +82,7 @@
       <DependentUpon>RemoveFromShelfWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shelf.cs" />
+    <Compile Include="Work.cs" />
     <Page Include="AddShelfWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

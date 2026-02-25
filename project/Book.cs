@@ -21,6 +21,8 @@ namespace project
         public bool public_scan_b { get; set; }
         public string subtitle { get; set; }
         public string title { get; set; }
+
+        public string price { get; set; }
         public string Cover_URL
         {
             get
