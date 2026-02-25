@@ -156,15 +156,15 @@ namespace project
             tblkBookInfo.Text = "Author: " + book.author_name[0];
             tblkPrice.Text = "Price: " + book.price;
             tblkPublished.Text = "First Published: " + book.first_publish_year;
-            CheckForDescription(book);
-            if (isDescription == true)
-            {
-                tblkDescription.Text = "Description: " + description;
-            }
-            else
-            {
-                tblkDescription.Text = "Description: Unavailable";
-            }
+            //CheckForDescription(book);
+            //if (isDescription == true)
+            //{
+            //    tblkDescription.Text = "Description: " + description;
+            //}
+            //else
+            //{
+            //    tblkDescription.Text = "Description: Unavailable";
+            //}
                 tblkEditions.Text = "Current Editions: " + book.edition_count;
             tblkLanguages.Text = "Available in: ";
 
