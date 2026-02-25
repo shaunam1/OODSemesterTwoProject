@@ -142,27 +142,28 @@
              Foreground="Black"/>
                 </StackPanel>
             </TabItem.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="170"></RowDefinition>
+                    <RowDefinition Height="170"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
+                <Label Name="lblAddress" Content="Delivery Details" Grid.Row="1" Grid.Column="1"/>
+                <Label Name="lblFullName" Content="Full Name:" Grid.Row="1" Grid.Column="1" Margin="0,20,0,0"/>
+                <Label Name="lblAddressLine1" Content="Address Line 1:" Grid.Row="1" Grid.Column="1" Margin="0,40,0,0"/>
+                <Label Name="lblAddressLine2" Content="City:" Grid.Row="1" Grid.Column="1" Margin="0,60,0,0"/>
+                <Label Name="lblAddressLine3" Content="County:" Grid.Row="1" Grid.Column="1" Margin="0,80,0,0"/>
+                <Label Name="lblEircode" Content="Eircode:" Grid.Row="1" Grid.Column="1" Margin="0,100,0,0"/>
+                <Label Name="lblPayment" Content="Payment Details" Grid.Row="2" Grid.Column="1"/>
+                
 
-            <ItemsControl Name="cartBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding Cart}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="3"></UniformGrid>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel x:Name="spBook" MouseUp="spBook_MouseUp">
-                            <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}"></TextBlock>
-                            <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="50" Width="50"></Image>
-                            <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
-                        </StackPanel>
-
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-
+            </Grid>
         </TabItem>
         <TabItem x:Name="TabBookInfo" Width="0" Visibility="Hidden">
             <TabItem.Header>

@@ -213,7 +213,7 @@ namespace project
                     allBookRecords = bookResult.docs;
                     if(allBookRecords.Count > 0)
                     {
-                        
+
                         //add the first returned book to the selected observable collection
                         Entries.Add(bookResult.docs[0]);
                         authorNames.Add(bookResult.docs[0].author_name[0].ToString());
