@@ -161,7 +161,7 @@ namespace project
             
             if (isDescription == true)
             {
-                //How to stop description going off screen
+                //How to stop description going off scree
                 description = description.Replace(".", "\n");
                 tblkDescription.Text = "Description: " + description;
             }
