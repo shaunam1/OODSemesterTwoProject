@@ -38,7 +38,7 @@ namespace project
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
-        List<Work> allWorks = new List<Work>();
+        List<Entry> allWorks = new List<Entry>();
         Shelf allBooks;
         string bookSearch = "";
         string selectedAuthor = "";
@@ -46,6 +46,7 @@ namespace project
         List<Book> searchResults = new List<Book>();
         string description = "";
         bool isDescription = false;
+        bool isReady = false;
         public MainWindow()
         {
             //this - main window
@@ -144,7 +145,7 @@ namespace project
         }
 
 
-        private void ShowInfo(Book book)
+        private async void ShowInfo(Book book)
         {
             string languages = "";
             selectedBook = book;
@@ -156,16 +157,19 @@ namespace project
             tblkBookInfo.Text = "Author: " + book.author_name[0];
             tblkPrice.Text = "Price: " + book.price;
             tblkPublished.Text = "First Published: " + book.first_publish_year;
-            CheckForDescription(book);
+            await CheckForDescription(book);
+            
             if (isDescription == true)
             {
+                //How to stop description going off screen
+                description = description.Replace(".", "\n");
                 tblkDescription.Text = "Description: " + description;
             }
             else
             {
                 tblkDescription.Text = "Description: Unavailable";
             }
-                tblkEditions.Text = "Current Editions: " + book.edition_count;
+            tblkEditions.Text = "Current Editions: " + book.edition_count;
             tblkLanguages.Text = "Available in: ";
 
             foreach (string l in book.language)
@@ -543,12 +547,12 @@ namespace project
 
         }
 
-        private async void CheckForDescription(Book book)
+        private async Task CheckForDescription(Book book)
         {
            
             if(book.author_key != null)
             {
-                string authorKey = book.author_key[0];
+                string authorKey = book.author_key[0].ToString();
 
                 var worksClient = new HttpClient();
                 var worksRequest = new HttpRequestMessage
@@ -569,7 +573,7 @@ namespace project
                     var workResult = JsonConvert.DeserializeObject<WorkRoot>(workBody);
 
                     //add books with this title to allBookRecords
-                    allWorks = workResult.works;
+                    allWorks = workResult.entries;
                     if (allWorks.Count > 0)
                     {
                         for (int i = 0; i < allWorks.Count; i++)
@@ -588,7 +592,7 @@ namespace project
                             }
                         }
                         //add the first returned book to the selected observable collection
-                      
+                        isReady = true;
                     }
                     else
                     {
