@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace project
         public int edition_count { get; set; }
         public int first_publish_year { get; set; }
         public bool has_fulltext { get; set; }
+        [Key]
         public string key { get; set; }
         public List<string> language { get; set; }
         public bool public_scan_b { get; set; }
@@ -48,4 +51,9 @@ namespace project
     }
 
 
+    public class BookData : DbContext
+    {
+        public BookData() : base("HomeBooksData") { }
+        public DbSet<Book> HomeBooks { get; set; }
+    }
 }
