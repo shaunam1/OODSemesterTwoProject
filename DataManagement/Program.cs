@@ -34,6 +34,14 @@ namespace DataManagement
                 Book book6 = books[5];
                 book6.price = "11.90";
 
+                //ADDED
+                book1.SyncListFields();
+                book2.SyncListFields();
+                book3.SyncListFields();
+                book4.SyncListFields();
+                book5.SyncListFields();
+                book6.SyncListFields();
+
                 db.HomeBooks.Add(book1);
                 db.HomeBooks.Add(book2);
                 db.HomeBooks.Add(book3);

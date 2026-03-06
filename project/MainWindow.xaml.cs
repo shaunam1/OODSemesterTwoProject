@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 
@@ -116,7 +117,8 @@ namespace project
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             //display the selected books
-            CreateBooks(chosenBooks);
+            //CreateBooks(chosenBooks);
+            ShowDatabaseBooks();
 
             //Set cart counts on each tab
             tblkCartCount.Text = cartCount.ToString();
@@ -154,10 +156,10 @@ namespace project
             //Display information about the selected book
             tblkTitle.Text = book.title;
             imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
-            tblkBookInfo.Text = "Author: " + book.author_name[0];
+            //tblkBookInfo.Text = "Author: " + book.author_name[0];
             tblkPrice.Text = "Price: " + book.price;
             tblkPublished.Text = "First Published: " + book.first_publish_year;
-            await CheckForDescription(book);
+            //await CheckForDescription(book);
             
             if (isDescription == true)
             {
@@ -172,13 +174,18 @@ namespace project
             tblkEditions.Text = "Current Editions: " + book.edition_count;
             tblkLanguages.Text = "Available in: ";
 
-            foreach (string l in book.language)
-            {
-                languages += l + ", ";
-            }
+            languages = book.LanguageData.ToString();
+            languages = languages.Replace(";", ", ");
 
-            languages = languages.Trim();
-            tblkLanguages.Text += languages.TrimEnd(',');
+            tblkLanguages.Text += languages;
+
+            //foreach (string l in book.language)
+            //{
+            //   languages += l + ", ";
+            //}
+
+            //languages = languages.Trim();
+            //tblkLanguages.Text += languages.TrimEnd(',');
         }
 
 
@@ -188,17 +195,28 @@ namespace project
             //Increase the cart count on all tabs
             if(selectedBook.price != "Not for sale")
             {
-                cartCount++;
-                tblkCartCount.Text = cartCount.ToString();
-                tblkShelfCartCount.Text = cartCount.ToString();
-                tblkCount.Text = cartCount.ToString();
+                if (!Cart.Contains(selectedBook))
+                {
+                    cartCount++;
+                    tblkCartCount.Text = cartCount.ToString();
+                    tblkShelfCartCount.Text = cartCount.ToString();
+                    tblkCount.Text = cartCount.ToString();
 
-                //add chosen books to JSON file of books in the cart
-                string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
-                System.IO.File.AppendAllText("cartItems.json", jsonString);
+                    //add chosen books to JSON file of books in the cart
+                    string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
+                    System.IO.File.AppendAllText("cartItems.json", jsonString);
+                    //Add the selected book to the ObservableCollection Cart
+                    Cart.Add(selectedBook);
+                }
+                else
+                {
+                    MessageBox.Show("This book is already in your cart");
+                }
+                
 
-                //Add the selected book to the ObservableCollection Cart
-                Cart.Add(selectedBook);
+               
+                
+                
             }
             else
             {
@@ -606,6 +624,25 @@ namespace project
             }
 
             
+        }
+
+        private void ShowDatabaseBooks()
+        {
+            BookData db = new BookData();
+
+            var query = from b in db.HomeBooks
+                        select b;
+
+            foreach (var book in query)
+            {
+                Entries.Add(book);
+                
+            }
+
+            //foreach (var book in Entries)
+            //{
+            //    authorNames.Add(book.author_name[0].ToString());
+            //}
         }
 
     }
