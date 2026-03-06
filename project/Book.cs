@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace project
         public bool has_fulltext { get; set; }
         [Key]
         public string key { get; set; }
-        //public List<string> language { get; set; }
+        public List<string> language { get; set; }
         public bool public_scan_b { get; set; }
         public string subtitle { get; set; }
         public string title { get; set; }
@@ -142,5 +143,7 @@ namespace project
         //ADDED
         public BookData() : base("HomeBooksDatav7") { }
         public DbSet<Book> HomeBooks { get; set; }
+
+
     }
 }

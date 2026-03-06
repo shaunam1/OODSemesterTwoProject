@@ -56,6 +56,13 @@ namespace DataManagement
                 book5.SyncListFields();
                 book6.SyncListFields();
 
+                book1.SyncListFields();
+                book2.SyncListFields();
+                book3.SyncListFields();
+                book4.SyncListFields();
+                book5.SyncListFields();
+                book6.SyncListFields();
+
                 db.HomeBooks.Add(book1);
                 db.HomeBooks.Add(book2);
                 db.HomeBooks.Add(book3);
