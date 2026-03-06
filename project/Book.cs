@@ -47,7 +47,7 @@ namespace project
         private List<string> _language;
 
         [NotMapped]
-        public List<string> language
+        public List<string> languages
         {
             get
             {
@@ -99,9 +99,9 @@ namespace project
         // Call before SaveChanges()
         public void SyncListFields()
         {
-            LanguageData = (language == null || !language.Any())
+            LanguageData = (languages == null || !languages.Any())
                 ? null
-                : string.Join(";", language);
+                : string.Join(";", languages);
             //AuthorData = (author_name == null || !author_name.Any())
             //    ? null
             //    : string.Join(";", author_name);
@@ -115,7 +115,7 @@ namespace project
         {
             
             author_name = new List<string>();
-            language = new List<string>(); // ensures setter runs on first use
+            languages = new List<string>(); // ensures setter runs on first use
         }
 
     }
