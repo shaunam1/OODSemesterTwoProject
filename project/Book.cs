@@ -15,6 +15,8 @@ namespace project
     {
         public List<string> author_key { get; set; }
         public List<string> author_name { get; set; }
+        public string author { get; set; }
+        public string authorKey { get; set; }
         public int cover_i { get; set; }
         public string ebook_access { get; set; }
         public int edition_count { get; set; }
@@ -65,6 +67,33 @@ namespace project
             }
         }
 
+        //public string AuthorData { get; set; }
+
+        //// Backing field
+        //private List<string> _author_name;
+
+        //[NotMapped]
+        //public List<string> author_name
+        //{
+        //    get
+        //    {
+        //        if (_author_name == null)
+        //        {
+        //            _author_name = string.IsNullOrEmpty(AuthorData)
+        //                ? new List<string>()
+        //                : AuthorData.Split(';').ToList();
+        //        }
+        //        return _author_name;
+        //    }
+        //    set
+        //    {
+        //        _author_name = value;
+        //        AuthorData = (value == null || !value.Any())
+        //            ? null
+        //            : string.Join(";", value);
+        //    }
+        //}
+
 
         // Call before SaveChanges()
         public void SyncListFields()
@@ -72,6 +101,9 @@ namespace project
             LanguageData = (language == null || !language.Any())
                 ? null
                 : string.Join(";", language);
+            //AuthorData = (author_name == null || !author_name.Any())
+            //    ? null
+            //    : string.Join(";", author_name);
         }
 
 
@@ -80,7 +112,7 @@ namespace project
         // Constructor
         public Book()
         {
-            author_key = new List<string>();
+            
             author_name = new List<string>();
             language = new List<string>(); // ensures setter runs on first use
         }
@@ -108,7 +140,7 @@ namespace project
     {
         //public BookData() : base("HomeBooksData") { }
         //ADDED
-        public BookData() : base("HomeBooksDatav4") { }
+        public BookData() : base("HomeBooksDatav7") { }
         public DbSet<Book> HomeBooks { get; set; }
     }
 }

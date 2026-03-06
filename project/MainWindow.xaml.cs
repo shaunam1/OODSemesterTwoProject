@@ -35,7 +35,7 @@ namespace project
         string bookSearchAPI = "https://openlibrary.org/search.json?q=the+lord+of+the+rings";
         string[] genres = { "Horror", "Fantasy", "Thriller", "Romance" };
         List<string> authors = new List<string>();
-        string[] originalAuthors = { "R. F. Kuang", "Madeline Miller", "Donna Tartt", "Suzanne Collins", "S. E. Hinton", "Stephen King", "All"  };
+        string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
         string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
@@ -156,10 +156,34 @@ namespace project
             //Display information about the selected book
             tblkTitle.Text = book.title;
             imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
-            //tblkBookInfo.Text = "Author: " + book.author_name[0];
-            tblkPrice.Text = "Price: " + book.price;
+            if (book.author != null)
+            {
+                string author = "";
+                //if the book is coming from the HomeBooksv4 database 
+                //the languages are in Language data
+                tblkBookInfo.Text = "Author: ";
+
+                author = book.author.ToString();
+
+                tblkBookInfo.Text += author;
+            }
+            else
+            {
+                //if the book was searched for  
+                //the author is in book.author_name
+                tblkBookInfo.Text = "Author: " + book.author_name[0];
+                
+            }
+
+            tblkPrice.Text = "Price: €";
+            if (book.price is null)
+            {
+                book.price = "Not for sale";
+                tblkPrice.Text = tblkPrice.Text.TrimEnd('€');
+            }
+            tblkPrice.Text += book.price;
             tblkPublished.Text = "First Published: " + book.first_publish_year;
-            //await CheckForDescription(book);
+            await CheckForDescription(book);
             
             if (isDescription == true)
             {
@@ -172,20 +196,33 @@ namespace project
                 tblkDescription.Text = "Description: Unavailable";
             }
             tblkEditions.Text = "Current Editions: " + book.edition_count;
-            tblkLanguages.Text = "Available in: ";
 
-            languages = book.LanguageData.ToString();
-            languages = languages.Replace(";", ", ");
+            if (book.LanguageData != null)
+            {
+                //if the book is coming from the HomeBooksv4 database 
+                //the languages are in Language data
+                tblkLanguages.Text = "Available in: ";
 
-            tblkLanguages.Text += languages;
+                languages = book.LanguageData.ToString();
+                languages = languages.Replace(";", ", ");
 
-            //foreach (string l in book.language)
-            //{
-            //   languages += l + ", ";
-            //}
+                tblkLanguages.Text += languages;
+            }
+            else
+            {
+                //if the book was searched for  
+                //the languages are in book.language
+                foreach (string l in book.language)
+                {
+                    languages += l + ", ";
+                }
 
-            //languages = languages.Trim();
-            //tblkLanguages.Text += languages.TrimEnd(',');
+                languages = languages.Trim();
+                tblkLanguages.Text += languages.TrimEnd(',');
+            }
+
+
+
         }
 
 
@@ -412,7 +449,7 @@ namespace project
                     {
                         searchResults.Add(bookResult.docs[j]);
                         //if there is an author
-                        if(bookResult.docs[j].author_name != null)
+                        if(bookResult.docs[j].author_name.Count > 0)
                         {
                             //Add the author to authorNames
                             if (!authorNames.Contains(bookResult.docs[j].author_name[0].ToString()))
@@ -510,118 +547,106 @@ namespace project
         {
             List<Book> authorResults = new List<Book>();
             selectedAuthor = lbxAuthor.SelectedItem as string;
+            List<Book> bookList = new List<Book>();
 
-            //If filtering Entries
             if (isSearchAuthors == false)
             {
-                if (selectedAuthor != null && selectedAuthor != "All")
-                {
-                    //if one author is selected
-                    //Add books by that author to authorResults
-                    foreach (Book b in Entries)
-                    {
-                        if (b.author_name[0] == selectedAuthor)
-                        {
-                            authorResults.Add(b);
-                        }
-
-                    }
-
-                    //set this filtered list as the ItemsSource
-                    selectedBooks.ItemsSource = authorResults;
-                }
-                else
-                {
-                    //If All or no author is selected Entries is the ItemsSource
-                    selectedBooks.ItemsSource = Entries;
-                }
+                bookList = Entries.ToList();
             }
             else
             {
-                //If filtering search results
-                if (selectedAuthor != null && selectedAuthor != "All")
-                {
-                    //if one author is selected
-                    //Add books by that author to authorResults
-                    foreach (Book b in searchResults)
-                    {
-                        if(b.author_name != null)
-                        {
-                            if (b.author_name[0] == selectedAuthor)
-                            {
-                                authorResults.Add(b);
-                            }
-                        }
-                    }
-                    //set this filtered list as the ItemsSource
-                    selectedBooks.ItemsSource = authorResults;
-                }
-                else
-                {
-                    //If All or no author is selected Entries is the ItemsSource
-                    selectedBooks.ItemsSource = searchResults;
-                }
+                bookList = searchResults;
             }
 
+            if (selectedAuthor != null && selectedAuthor != "All")
+            {
+                    //if one author is selected
+                    //Add books by that author to authorResults
+                foreach (Book b in bookList)
+                {
+                    if ((b.author_name.Count > 0 && b.author_name[0] == selectedAuthor) || b.author != null && b.author == selectedAuthor)
+                    {
+                        authorResults.Add(b);
+                    }
+
+                }
+
+                    //set this filtered list as the ItemsSource
+                    selectedBooks.ItemsSource = authorResults;
+            }
+            else
+            {
+                //If All or no author is selected Entries is the ItemsSource
+                selectedBooks.ItemsSource = bookList;
+            }
         }
+
+        
 
         private async Task CheckForDescription(Book book)
         {
-           
-            if(book.author_key != null)
+            string key = "";
+            if (book.author_key != null)
             {
-                string authorKey = book.author_key[0].ToString();
 
-                var worksClient = new HttpClient();
-                var worksRequest = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    //how do I include the {} in the URL???
-                    RequestUri = new Uri($"https://openlibrary.org/authors/{authorKey}/works.json"),
-                    Headers =
-                {
-
-                }
-                    ,
-                };
-                using (var worksResponse = await worksClient.SendAsync(worksRequest))
-                {
-                    worksResponse.EnsureSuccessStatusCode();
-                    var workBody = await worksResponse.Content.ReadAsStringAsync();
-                    var workResult = JsonConvert.DeserializeObject<WorkRoot>(workBody);
-
-                    //add books with this title to allBookRecords
-                    allWorks = workResult.entries;
-                    if (allWorks.Count > 0)
-                    {
-                        for (int i = 0; i < allWorks.Count; i++)
-                        {
-                            if (allWorks[i].title == book.title)
-                            {
-                                if (allWorks[i].description != null)
-                                {
-                                    description = allWorks[i].description.ToString();
-                                    isDescription = true;
-                                }
-                                else
-                                {
-                                    isDescription = false;
-                                }
-                            }
-                        }
-                        //add the first returned book to the selected observable collection
-                        isReady = true;
-                    }
-                    else
-                    {
-                        //do i need this???
-                        MessageBox.Show("No results found");
-                    }
-
-
-                }
+                key = book.author_key[0].ToString();
+            }
+            else
+            {
+                key = book.authorKey;
+            }
+           
+            
+            var worksClient = new HttpClient();
+            var worksRequest = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                //how do I include the {} in the URL???
+                RequestUri = new Uri($"https://openlibrary.org/authors/{key}/works.json"),
+                Headers =
+            {
 
             }
+                ,
+            };
+            using (var worksResponse = await worksClient.SendAsync(worksRequest))
+            {
+                worksResponse.EnsureSuccessStatusCode();
+                var workBody = await worksResponse.Content.ReadAsStringAsync();
+                var workResult = JsonConvert.DeserializeObject<WorkRoot>(workBody);
+
+                //add books with this title to allBookRecords
+                allWorks = workResult.entries;
+                if (allWorks.Count > 0)
+                {
+                    for (int i = 0; i < allWorks.Count; i++)
+                    {
+                        if (allWorks[i].title == book.title)
+                        {
+                            if (allWorks[i].description != null)
+                            {
+                                description = allWorks[i].description.ToString();
+                                isDescription = true;
+                            }
+                            else
+                            {
+                                isDescription = false;
+                            }
+                        }
+                    }
+                    //add the first returned book to the selected observable collection
+                    isReady = true;
+                }
+                else
+                {
+                    //do i need this???
+                    MessageBox.Show("No results found");
+                }
+
+
+                }
+
+            
 
             
         }
@@ -639,11 +664,25 @@ namespace project
                 
             }
 
-            //foreach (var book in Entries)
-            //{
-            //    authorNames.Add(book.author_name[0].ToString());
-            //}
+            authorNames.Add("All");
+
+            foreach (var book in Entries)
+            {
+                authorNames.Add(book.author.ToString());
+            }
+            
         }
 
+        private void btnRemoveCart_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            Book book = btn.DataContext as Book;
+            Cart.Remove(book);
+            cartCount--;
+            tblkCartCount.Text = cartCount.ToString();
+            tblkShelfCartCount.Text = cartCount.ToString();
+            tblkCount.Text = cartCount.ToString();
+
+        }
     }
 }

@@ -23,38 +23,16 @@ namespace DataManagement
 
                 Book book1 = books[0];
                 book1.price = "11.95";
-                book1.author =  "R.F. Kuang";
-                book1.authorKey = "OL7486601A";
                 Book book2 = books[1];
                 book2.price = "12.00";
-                book2.author = "Madeline Miller";
-                book2.authorKey = "OL1926056A";
                 Book book3 = books[2];
                 book3.price = "13.50";
-                book3.author = "Donna Tartt";
-                book3.authorKey = "OL841112A";
                 Book book4 = books[3];
                 book4.price = "14.00";
-                book4.author = "Suzanne Collins";
-                book4.authorKey = "OL1394359A";
                 Book book5 = books[4];
                 book5.price = "9.99";
-                book5.author = "S.E. Hinton";
-                book5.authorKey = "OL397826A";
                 Book book6 = books[5];
                 book6.price = "11.90";
-                book6.author = "Stephen King";
-                book6.authorKey = "OL19981A";
-
-
-
-                //ADDED
-                book1.SyncListFields();
-                book2.SyncListFields();
-                book3.SyncListFields();
-                book4.SyncListFields();
-                book5.SyncListFields();
-                book6.SyncListFields();
 
                 db.HomeBooks.Add(book1);
                 db.HomeBooks.Add(book2);
