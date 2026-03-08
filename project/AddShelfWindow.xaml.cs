@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace project
 {
-    /// <summary>
-    /// Interaction logic for AddShelfWindow.xaml
-    /// </summary>
     public partial class AddShelfWindow : Window
     {
         public AddShelfWindow()
@@ -36,14 +33,6 @@ namespace project
 
             //Close window when shelf added
             this.Close();
-           
-            //If no of shelves > 1
-            //new window
-            //Select shelf
-            //added to selected shelf
-            //Dropdown???
-
-            
         }
     }
 }

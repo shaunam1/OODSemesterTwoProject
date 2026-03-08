@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace project
 {
-    /// <summary>
-    /// Interaction logic for DeleteShelfWindow.xaml
-    /// </summary>
     public partial class DeleteShelfWindow : Window
     {
         Shelf selectedShelf;
@@ -28,13 +25,16 @@ namespace project
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
-            //How remove All Books shelf???
-            //Populate combobox with shelves
+            //Populate combobox with all shelves apart from All books
             List<Shelf> deletableShelves = new List<Shelf>();
             for (int i = 1; i< main.AllShelves.Count; i++)
             {
-                deletableShelves.Add(main.AllShelves[i]);
+                if (main.AllShelves[i].ShelfName != "AllBooks")
+                {
+                    deletableShelves.Add(main.AllShelves[i]);
+                }
             }
+            
             cbxDeleteShelves.ItemsSource = deletableShelves;
 
         }
@@ -44,8 +44,6 @@ namespace project
             //shelf selected by the user is selectedShelf
             selectedShelf = cbxDeleteShelves.SelectedItem as Shelf;
         }
-
-
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -57,18 +55,9 @@ namespace project
             }
             else
             {
-                //if the shelf selected is not "All Books" delete it
-                if (selectedShelf.ShelfName != "All Books")
-                {
-                    //Remove shelf from observable collection and close window
-                    main.AllShelves.Remove(selectedShelf);
-                    this.Close();
-                }
-                else
-                {
-                    //Inform user this shelf cannot be deleted
-                    MessageBox.Show("All Books shelf cannot be deleted");
-                }
+                //Remove shelf from observable collection and close window
+                main.AllShelves.Remove(selectedShelf);
+                this.Close();
 
             }
         }

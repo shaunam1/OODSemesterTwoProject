@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace project
 {
-    /// <summary>
-    /// Interaction logic for ChooseShelfWindow.xaml
-    /// </summary>
     public partial class ChooseShelfWindow : Window
     {
         Shelf selectedShelf;
@@ -29,6 +26,7 @@ namespace project
         {
             MainWindow main = this.Owner as MainWindow;
             Book selectedBook = main.selectedBook;
+
             //If no shelf has been selected
             if (selectedShelf == null)
             {
@@ -36,8 +34,8 @@ namespace project
             }
             else
             {
-                //If the shelf already contains the selected book
-               selectedShelf.Books.Add(selectedBook);
+                //Add to the selected shelf 
+                selectedShelf.Books.Add(selectedBook);
                 if (selectedShelf.ShelfName != "All Books")
                 {
                     //add to Observable collection if not already added
@@ -46,7 +44,6 @@ namespace project
                         main.ShelvedEntries.Add(selectedBook);
                     }
                 }
-
                 this.Close(); 
             }
             
@@ -57,6 +54,9 @@ namespace project
             MainWindow main = this.Owner as MainWindow;
             List<Shelf> potentialShelves = new List<Shelf>();
             Book selectedBook = main.selectedBook;
+
+            //if a shelf does not contain this book
+            //it is added to the dropdown of shelves that the user can add the selectedBook to
             foreach (Shelf s in main.AllShelves)
             {
                 if (!s.Books.Contains(selectedBook))
