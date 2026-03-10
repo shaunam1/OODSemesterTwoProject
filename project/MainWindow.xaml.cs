@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -40,6 +41,7 @@ namespace project
         string description = "";
         bool isDescription = false;
         bool isReady = false;
+        decimal total = 0;
         public MainWindow()
         {
             //this - main window
@@ -114,6 +116,7 @@ namespace project
             tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
+            tblkTotalCost.Text = total.ToString();
 
             //Set ItemsSource of listbox
             lbxAuthor.ItemsSource = authorNames;
@@ -231,6 +234,9 @@ namespace project
                     tblkCartCount.Text = cartCount.ToString();
                     tblkShelfCartCount.Text = cartCount.ToString();
                     tblkCount.Text = cartCount.ToString();
+                    decimal cost = decimal.Parse(selectedBook.price);
+                    total += cost;
+                    tblkTotalCost.Text = total.ToString();
 
                     //add chosen books to JSON file of books in the cart
                     //SHOULD I REMOVE JSON???
@@ -579,6 +585,9 @@ namespace project
             tblkCartCount.Text = cartCount.ToString();
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
+            decimal cost = decimal.Parse(book.price);
+            total -= cost;
+            tblkTotalCost.Text = total.ToString();
 
         }
     }
