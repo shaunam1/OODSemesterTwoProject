@@ -86,10 +86,12 @@
     <Compile Include="DeleteShelfWindow.xaml.cs">
       <DependentUpon>DeleteShelfWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Order.cs" />
     <Compile Include="RemoveFromShelfWindow.xaml.cs">
       <DependentUpon>RemoveFromShelfWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shelf.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Work.cs" />
     <Page Include="AddShelfWindow.xaml">
       <SubType>Designer</SubType>
