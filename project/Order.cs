@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -7,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace project
 {
-    internal class Order
+    public class Order
     {
+        [Key]
         public int OrderNumber { get; set; }
         public decimal Total { get; set; }
         public User User { get; set; }

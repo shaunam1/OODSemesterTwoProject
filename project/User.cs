@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace project
 {
-    internal class User
+    public class User
     {
+        
         public int UserID { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -20,13 +21,35 @@ namespace project
         public string CardNumber { get; set; }
         public DateTime CardDate { get; set; }
         public int CVV { get; set; }
-        public List<Shelf> UserShelves { get; set; }
         public List<Order> Orders { get; set; }
 
-        public class UserData : DbContext
+        public User()
         {
-            public UserData() : base("UserData") { }
-            public DbSet<User> Users { get; set; }
+
         }
+
+        public User(int userId, string username, string password, string firstName, string lastName, string addressOne, string addressTwo, string eircode, string cardNumber, DateTime date, int cvv)
+        {
+            UserID = userId;
+            Username = username;
+            Password = password;
+            FirstName = firstName;
+            LastName = lastName;
+            AddressLineOne = addressOne;
+            AddressLineTwo = addressTwo;
+            Eircode = eircode;
+            CardNumber = cardNumber;
+            CardDate = date;
+            CVV = cvv;
+        }
+
+
+        
+    }
+
+    public class UserData : DbContext
+    {
+        public UserData() : base("UserData") { }
+        public DbSet<User> Users { get; set; }
     }
 }
