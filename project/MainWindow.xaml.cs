@@ -42,6 +42,7 @@ namespace project
         bool isDescription = false;
         bool isReady = false;
         decimal total = 0;
+        public bool isUserOne = true;
         public MainWindow()
         {
             //this - main window
@@ -109,7 +110,12 @@ namespace project
 
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
+            Login loginWindow = new Login();
+            loginWindow.Owner = this;
+            loginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            loginWindow.ShowDialog();
             //display the books from HomeBooksDatav7 database
+            PopulateCheckout();
             ShowDatabaseBooks();
 
             //Set cart counts on each tab
@@ -589,6 +595,38 @@ namespace project
             total -= cost;
             tblkTotalCost.Text = total.ToString();
 
+        }
+
+        private void PopulateCheckout()
+        {
+            int userNumber = 0;
+            UserData db = new UserData();
+
+            var query = from u in db.Users
+                        select u;
+
+            List<User> users = new List<User>();
+            foreach (var user in query)
+            {
+                users.Add(user);
+            }
+
+            if (isUserOne == true)
+            {
+                userNumber = 0;
+            }
+            else
+            {
+                userNumber = 1;
+            }
+
+            tbxFullName.Text = users[userNumber].FirstName + " " + users[userNumber].LastName;
+            tbxAddressLine1.Text = users[userNumber].AddressLineOne;
+            tbxAddressLine2.Text = users[userNumber].AddressLineTwo;
+            tbxEircode.Text = users[userNumber].Eircode;
+            tbxCardNumber.Text = users[userNumber].CardNumber;
+            tbxDate.Text = users[userNumber].CardDate.ToString();
+            tbxCVV.Text = users[userNumber].CVV.ToString();
         }
     }
 }

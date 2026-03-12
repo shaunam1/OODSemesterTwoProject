@@ -86,6 +86,9 @@
     <Compile Include="DeleteShelfWindow.xaml.cs">
       <DependentUpon>DeleteShelfWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Order.cs" />
     <Compile Include="RemoveFromShelfWindow.xaml.cs">
       <DependentUpon>RemoveFromShelfWindow.xaml</DependentUpon>
@@ -106,6 +109,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DeleteShelfWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
