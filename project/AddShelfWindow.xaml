@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:project"
         mc:Ignorable="d"
         Title="AddShelfWindow" Height="400" Width="700" 
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"  Background="RosyBrown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="15*"></RowDefinition>

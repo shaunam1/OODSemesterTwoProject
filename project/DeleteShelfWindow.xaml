@@ -6,7 +6,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:project"
         mc:Ignorable="d"
-        Title="DeleteShelfWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="DeleteShelfWindow" Height="450" Width="800" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" Background="RosyBrown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="15*"></RowDefinition>
