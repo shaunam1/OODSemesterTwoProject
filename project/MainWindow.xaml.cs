@@ -653,12 +653,18 @@ namespace project
 
         private void UpdateOrdersDatabase()
         {
-            List<Book> booksInCart = new List<Book>();
+            OrderBookDBContext db = new OrderBookDBContext();
+            HashSet<Book> booksInCart = new HashSet<Book>();
             foreach (Book b in Cart)
             {
-                booksInCart.Add(b);
+                Book book = db.Books.Find(b.key);
+                if (book != null)
+                {
+                    booksInCart.Add(book);
+                }
+                
             }
-            OrderData db = new OrderData();
+            
 
             Order order1 = new Order(total, currentUser.UserID, booksInCart);
 

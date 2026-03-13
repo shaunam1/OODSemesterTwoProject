@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace project
 {
@@ -19,31 +21,57 @@ namespace project
         [ForeignKey("User")]
         public int UserID { get; set; }
         public User User { get; set; }
-        public List<Book> Books { get; set; }
         public List<Shelf> Shelves { get; set; }
 
-        public ICollection<OrderBook> OrderBooks { get; set; }
+        
 
         //Constructors
         public Order()
         {
-
+            this.Books = new HashSet<Book>();
         }
 
-        public Order(decimal total, int userID, List<Book> books)
+        public Order(decimal total, int userID, HashSet<Book> books)
         {
             
             Total = total;
             UserID = userID;
-            Books = books;
+            this.Books = books;
 
         }
+
+        public virtual ICollection<Book> Books { get; set; }
 
     }
 
     public class OrderData : DbContext
     {
-        public OrderData() : base("OrderDatav8") { }
+        public OrderData() : base("AllOrderDetailsv5") { }
         public DbSet<Order> Orders { get; set; }
     }
+
+    public class OrderBookDBContext : DbContext
+    {
+        public OrderBookDBContext() : base("AllOrderDetailsv5")
+        {
+        }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Book> Books { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Order>()
+                .HasMany<Book>(o => o.Books)
+                .WithMany(b => b.Orders)
+                .Map(bo =>
+                {
+                    bo.MapLeftKey("Order_OrderNumber");
+                    bo.MapRightKey("Book_key");
+                    bo.ToTable("OrderBooks");
+                });
+        }
+        
+    }
+
 }

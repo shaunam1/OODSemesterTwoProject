@@ -32,7 +32,7 @@ namespace project
 
         public string price { get; set; }
 
-        public ICollection<OrderBook> OrderBooks { get; set; }
+        public ICollection<Order> Orders { get; set; }
         public string Cover_URL
         {
             get
@@ -118,6 +118,7 @@ namespace project
             
             author_name = new List<string>();
             languages = new List<string>(); // ensures setter runs on first use
+            this.Orders = new HashSet<Order>();
         }
 
     }
@@ -143,7 +144,7 @@ namespace project
     {
         //public BookData() : base("HomeBooksData") { }
         //ADDED
-        public BookData() : base("HomeBooksDatav9") { }
+        public BookData() : base("AllOrderDetailsv5") { }
         public DbSet<Book> HomeBooks { get; set; }
 
 
