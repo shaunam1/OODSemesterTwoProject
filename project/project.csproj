@@ -90,6 +90,7 @@
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Compile Include="Order.cs" />
+    <Compile Include="OrderBook.cs" />
     <Compile Include="RemoveFromShelfWindow.xaml.cs">
       <DependentUpon>RemoveFromShelfWindow.xaml</DependentUpon>
     </Compile>

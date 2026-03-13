@@ -50,7 +50,7 @@ namespace project
 
     public class UserData : DbContext
     {
-        public UserData() : base("OrderDatav6") { }
+        public UserData() : base("OrderDatav8") { }
         public DbSet<User> Users { get; set; }
     }
 }

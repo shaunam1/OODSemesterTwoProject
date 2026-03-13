@@ -44,8 +44,10 @@ namespace project
         decimal total = 0;
         public bool isUserOne = true;
         User currentUser;
+       
         public MainWindow()
         {
+
             //this - main window
             DataContext = this;
             entries = new ObservableCollection<Book>();
@@ -614,23 +616,39 @@ namespace project
                 userNumber = 1;
             }
 
-            tbxFullName.Text = users[userNumber].FirstName + " " + users[userNumber].LastName;
+            string monthYear = users[userNumber].CardDate.ToString("MM / yy");
+
+            tblkFullName.Text = users[userNumber].FirstName + " " + users[userNumber].LastName;
             tbxAddressLine1.Text = users[userNumber].AddressLineOne;
             tbxAddressLine2.Text = users[userNumber].AddressLineTwo;
             tbxEircode.Text = users[userNumber].Eircode;
             tbxCardNumber.Text = users[userNumber].CardNumber;
-            tbxDate.Text = users[userNumber].CardDate.ToString();
+            tbxDate.Text = monthYear;
             tbxCVV.Text = users[userNumber].CVV.ToString();
         }
 
         private void btnBuyNow_Click(object sender, RoutedEventArgs e)
         {
-            UpdateOrdersDatabase();
-            Cart.Clear();
-            total = 0;
-            cartCount = 0;
-            RefreshCartCountsAndTotal();
-            MessageBox.Show("Thank you for your order! You will receive an email with delivery details shortly.");
+            if(Cart.Count > 0)
+            {
+                bool isCorrect;
+                isCorrect = CheckUserDetailsCorrect();
+                if (isCorrect == true)
+                {
+                    UpdateOrdersDatabase();
+                    Cart.Clear();
+                    total = 0;
+                    cartCount = 0;
+                    RefreshCartCountsAndTotal();
+                    MessageBox.Show("Thank you for your order! You will receive an email with delivery details shortly.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("There are no books in your cart!");
+            }
+            
+            
         }
 
         private void UpdateOrdersDatabase()
@@ -654,6 +672,22 @@ namespace project
             tblkShelfCartCount.Text = cartCount.ToString();
             tblkCount.Text = cartCount.ToString();
             tblkTotalCost.Text = total.ToString();
+        }
+
+        private bool CheckUserDetailsCorrect()
+        {
+            bool isCorrect = false;
+            if(tbxAddressLine1.Text != currentUser.AddressLineOne || tbxAddressLine2.Text != currentUser.AddressLineTwo || tbxEircode.Text != currentUser.Eircode || tbxCardNumber.Text != currentUser.CardNumber || tbxDate.Text != currentUser.CardDate.ToString("MM / yy") || tbxCVV.Text != currentUser.CVV.ToString())
+            {
+                MessageBox.Show("Customer delivery details or card details are incorrect");
+
+            }
+            else
+            {
+                isCorrect = true;
+            }
+
+            return isCorrect;
         }
     }
 }

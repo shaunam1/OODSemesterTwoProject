@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.IO.Packaging;
 using System.Linq;
 using System.Text;
@@ -11,6 +13,8 @@ namespace project
     public class Shelf
     {
         //Properties
+        [Key]
+        public int ShelfID { get; set; }
         public string ShelfName { get; set; }
         public ObservableCollection<Book> Books { get; set; }
 
@@ -39,4 +43,9 @@ namespace project
         }
     }
 
+    public class ShelfData : DbContext
+    {
+        public ShelfData() : base("OrderDatav7") { }
+        public DbSet<Shelf> Shelves { get; set; }
+    }
 }

@@ -31,6 +31,8 @@ namespace project
         public string title { get; set; }
 
         public string price { get; set; }
+
+        public ICollection<OrderBook> OrderBooks { get; set; }
         public string Cover_URL
         {
             get
@@ -99,9 +101,9 @@ namespace project
         // Call before SaveChanges()
         public void SyncListFields()
         {
-            LanguageData = (languages == null || !languages.Any())
+            LanguageData = (language == null || !language.Any())
                 ? null
-                : string.Join(";", languages);
+                : string.Join(";", language);
             //AuthorData = (author_name == null || !author_name.Any())
             //    ? null
             //    : string.Join(";", author_name);
@@ -141,7 +143,7 @@ namespace project
     {
         //public BookData() : base("HomeBooksData") { }
         //ADDED
-        public BookData() : base("HomeBooksDatav7") { }
+        public BookData() : base("HomeBooksDatav9") { }
         public DbSet<Book> HomeBooks { get; set; }
 
 

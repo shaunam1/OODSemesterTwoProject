@@ -20,6 +20,9 @@ namespace project
         public int UserID { get; set; }
         public User User { get; set; }
         public List<Book> Books { get; set; }
+        public List<Shelf> Shelves { get; set; }
+
+        public ICollection<OrderBook> OrderBooks { get; set; }
 
         //Constructors
         public Order()
@@ -40,7 +43,7 @@ namespace project
 
     public class OrderData : DbContext
     {
-        public OrderData() : base("OrderDatav6") { }
+        public OrderData() : base("OrderDatav8") { }
         public DbSet<Order> Orders { get; set; }
     }
 }
