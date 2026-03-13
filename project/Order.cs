@@ -11,17 +11,36 @@ namespace project
 {
     public class Order
     {
+        //Properties
         [Key]
         public int OrderNumber { get; set; }
         public decimal Total { get; set; }
+
+        [ForeignKey("User")]
+        public int UserID { get; set; }
         public User User { get; set; }
         public List<Book> Books { get; set; }
 
-        public class OrderData : DbContext
+        //Constructors
+        public Order()
         {
-            public OrderData() : base("OrderData") { }
-            public DbSet<Order> Orders { get; set; }
+
         }
 
+        public Order(decimal total, int userID, List<Book> books)
+        {
+            
+            Total = total;
+            UserID = userID;
+            Books = books;
+
+        }
+
+    }
+
+    public class OrderData : DbContext
+    {
+        public OrderData() : base("OrderDatav6") { }
+        public DbSet<Order> Orders { get; set; }
     }
 }

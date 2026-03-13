@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace project
 {
     public class User
     {
-        
+        [Key]
         public int UserID { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -49,7 +50,7 @@ namespace project
 
     public class UserData : DbContext
     {
-        public UserData() : base("UserData") { }
+        public UserData() : base("OrderDatav6") { }
         public DbSet<User> Users { get; set; }
     }
 }

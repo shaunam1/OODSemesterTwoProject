@@ -16,7 +16,7 @@ namespace UserDataManagement2
             using (db)
             {
                 User user1 = new User(1, "UserOne", "useronepassword", "John", "Doe", "Sligo Town", "Sligo", "S87T0P5", "1234 5678 9101 1213", new DateTime(2028, 01, 01), 123);
-                User user2 = new User(1, "UserTwo", "usertwopassword", "Jane", "Doe", "Grange", "Sligo", "S85T0Q1", "1234 5678 5678 1234", new DateTime(2029, 07, 03), 567);
+                User user2 = new User(2, "UserTwo", "usertwopassword", "Jane", "Doe", "Grange", "Sligo", "S85T0Q1", "1234 5678 5678 1234", new DateTime(2029, 07, 03), 567);
 
                 db.Users.Add(user1);
                 db.Users.Add(user2);

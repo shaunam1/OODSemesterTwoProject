@@ -43,6 +43,7 @@ namespace project
         bool isReady = false;
         decimal total = 0;
         public bool isUserOne = true;
+        User currentUser;
         public MainWindow()
         {
             //this - main window
@@ -119,10 +120,7 @@ namespace project
             ShowDatabaseBooks();
 
             //Set cart counts on each tab
-            tblkCartCount.Text = cartCount.ToString();
-            tblkShelfCartCount.Text = cartCount.ToString();
-            tblkCount.Text = cartCount.ToString();
-            tblkTotalCost.Text = total.ToString();
+            RefreshCartCountsAndTotal();
 
             //Set ItemsSource of listbox
             lbxAuthor.ItemsSource = authorNames;
@@ -237,12 +235,9 @@ namespace project
                 {
                     //Increase the cart count
                     cartCount++;
-                    tblkCartCount.Text = cartCount.ToString();
-                    tblkShelfCartCount.Text = cartCount.ToString();
-                    tblkCount.Text = cartCount.ToString();
                     decimal cost = decimal.Parse(selectedBook.price);
                     total += cost;
-                    tblkTotalCost.Text = total.ToString();
+                    RefreshCartCountsAndTotal();
 
                     //add chosen books to JSON file of books in the cart
                     //SHOULD I REMOVE JSON???
@@ -588,12 +583,9 @@ namespace project
             Book book = btn.DataContext as Book;
             Cart.Remove(book);
             cartCount--;
-            tblkCartCount.Text = cartCount.ToString();
-            tblkShelfCartCount.Text = cartCount.ToString();
-            tblkCount.Text = cartCount.ToString();
             decimal cost = decimal.Parse(book.price);
             total -= cost;
-            tblkTotalCost.Text = total.ToString();
+            RefreshCartCountsAndTotal();
 
         }
 
@@ -613,10 +605,12 @@ namespace project
 
             if (isUserOne == true)
             {
+                currentUser = users[0];
                 userNumber = 0;
             }
             else
             {
+                currentUser = users[1];
                 userNumber = 1;
             }
 
@@ -627,6 +621,39 @@ namespace project
             tbxCardNumber.Text = users[userNumber].CardNumber;
             tbxDate.Text = users[userNumber].CardDate.ToString();
             tbxCVV.Text = users[userNumber].CVV.ToString();
+        }
+
+        private void btnBuyNow_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateOrdersDatabase();
+            Cart.Clear();
+            total = 0;
+            cartCount = 0;
+            RefreshCartCountsAndTotal();
+            MessageBox.Show("Thank you for your order! You will receive an email with delivery details shortly.");
+        }
+
+        private void UpdateOrdersDatabase()
+        {
+            List<Book> booksInCart = new List<Book>();
+            foreach (Book b in Cart)
+            {
+                booksInCart.Add(b);
+            }
+            OrderData db = new OrderData();
+
+            Order order1 = new Order(total, currentUser.UserID, booksInCart);
+
+            db.Orders.Add(order1);
+            db.SaveChanges();
+        }
+
+        private void RefreshCartCountsAndTotal()
+        {
+            tblkCartCount.Text = cartCount.ToString();
+            tblkShelfCartCount.Text = cartCount.ToString();
+            tblkCount.Text = cartCount.ToString();
+            tblkTotalCost.Text = total.ToString();
         }
     }
 }
