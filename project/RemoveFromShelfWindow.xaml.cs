@@ -1,22 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace project
 {
-    /// <summary>
-    /// Interaction logic for RemoveFromShelfWindow.xaml
-    /// </summary>
     public partial class RemoveFromShelfWindow : Window
     {
         Shelf selectedShelf;
@@ -33,13 +20,14 @@ namespace project
             Book selectedBook = main.selectedBook;
             foreach (Shelf s in main.AllShelves)
             {
+                //If a shelf contains the selected book it is added to the listbox of shelves that
+                //book can be removed from
                 if (s.Books.Contains(selectedBook))
                 {
                     potentialShelves.Add(s);
                 }
             }
             cbxShelves.ItemsSource = potentialShelves;
-
         }
 
         private void cbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -76,11 +64,8 @@ namespace project
                     //remove it from that shelf 
                     selectedShelf.Books.Remove(selectedBook);
                 }
-
             }
-
             this.Close();
-
         }
 
 

@@ -194,15 +194,7 @@ namespace project
             tblkPublished.Text = "First Published: " + book.first_publish_year;
 
             await CheckForDescription(book);
-            if (isDescription == true)
-            {
-                description = description.Replace(".", "\n");
-                tblkDescription.Text = "Description: " + description;
-            }
-            else
-            {
-                tblkDescription.Text = "Description: Unavailable";
-            }
+            tblkDescription.Text = "Description: " + description;
 
             tblkEditions.Text = "Current Editions: " + book.edition_count;
 
@@ -425,8 +417,6 @@ namespace project
             shelfBooks.ItemsSource = searchResults;
         }
 
-
-        //FINISHED EDITING HERE
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
             if (allShelves.Count > 1)
@@ -437,6 +427,7 @@ namespace project
             }
             else
             {
+                //If there is only one shelf
                 if (ShelvedEntries.Contains(selectedBook))
                 {
                     ShelvedEntries.Remove(selectedBook);
@@ -452,13 +443,16 @@ namespace project
         private void FilterAuthors(object sender, SelectionChangedEventArgs e)
         {
             List<Book> authorResults = new List<Book>();
-            selectedAuthor = lbxAuthor.SelectedItem as string;
             List<Book> bookList = new List<Book>();
+            selectedAuthor = lbxAuthor.SelectedItem as string;
 
+            //If this is for home page books
             if (isSearchAuthors == false)
             {
                 bookList = Entries.ToList();
             }
+            //If this is for search results
+            //The list of books is the books returned in the search
             else
             {
                 bookList = searchResults;
@@ -466,48 +460,48 @@ namespace project
 
             if (selectedAuthor != null && selectedAuthor != "All")
             {
-                    //if one author is selected
-                    //Add books by that author to authorResults
+                //If one author is selected
+                //Add books by that author to authorResults
                 foreach (Book b in bookList)
                 {
+                    //If the book has a list of authors and the first author is the selected author
+                    //Or the book has one author 
                     if ((b.author_name.Count > 0 && b.author_name[0] == selectedAuthor) || b.author != null && b.author == selectedAuthor)
                     {
                         authorResults.Add(b);
                     }
-
                 }
-
                     //set this filtered list as the ItemsSource
                     selectedBooks.ItemsSource = authorResults;
             }
             else
             {
-                //If All or no author is selected Entries is the ItemsSource
+                //If "All" or no author is selected Entries is the ItemsSource
+                //Display all search results
                 selectedBooks.ItemsSource = bookList;
             }
         }
 
-        
-
+        //Potential problem area!!!
         private async Task CheckForDescription(Book book)
         {
             string key = "";
+            //If a search result
             if (book.author_key != null)
             {
-
                 key = book.author_key[0].ToString();
             }
+            //If a home page book
             else
             {
                 key = book.authorKey;
             }
            
-            
+            //Get works by this author
             var worksClient = new HttpClient();
             var worksRequest = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                //how do I include the {} in the URL???
                 RequestUri = new Uri($"https://openlibrary.org/authors/{key}/works.json"),
                 Headers =
             {
@@ -521,40 +515,38 @@ namespace project
                 var workBody = await worksResponse.Content.ReadAsStringAsync();
                 var workResult = JsonConvert.DeserializeObject<WorkRoot>(workBody);
 
-                //add books with this title to allBookRecords
+                //add books with the selected title to allBookRecords
                 allWorks = workResult.entries;
                 if (allWorks.Count > 0)
                 {
-                    for (int i = 0; i < allWorks.Count; i++)
+                    int i = 0;
+                    do
                     {
                         if (allWorks[i].title == book.title)
                         {
+                            //if this book has a description 
                             if (allWorks[i].description != null)
                             {
                                 description = allWorks[i].description.ToString();
                                 isDescription = true;
                             }
-                            else
-                            {
-                                isDescription = false;
-                            }
                         }
+                        i++;
                     }
-                    //add the first returned book to the selected observable collection
-                    isReady = true;
+                    //Stop when we get a description or we've gone through all works
+                    while (i < allWorks.Count && isDescription == false);
+                    if (isDescription == false)
+                    {
+                        description = "unavailable";
+                    }
+                    isDescription = false;
                 }
                 else
                 {
-                    //do i need this???
-                    MessageBox.Show("No results found");
+                    isDescription = false;
+                    description = "unavailable";
                 }
-
-
-                }
-
-            
-
-            
+            } 
         }
 
         private void ShowDatabaseBooks()
@@ -564,14 +556,14 @@ namespace project
             var query = from b in db.HomeBooks
                         select b;
 
+            //Add each book in the db to Entries
             foreach (var book in query)
             {
                 Entries.Add(book);
-                
             }
 
             authorNames.Add("All");
-
+            //Add each author to authorNames
             foreach (var book in Entries)
             {
                 authorNames.Add(book.author.ToString());
@@ -583,8 +575,14 @@ namespace project
         {
             Button btn = sender as Button;
             Book book = btn.DataContext as Book;
+
+            //Remove from Cart
             Cart.Remove(book);
+
+            //Decrease cart count
             cartCount--;
+
+            //Remove the cost of the removed book from the total and refresh counts
             decimal cost = decimal.Parse(book.price);
             total -= cost;
             RefreshCartCountsAndTotal();
@@ -594,28 +592,34 @@ namespace project
         private void PopulateCheckout()
         {
             int userNumber = 0;
+            List<User> users = new List<User>();
             UserData db = new UserData();
 
             var query = from u in db.Users
                         select u;
 
-            List<User> users = new List<User>();
+            //Add users to list
             foreach (var user in query)
             {
                 users.Add(user);
             }
 
+            //If current user = UserOne
             if (isUserOne == true)
             {
                 currentUser = users[0];
                 userNumber = 0;
             }
+            //If current user = UserTwo
             else
             {
                 currentUser = users[1];
                 userNumber = 1;
             }
 
+
+            //Display Checkout details for the currentUser
+            //I'm not using Binding here because of monthYear and FullName
             string monthYear = users[userNumber].CardDate.ToString("MM / yy");
 
             tblkFullName.Text = users[userNumber].FirstName + " " + users[userNumber].LastName;
@@ -629,10 +633,12 @@ namespace project
 
         private void btnBuyNow_Click(object sender, RoutedEventArgs e)
         {
+            //If there's something in the cart
             if(Cart.Count > 0)
             {
                 bool isCorrect;
                 isCorrect = CheckUserDetailsCorrect();
+                //If user details in checkout match the database
                 if (isCorrect == true)
                 {
                     UpdateOrdersDatabase();
@@ -642,32 +648,34 @@ namespace project
                     RefreshCartCountsAndTotal();
                     MessageBox.Show("Thank you for your order! You will receive an email with delivery details shortly.");
                 }
+                else
+                {
+                    MessageBox.Show("Customer delivery details or card details are incorrect");
+                }
             }
             else
             {
                 MessageBox.Show("There are no books in your cart!");
             }
-            
-            
         }
 
         private void UpdateOrdersDatabase()
         {
             OrderBookDBContext db = new OrderBookDBContext();
+            //HashSet prevents duplicates
             HashSet<Book> booksInCart = new HashSet<Book>();
             foreach (Book b in Cart)
             {
+                //track the book in the database
                 Book book = db.Books.Find(b.key);
                 if (book != null)
                 {
                     booksInCart.Add(book);
                 }
-                
             }
             
-
+            //add the order details to the Orders table
             Order order1 = new Order(total, currentUser.UserID, booksInCart);
-
             db.Orders.Add(order1);
             db.SaveChanges();
         }
@@ -683,12 +691,8 @@ namespace project
         private bool CheckUserDetailsCorrect()
         {
             bool isCorrect = false;
-            if(tbxAddressLine1.Text != currentUser.AddressLineOne || tbxAddressLine2.Text != currentUser.AddressLineTwo || tbxEircode.Text != currentUser.Eircode || tbxCardNumber.Text != currentUser.CardNumber || tbxDate.Text != currentUser.CardDate.ToString("MM / yy") || tbxCVV.Text != currentUser.CVV.ToString())
-            {
-                MessageBox.Show("Customer delivery details or card details are incorrect");
-
-            }
-            else
+            //If the details in the checkout match the details in the database
+            if(tbxAddressLine1.Text == currentUser.AddressLineOne && tbxAddressLine2.Text == currentUser.AddressLineTwo && tbxEircode.Text == currentUser.Eircode && tbxCardNumber.Text == currentUser.CardNumber && tbxDate.Text == currentUser.CardDate.ToString("MM / yy") && tbxCVV.Text == currentUser.CVV.ToString())
             {
                 isCorrect = true;
             }
