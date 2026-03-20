@@ -84,6 +84,7 @@
     <Compile Include="ChooseShelfWindow.xaml.cs">
       <DependentUpon>ChooseShelfWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataAccess.cs" />
     <Compile Include="DeleteShelfWindow.xaml.cs">
       <DependentUpon>DeleteShelfWindow.xaml</DependentUpon>
     </Compile>

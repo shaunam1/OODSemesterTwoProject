@@ -44,6 +44,7 @@ namespace project
         decimal total = 0;
         public bool isUserOne = true;
         User currentUser;
+        DataAccess dataAccess = new DataAccess();
        
         public MainWindow()
         {
@@ -470,11 +471,8 @@ namespace project
 
         private void ShowDatabaseBooks()
         {
-            BookData db = new BookData();
-
-            var query = from b in db.HomeBooks
-                        select b;
-
+            var query = dataAccess.GetHomeBooksFromDatabase();
+            
             //Add each book in the db to Entries
             foreach (var book in query)
             {
@@ -512,10 +510,7 @@ namespace project
         {
             int userNumber = 0;
             List<User> users = new List<User>();
-            UserData db = new UserData();
-
-            var query = from u in db.Users
-                        select u;
+            var query = dataAccess.GetUserData();
 
             //Add users to list
             foreach (var user in query)
@@ -580,23 +575,11 @@ namespace project
 
         private void UpdateOrdersDatabase()
         {
-            OrderBookDBContext db = new OrderBookDBContext();
-            //HashSet prevents duplicates
-            HashSet<Book> booksInCart = new HashSet<Book>();
-            foreach (Book b in Cart)
-            {
-                //track the book in the database
-                Book book = db.Books.Find(b.key);
-                if (book != null)
-                {
-                    booksInCart.Add(book);
-                }
-            }
             
-            //add the order details to the Orders table
-            Order order1 = new Order(total, currentUser.UserID, booksInCart);
-            db.Orders.Add(order1);
-            db.SaveChanges();
+            List<Book> cartBooks = new List<Book>();
+            cartBooks = Cart.ToList();
+            int userID = currentUser.UserID;
+            dataAccess.UpdateOrders(cartBooks, total, userID);
         }
 
         private void RefreshCartCountsAndTotal()
