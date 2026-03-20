@@ -1,28 +1,12 @@
-﻿using MaterialDesignThemes.Wpf;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.SqlTypes;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Net.WebRequestMethods;
+using Newtonsoft.Json;
 
 namespace project
 {
@@ -33,19 +17,16 @@ namespace project
         public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
-        List<Entry> allWorks = new List<Entry>();
-        string bookSearch = "";
         string selectedAuthor = "";
         public bool isSearchAuthors = false;
         public List<Book> searchResults = new List<Book>();
         string description = "";
-        bool isDescription = false;
-        bool isReady = false;
         decimal total = 0;
         public bool isUserOne = true;
         User currentUser;
         DataAccess dataAccess = new DataAccess();
-       
+        APIService apiService = new APIService();
+
         public MainWindow()
         {
 
@@ -61,6 +42,7 @@ namespace project
             ;
         }
 
+        #region
         //ADVICE FROM KEITH:
         //Instead of all the observable collections
         //Could Enums be used to filter?
@@ -112,11 +94,11 @@ namespace project
             set { authorNames = value; }
         }
 
+        #endregion 
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
             Login loginWindow = new Login();
             loginWindow.Owner = this;
-            loginWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             loginWindow.ShowDialog();
             //display the books from HomeBooksDatav7 database
             PopulateCheckout();
@@ -124,9 +106,6 @@ namespace project
 
             //Set cart counts on each tab
             RefreshCartCountsAndTotal();
-
-            //Set ItemsSource of listbox
-            lbxAuthor.ItemsSource = authorNames;
 
             //All Books shelf automatically created so that books can be shelved
             Shelf allBooks = new Shelf("All Books", ShelvedEntries);
@@ -194,8 +173,6 @@ namespace project
             tblkPrice.Text += book.price;
             tblkPublished.Text = "First Published: " + book.first_publish_year;
 
-
-            APIService apiService = new APIService();
             description = await apiService.CheckForDescription(book);
             tblkDescription.Text = "Description: " + description;
 
@@ -288,7 +265,6 @@ namespace project
                 searchTerm = searchTerm.Replace(" ", "+");
                 //Display the search result 
                 searchResults.Clear();
-                APIService apiService = new APIService();
                 allBookRecords = await apiService.GetBookSearchResults(searchTerm);
                 if (allBookRecords.Count > 0)
                 {
@@ -298,7 +274,11 @@ namespace project
                 {
                     MessageBox.Show("No results found");
                     selectedBooks.ItemsSource = Entries;
-                    lbxAuthor.ItemsSource = originalAuthors;
+                    authorNames.Clear();
+                    foreach(string s in originalAuthors)
+                    {
+                        authorNames.Add(s);
+                    }
                     isSearchAuthors = false;
                 }
             }
@@ -322,9 +302,6 @@ namespace project
                     }
                 }
             }
-            //Set authors in listbox as authors of these books
-            lbxAuthor.ItemsSource = authorNames;
-
             //Display the new results
             selectedBooks.ItemsSource = null;
             selectedBooks.ItemsSource = searchResults;

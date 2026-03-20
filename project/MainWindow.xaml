@@ -38,7 +38,7 @@
                 <TextBox x:Name="tbxSearch" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="161" Height="25" GotFocus="tbxSearch_GotFocus" KeyDown="tbxSearch_KeyDown"/>
 
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="50"/>
-                <ListBox x:Name="lbxAuthor" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="23,33,21,10" Grid.Row="1" SelectionChanged="FilterAuthors"/>
+                <ListBox x:Name="lbxAuthor" ItemsSource="{Binding AuthorNames}" Margin="23,33,21,10" Grid.Row="1" SelectionChanged="FilterAuthors"/>
                 <TextBlock x:Name="tblkAuthor" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Author" VerticalAlignment="Top" Height="16" Width="37"/>
                 <TextBlock Name="tblkBookInfo2"></TextBlock>
 
