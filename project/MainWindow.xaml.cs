@@ -30,14 +30,14 @@ namespace project
     {
         //Variables
         int cartCount = 0;
-        string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
+        public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
         public Book selectedBook;
         List<Book> allBookRecords = new List<Book>();
         List<Entry> allWorks = new List<Entry>();
         string bookSearch = "";
         string selectedAuthor = "";
-        bool isSearchAuthors = false;
-        List<Book> searchResults = new List<Book>();
+        public bool isSearchAuthors = false;
+        public List<Book> searchResults = new List<Book>();
         string description = "";
         bool isDescription = false;
         bool isReady = false;
@@ -103,7 +103,7 @@ namespace project
         }
 
         //For the authors of the books of the current book results
-        private ObservableCollection<string> authorNames;
+        public ObservableCollection<string> authorNames;
 
         public ObservableCollection<string> AuthorNames
         {
@@ -275,7 +275,7 @@ namespace project
             }
         }
 
-        private void tbxSearch_KeyDown(object sender, KeyEventArgs e)
+        private async void tbxSearch_KeyDown(object sender, KeyEventArgs e)
         {
             //If the enter key is pressed
             if (e.Key == Key.Enter)
@@ -285,63 +285,15 @@ namespace project
                 searchTerm.Replace(" ", "+");
                 bookSearch = searchTerm;
                 //Display the search result 
-                GetBookSearchResults(bookSearch);
-            }
-        }
-
-        private async void GetBookSearchResults(string bookSearch)
-        {
-            searchResults.Clear();
-
-            //Get API response
-            var bookClient = new HttpClient();
-            var bookRequest = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://openlibrary.org/search.json?q={bookSearch}"),
-                Headers =
-                {
-
-                }
-                ,
-            };
-            using (var bookResponse = await bookClient.SendAsync(bookRequest))
-            {
-                bookResponse.EnsureSuccessStatusCode();
-                var bookBody = await bookResponse.Content.ReadAsStringAsync();
-                var bookResult = JsonConvert.DeserializeObject<BookRoot>(bookBody);
-
-                //add books with this title to allBookRecords
-                allBookRecords = bookResult.docs;
+                searchResults.Clear();
+                APIService apiService = new APIService();
+                allBookRecords = await apiService.GetBookSearchResults(bookSearch);
                 if (allBookRecords.Count > 0)
                 {
-                    authorNames.Clear();
-                    authorNames.Add("All");
-
-                    for (int j = 0; j < allBookRecords.Count; j++)
-                    {
-                        searchResults.Add(bookResult.docs[j]);
-                        //if there is an author
-                        if (bookResult.docs[j].author_name.Count > 0)
-                        {
-                            //Add the author to authorNames
-                            if (!authorNames.Contains(bookResult.docs[j].author_name[0].ToString()))
-                            {
-                                authorNames.Add(bookResult.docs[j].author_name[0].ToString());
-                            }
-                        }
-                    }
-                    //Set authors in listbox as authors of these books
-                    lbxAuthor.ItemsSource = authorNames;
-
-                    //Display the new results
-                    selectedBooks.ItemsSource = null;
-                    selectedBooks.ItemsSource = searchResults;
-                    isSearchAuthors = true;
+                    DisplaySearchResults();
                 }
                 else
                 {
-                    //If no book found display Entries and originalAuthors
                     MessageBox.Show("No results found");
                     selectedBooks.ItemsSource = Entries;
                     lbxAuthor.ItemsSource = originalAuthors;
@@ -349,6 +301,35 @@ namespace project
                 }
             }
         }
+
+        private void DisplaySearchResults()
+        {
+            authorNames.Clear();
+            authorNames.Add("All");
+
+            for (int j = 0; j < allBookRecords.Count; j++)
+            {
+                searchResults.Add(allBookRecords[j]);
+                //if there is an author
+                if (allBookRecords[j].author_name.Count > 0)
+                {
+                    //Add the author to authorNames
+                    if (!authorNames.Contains(allBookRecords[j].author_name[0].ToString()))
+                    {
+                        authorNames.Add(allBookRecords[j].author_name[0].ToString());
+                    }
+                }
+            }
+            //Set authors in listbox as authors of these books
+            lbxAuthor.ItemsSource = authorNames;
+
+            //Display the new results
+            selectedBooks.ItemsSource = null;
+            selectedBooks.ItemsSource = searchResults;
+            isSearchAuthors = true;
+        }
+
+
 
         private void lbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

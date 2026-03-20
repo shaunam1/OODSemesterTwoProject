@@ -80,6 +80,7 @@
     <Compile Include="AddShelfWindow.xaml.cs">
       <DependentUpon>AddShelfWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="APIService.cs" />
     <Compile Include="ChooseShelfWindow.xaml.cs">
       <DependentUpon>ChooseShelfWindow.xaml</DependentUpon>
     </Compile>
