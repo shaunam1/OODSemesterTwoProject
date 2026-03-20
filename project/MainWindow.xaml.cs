@@ -285,12 +285,11 @@ namespace project
             {
                 string searchTerm = tbxSearch.Text;
                 //Replace spaces with +
-                searchTerm.Replace(" ", "+");
-                bookSearch = searchTerm;
+                searchTerm = searchTerm.Replace(" ", "+");
                 //Display the search result 
                 searchResults.Clear();
                 APIService apiService = new APIService();
-                allBookRecords = await apiService.GetBookSearchResults(bookSearch);
+                allBookRecords = await apiService.GetBookSearchResults(searchTerm);
                 if (allBookRecords.Count > 0)
                 {
                     DisplaySearchResults();
