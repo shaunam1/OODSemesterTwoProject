@@ -42,32 +42,78 @@ namespace project
                 return allBookRecords as List<Book>;
             }
         }
-            
-            //        authorNames.Clear();
-            //        authorNames.Add("All");
 
-            //        for (int j = 0; j < allBookRecords.Count; j++)
-            //        {
-            //            searchResults.Add(bookResult.docs[j]);
-            //            //if there is an author
-            //            if (bookResult.docs[j].author_name.Count > 0)
-            //            {
-            //                //Add the author to authorNames
-            //                if (!authorNames.Contains(bookResult.docs[j].author_name[0].ToString()))
-            //                {
-            //                    authorNames.Add(bookResult.docs[j].author_name[0].ToString());
-            //                }
-            //            }
-            //        }
-            //        //Set authors in listbox as authors of these books
-            //        lbxAuthor.ItemsSource = authorNames;
+        public async Task<string> CheckForDescription(Book book)
+        {
+            List<Entry> allWorks = new List<Entry>();
+            string key = "", description = "";
+            bool isDescription = false;
+            //If a search result
+            if (book.author_key != null)
+            {
+                key = book.author_key[0].ToString();
+            }
+            //If a home page book
+            else
+            {
+                key = book.authorKey;
+            }
 
-            //        //Display the new results
-            //        selectedBooks.ItemsSource = null;
-            //        selectedBooks.ItemsSource = searchResults;
-            //        isSearchAuthors = true;
-            //
-            //}
+            //Get works by this author
+            var worksClient = new HttpClient();
+            var worksRequest = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://openlibrary.org/authors/{key}/works.json"),
+                Headers =
+            {
+
+            }
+                ,
+            };
+            using (var worksResponse = await worksClient.SendAsync(worksRequest))
+            {
+                worksResponse.EnsureSuccessStatusCode();
+                var workBody = await worksResponse.Content.ReadAsStringAsync();
+                var workResult = JsonConvert.DeserializeObject<WorkRoot>(workBody);
+
+                //add books with the selected title to allBookRecords
+                allWorks = workResult.entries;
+                if (allWorks.Count > 0)
+                {
+                    int i = 0;
+                    do
+                    {
+                        if (allWorks[i].title == book.title)
+                        {
+                            //if this book has a description 
+                            if (allWorks[i].description != null)
+                            {
+                                description = allWorks[i].description.ToString();
+                                isDescription = true;
+                            }
+                        }
+                        i++;
+                    }
+                    //Stop when we get a description or we've gone through all works
+                    while (i < allWorks.Count && isDescription == false);
+                    if (isDescription == false)
+                    {
+                        description = "unavailable";
+                    }
+                    isDescription = false;
+                }
+                else
+                {
+                    isDescription = false;
+                    description = "unavailable";
+                }
+            }
+
+            return description;
         }
+
+
     }
-//}
+    }
+
