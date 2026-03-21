@@ -32,6 +32,7 @@ namespace project
 
             //this - main window
             DataContext = this;
+            homeBooks = new ObservableCollection<Book>();
             entries = new ObservableCollection<Book>();
             shelvedEntries = new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
@@ -46,6 +47,14 @@ namespace project
         //ADVICE FROM KEITH:
         //Instead of all the observable collections
         //Could Enums be used to filter?
+
+        private ObservableCollection<Book> homeBooks;
+
+        public ObservableCollection<Book> HomeBooks
+        {
+            get { return homeBooks; }
+            set { homeBooks = value; }
+        }
 
         //Used for books being displayed on screen in Home tab
         private ObservableCollection<Book> entries;
@@ -110,7 +119,6 @@ namespace project
             //All Books shelf automatically created so that books can be shelved
             Shelf allBooks = new Shelf("All Books", ShelvedEntries);
             AllShelves.Add(allBooks);
-            lbxShelves.ItemsSource = AllShelves;
         }
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -273,7 +281,11 @@ namespace project
                 else
                 {
                     MessageBox.Show("No results found");
-                    selectedBooks.ItemsSource = Entries;
+                    Entries.Clear();
+                    foreach (Book b in HomeBooks)
+                    {
+                        Entries.Add(b);
+                    }
                     authorNames.Clear();
                     foreach(string s in originalAuthors)
                     {
@@ -302,9 +314,12 @@ namespace project
                     }
                 }
             }
+            Entries.Clear();
             //Display the new results
-            selectedBooks.ItemsSource = null;
-            selectedBooks.ItemsSource = searchResults;
+            foreach(Book b in searchResults)
+            {
+                Entries.Add(b);
+            }
             isSearchAuthors = true;
         }
 
@@ -431,14 +446,22 @@ namespace project
                         authorResults.Add(b);
                     }
                 }
-                    //set this filtered list as the ItemsSource
-                    selectedBooks.ItemsSource = authorResults;
+                Entries.Clear();
+                //set this filtered list as the ItemsSource
+                foreach(Book b in authorResults)
+                {
+                    Entries.Add(b);
+                }
             }
             else
             {
                 //If "All" or no author is selected Entries is the ItemsSource
                 //Display all search results
-                selectedBooks.ItemsSource = bookList;
+                Entries.Clear();
+                foreach (Book b in bookList)
+                {
+                    Entries.Add(b);
+                }
             }
         }
 
@@ -452,16 +475,20 @@ namespace project
             //Add each book in the db to Entries
             foreach (var book in query)
             {
-                Entries.Add(book);
+                HomeBooks.Add(book);
             }
 
             authorNames.Add("All");
             //Add each author to authorNames
-            foreach (var book in Entries)
+            foreach (var book in HomeBooks)
             {
                 authorNames.Add(book.author.ToString());
             }
-            
+
+            foreach(Book b in HomeBooks)
+            {
+                Entries.Add(b);
+            }
         }
 
         private void btnRemoveCart_Click(object sender, RoutedEventArgs e)
