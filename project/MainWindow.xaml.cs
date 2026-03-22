@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace project
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         //Variables
         int cartCount = 0;
@@ -49,12 +50,18 @@ namespace project
         //Instead of all the observable collections
         //Could Enums be used to filter?
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private ObservableCollection<Book> shelfFilter;
 
         public ObservableCollection<Book> ShelfFilter
         {
             get { return shelfFilter; }
-            set { shelfFilter = value; }
+            set 
+            { 
+                shelfFilter = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ShelfFilter"));
+            }
         }
 
         private ObservableCollection<Book> homeBooks;
@@ -105,6 +112,8 @@ namespace project
 
         //For the authors of the books of the current book results
         public ObservableCollection<string> authorNames;
+
+        
 
         public ObservableCollection<string> AuthorNames
         {
@@ -340,12 +349,7 @@ namespace project
             //If the selected shelf has books in it show the books
             if (selectedShelf.Books != null)
             {
-                shelfFilter.Clear();
-                foreach(Book b in selectedShelf.Books)
-                {
-                    shelfFilter.Add(b);
-                }
-                
+                ShelfFilter = selectedShelf.Books;
             }
         }
 
@@ -393,15 +397,16 @@ namespace project
                 selectedShelf = AllShelves[0];
             }
             string searchTerm = tbxShelfSearch.Text.ToLower();
-            shelfFilter.Clear();
+            List<Book> filteredList = new List<Book>();
             for (int i = 0; i < selectedShelf.Books.Count; i++)
             {
                 //if a book contains the search term add it to search results
                 if (selectedShelf.Books[i].title.ToLower().Contains(searchTerm))
                 {
-                    shelfFilter.Add(selectedShelf.Books[i]);
+                    filteredList.Add(selectedShelf.Books[i]);
                 }
             }
+            ShelfFilter = new ObservableCollection<Book>(filteredList);
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
