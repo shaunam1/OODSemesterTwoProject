@@ -215,7 +215,9 @@ namespace project
             }
             else
             {
-                //if the book was searched for the languages are in book.language
+                //if the book was
+                //
+                //ed for the languages are in book.language
                 foreach (string l in book.language)
                 {
                     languages += l + ", ";
@@ -299,15 +301,15 @@ namespace project
                 else
                 {
                     MessageBox.Show("No results found");
+                    authorNames.Clear();
+                    foreach (string s in originalAuthors)
+                    {
+                        authorNames.Add(s);
+                    }
                     Entries.Clear();
                     foreach (Book b in HomeBooks)
                     {
                         Entries.Add(b);
-                    }
-                    authorNames.Clear();
-                    foreach(string s in originalAuthors)
-                    {
-                        authorNames.Add(s);
                     }
                     isSearchAuthors = false;
                 }
@@ -406,6 +408,7 @@ namespace project
                     filteredList.Add(selectedShelf.Books[i]);
                 }
             }
+
             ShelfFilter = new ObservableCollection<Book>(filteredList);
         }
 
@@ -441,7 +444,7 @@ namespace project
             //If this is for home page books
             if (isSearchAuthors == false)
             {
-                bookList = Entries.ToList();
+                bookList = HomeBooks.ToList();
             }
             //If this is for search results
             //The list of books is the books returned in the search
