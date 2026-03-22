@@ -33,6 +33,7 @@ namespace project
             //this - main window
             DataContext = this;
             homeBooks = new ObservableCollection<Book>();
+            shelfFilter = new ObservableCollection<Book>();
             entries = new ObservableCollection<Book>();
             shelvedEntries = new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
@@ -47,6 +48,14 @@ namespace project
         //ADVICE FROM KEITH:
         //Instead of all the observable collections
         //Could Enums be used to filter?
+
+        private ObservableCollection<Book> shelfFilter;
+
+        public ObservableCollection<Book> ShelfFilter
+        {
+            get { return shelfFilter; }
+            set { shelfFilter = value; }
+        }
 
         private ObservableCollection<Book> homeBooks;
 
@@ -331,7 +340,12 @@ namespace project
             //If the selected shelf has books in it show the books
             if (selectedShelf.Books != null)
             {
-                shelfBooks.ItemsSource = selectedShelf.Books;
+                shelfFilter.Clear();
+                foreach(Book b in selectedShelf.Books)
+                {
+                    shelfFilter.Add(b);
+                }
+                
             }
         }
 
@@ -379,17 +393,15 @@ namespace project
                 selectedShelf = AllShelves[0];
             }
             string searchTerm = tbxShelfSearch.Text.ToLower();
-            List<Book> searchResults = new List<Book>();
+            shelfFilter.Clear();
             for (int i = 0; i < selectedShelf.Books.Count; i++)
             {
                 //if a book contains the search term add it to search results
                 if (selectedShelf.Books[i].title.ToLower().Contains(searchTerm))
                 {
-                    searchResults.Add(selectedShelf.Books[i]);
+                    shelfFilter.Add(selectedShelf.Books[i]);
                 }
             }
-            //display search results
-            shelfBooks.ItemsSource = searchResults;
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)

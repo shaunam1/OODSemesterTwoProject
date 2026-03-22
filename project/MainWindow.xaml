@@ -114,7 +114,7 @@
 
                 <Button Name="btnAddShelf" Content="Add Shelf" Grid.Row="2" Click="btnAddShelf_Click"></Button>
                 <Button Name="btnRemoveShelf" Content="Remove Shelf" Grid.Row="2" Margin="0,80,0,0" Click="btnRemoveShelf_Click"></Button>
-                <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ShelvedEntries}">
+                <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ShelfFilter}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="3"></UniformGrid>
