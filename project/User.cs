@@ -49,7 +49,7 @@ namespace project
 
     public class UserData : DbContext
     {
-        public UserData() : base("AllOrderDetailsv6Test") { }
+        public UserData() : base("AllOrderDetailsv6") { }
         public DbSet<User> Users { get; set; }
     }
 }

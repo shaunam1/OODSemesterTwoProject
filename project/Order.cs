@@ -46,13 +46,13 @@ namespace project
 
     public class OrderData : DbContext
     {
-        public OrderData() : base("AllOrderDetailsv6Test") { }
+        public OrderData() : base("AllOrderDetailsv6") { }
         public DbSet<Order> Orders { get; set; }
     }
 
     public class OrderBookDBContext : DbContext
     {
-        public OrderBookDBContext() : base("AllOrderDetailsv6Test")
+        public OrderBookDBContext() : base("AllOrderDetailsv6")
         {
         }
         public DbSet<Order> Orders { get; set; }

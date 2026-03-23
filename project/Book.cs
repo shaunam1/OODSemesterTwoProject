@@ -144,7 +144,7 @@ namespace project
     {
         //public BookData() : base("HomeBooksData") { }
         //ADDED
-        public BookData() : base("AllOrderDetailsv6Test") { }
+        public BookData() : base("AllOrderDetailsv6") { }
         public DbSet<Book> HomeBooks { get; set; }
 
 

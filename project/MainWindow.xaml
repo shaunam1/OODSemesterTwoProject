@@ -11,6 +11,7 @@
     <TabControl x:Name="MyControl" TabStripPlacement="Bottom">
         <TabItem x:Name="TabHome">
             <TabItem.Header>
+
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Home"
                                              Width="25"
@@ -36,11 +37,13 @@
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
                 <TextBlock x:Name="tblkCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <TextBox x:Name="tbxSearch" Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxSearch_GotFocus" KeyDown="tbxSearch_KeyDown"/>
+                <materialDesign:PackIcon Kind="Magnify" Grid.Column="2" Margin="51,0,0,0" VerticalAlignment="Center"/>
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="50" Height="50"/>
                 <Label Name="lblAppNameHome" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></Label>
+
                 <ListBox x:Name="lbxAuthor" ItemsSource="{Binding AuthorNames}" Margin="23,33,21,10" Grid.Row="1" Background="GhostWhite" SelectionChanged="FilterAuthors"/>
                 <TextBlock x:Name="tblkAuthor" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Author" VerticalAlignment="Top" FontWeight="Bold" Height="16" Width="40"/>
-                
+
 
                 <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
 
@@ -55,11 +58,13 @@
 
 
                             <DataTemplate>
-                                <StackPanel x:Name="spBook" MouseUp="spBook_MouseUp" Background="GhostWhite" Margin="5,5,5,5" MaxHeight="180" >
-                                    <TextBlock Name="tblkBookTitle" Text ="{Binding title}" TextWrapping="Wrap"></TextBlock>
-                                    <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
-                                    <TextBlock Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
-                                </StackPanel>
+                                <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
+                                    <StackPanel x:Name="spBook" MaxHeight="180" MouseUp="spBook_MouseUp" >
+                                        <TextBlock Name="tblkBookTitle" Text ="{Binding title}" TextWrapping="Wrap"></TextBlock>
+                                        <Image x:Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100"></Image>
+                                        <TextBlock Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
+                                    </StackPanel>
+                                </Border>
                             </DataTemplate>
 
                         </ItemsControl.ItemTemplate>
@@ -88,21 +93,20 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="75"></RowDefinition>
-                    <RowDefinition Height="170"></RowDefinition>
-                    <RowDefinition Height="170"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition ></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="200*"></ColumnDefinition>
+                    <ColumnDefinition Width="300*"></ColumnDefinition>
+                    <ColumnDefinition Width="300*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"></materialDesign:PackIcon>
 
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="50" Height="50"/>
                 <Label Name="lblAppNameShelf" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></Label>
                 <TextBlock x:Name="tblkShelfCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
-                <materialDesign:PackIcon Kind="Magnify" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,10,30,0"></materialDesign:PackIcon>
+                <materialDesign:PackIcon Kind="Magnify" Grid.Column="2" Margin="51,0,0,0" VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxShelfSearch"  Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxShelfSearch_GotFocus" KeyUp="tbxShelfSearch_KeyUp" />
 
                 <ListBox x:Name="lbxShelves" ItemsSource="{Binding AllShelves}" Margin="23,33,5,131" Grid.Row="1" Grid.RowSpan="2" DisplayMemberPath="ShelfName" Background="GhostWhite" SelectionChanged="lbxShelves_SelectionChanged"/>
@@ -114,26 +118,29 @@
 
                 <Button Name="btnAddShelf" Content="Add Shelf" Grid.Row="2" Width="150" Click="btnAddShelf_Click"></Button>
                 <Button Name="btnRemoveShelf" Content="Remove Shelf" Grid.Row="2" Width="150" Margin="0,80,0,0" Click="btnRemoveShelf_Click"></Button>
-                <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ShelfFilter}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="3"></UniformGrid>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                    <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ShelfFilter}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2"></UniformGrid>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel x:Name="spBook" MouseUp="spBook_MouseUp">
-                                <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}"></TextBlock>
-                                <Image x:Name="imgBookImage" Source="{Binding Cover_URL}" Height="100" Width="100"></Image>
-                                <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
+                                    <StackPanel x:Name="spBook" MaxHeight="180" MouseUp="spBook_MouseUp">
+                                        <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}" TextWrapping="Wrap"></TextBlock>
+                                        <Image x:Name="imgBookImage" Source="{Binding Cover_URL}" Height="100" Width="100"></Image>
+                                        <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
 
-                            </StackPanel>
+                                    </StackPanel>
+                                </Border>
 
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
         </TabItem>
         <TabItem x:Name="TabCheckout">
@@ -164,7 +171,7 @@
                 </Grid.ColumnDefinitions>
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
                 <Label Name="lblAddress" Content="Delivery Details" Height="25" Grid.Row="1" Grid.Column="1" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Top"/>
-                
+
                 <Label Name="lblFullName" Content="Full Name:" Grid.Row="1" Grid.Column="1" Height="25" Margin="0,25,0,0" VerticalAlignment="Top"/>
                 <TextBlock Name="tblkFullName" Grid.Row="1" Grid.Column="1" Height="25" Width="160" Margin="145,24,85,0" VerticalAlignment="Top" Background="GhostWhite"/>
                 <Label Name="lblAddressLine1"  Content="Address Line 1:" Grid.Row="1" Grid.Column="1" Height="25" Margin="0,55,0,0" VerticalAlignment="Top"/>
@@ -184,9 +191,9 @@
 
                 <Button Name="btnBuyNow" Content="Buy Now" Grid.Row="2" Grid.Column="1" Margin="60,100,60,0" Click="btnBuyNow_Click" />
 
-                        
-                <Label Name="lblTotal" Content="Total: €" FontWeight="Bold" FontSize="16" Grid.Row="0" Grid.Column="0" Height="30" Width="100" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <TextBlock Name="tblkTotalCost" FontWeight="Bold" FontSize="16" Grid.Row="0" Grid.Column="0" Height="30" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,2,0,0" />
+
+                <Label Name="lblTotal" Content="Total: €" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Height="30" Width="75" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                <TextBlock Name="tblkTotalCost" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Height="30"/>
 
                 <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
                     <ItemsControl Name="cartBooks" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" ItemsSource="{Binding Cart}">
@@ -242,17 +249,18 @@
 
 
                 <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" >
-
-                    <StackPanel Background="GhostWhite" Margin="5,5,5,5">
-                        <TextBlock Name="tblkTitle"  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
-                        <Image Name="imgCover" Grid.Row="1" Grid.Column="0" Width="100px" Height="100px" HorizontalAlignment="Center"></Image>
-                        <TextBlock Name="tblkBookInfo" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
-                        <TextBlock Name="tblkPrice" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="0,15,0,0"></TextBlock>
-                        <TextBlock Name="tblkPublished" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
-                        <TextBlock Name="tblkEditions" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
-                        <TextBlock Name="tblkLanguages" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"></TextBlock>
-                        <TextBlock Name="tblkDescription" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="0,15,0,0" MaxWidth="500" TextWrapping="Wrap"></TextBlock>
-                    </StackPanel>
+                    <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
+                        <StackPanel Background="GhostWhite" Margin="5,5,5,5">
+                            <TextBlock Name="tblkTitle"  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
+                            <Image Name="imgCover" Grid.Row="1" Grid.Column="0" Width="100px" Height="100px" HorizontalAlignment="Center"></Image>
+                            <TextBlock Name="tblkBookInfo" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock Name="tblkPrice" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="0,15,0,0"></TextBlock>
+                            <TextBlock Name="tblkPublished" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock Name="tblkEditions" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock Name="tblkLanguages" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"></TextBlock>
+                            <TextBlock Name="tblkDescription" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="0,15,0,0" MaxWidth="500" TextWrapping="Wrap"></TextBlock>
+                        </StackPanel>
+                    </Border>
                 </ScrollViewer>
 
 
