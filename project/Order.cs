@@ -46,13 +46,13 @@ namespace project
 
     public class OrderData : DbContext
     {
-        public OrderData() : base("AllOrderDetailsv5") { }
+        public OrderData() : base("AllOrderDetailsv6Test") { }
         public DbSet<Order> Orders { get; set; }
     }
 
     public class OrderBookDBContext : DbContext
     {
-        public OrderBookDBContext() : base("AllOrderDetailsv5")
+        public OrderBookDBContext() : base("AllOrderDetailsv6Test")
         {
         }
         public DbSet<Order> Orders { get; set; }
@@ -68,7 +68,7 @@ namespace project
                 {
                     bo.MapLeftKey("Order_OrderNumber");
                     bo.MapRightKey("Book_key");
-                    bo.ToTable("OrderBooks");
+                    bo.ToTable("BookOrders");
                 });
         }
         

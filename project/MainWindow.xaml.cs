@@ -24,6 +24,7 @@ namespace project
         string description = "";
         decimal total = 0;
         public bool isUserOne = true;
+        public bool isLoggedIn = false;
         User currentUser;
         DataAccess dataAccess = new DataAccess();
         APIService apiService = new APIService();
@@ -128,15 +129,19 @@ namespace project
             loginWindow.Owner = this;
             loginWindow.ShowDialog();
             //display the books from HomeBooksDatav7 database
-            PopulateCheckout();
-            ShowDatabaseBooks();
+            if (isLoggedIn == true)
+            {
+                PopulateCheckout();
+                ShowDatabaseBooks();
 
-            //Set cart counts on each tab
-            RefreshCartCountsAndTotal();
+                //Set cart counts on each tab
+                RefreshCartCountsAndTotal();
 
-            //All Books shelf automatically created so that books can be shelved
-            Shelf allBooks = new Shelf("All Books", ShelvedEntries);
-            AllShelves.Add(allBooks);
+                //All Books shelf automatically created so that books can be shelved
+                Shelf allBooks = new Shelf("All Books", ShelvedEntries);
+                AllShelves.Add(allBooks);
+            }
+            
         }
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {

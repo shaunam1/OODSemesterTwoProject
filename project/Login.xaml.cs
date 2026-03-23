@@ -27,6 +27,7 @@ namespace project
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
+            bool isCorrect = false;
 
             UserData db = new UserData();
 
@@ -48,18 +49,25 @@ namespace project
                     userNo = 1;
                     main.isUserOne = false;
                 }
-                if (tbxUsername.Text == users[userNo].Username && tbxPassword.Text == users[userNo].Password)
+                if (BCrypt.Net.BCrypt.EnhancedVerify(tbxPassword.Text, users[userNo].Password) == true)
                 {
-                    this.Close();
+                    isCorrect = true;
+                }
+                if (tbxUsername.Text == users[userNo].Username && isCorrect == true)
+                {
+                   this.Close();
+                    main.isLoggedIn = true;
                 }
                 else
                 {
                     MessageBox.Show("Username or password is incorrect.");
+                    main.isLoggedIn = false;
                 }
             }
             else
             {
                 MessageBox.Show("Username or password is incorrect.");
+                main.isLoggedIn = false;
             }
         }
     }

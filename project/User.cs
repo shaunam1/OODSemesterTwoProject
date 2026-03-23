@@ -29,11 +29,10 @@ namespace project
 
         }
 
-        public User(int userId, string username, string password, string firstName, string lastName, string addressOne, string addressTwo, string eircode, string cardNumber, DateTime date, int cvv)
+        public User(int userId, string username, string firstName, string lastName, string addressOne, string addressTwo, string eircode, string cardNumber, DateTime date, int cvv)
         {
             UserID = userId;
             Username = username;
-            Password = password;
             FirstName = firstName;
             LastName = lastName;
             AddressLineOne = addressOne;
@@ -50,7 +49,7 @@ namespace project
 
     public class UserData : DbContext
     {
-        public UserData() : base("AllOrderDetailsv5") { }
+        public UserData() : base("AllOrderDetailsv6Test") { }
         public DbSet<User> Users { get; set; }
     }
 }
