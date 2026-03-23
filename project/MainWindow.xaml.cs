@@ -41,6 +41,7 @@ namespace project
             cart = new ObservableCollection<Book>();
             allShelves = new ObservableCollection<Shelf>();
             authorNames = new ObservableCollection<string>();
+            
             InitializeComponent();
 
             ;
@@ -184,18 +185,17 @@ namespace project
             {
                 //If the book is from HomeBooksDatav7 the author is in author
                 string author = "";
-                tblkBookInfo.Text = "Author: ";
                 author = book.author.ToString();
-                tblkBookInfo.Text += author;
+                tblkBookInfo.Text = author;
             }
             else
             {
                 //if the book was searched for the author is in book.author_name
-                tblkBookInfo.Text = "Author: " + book.author_name[0];
+                tblkBookInfo.Text = book.author_name[0];
 
             }
 
-            tblkPrice.Text = "Price: €";
+            tblkPrice.Text = "€";
             if (book.price is null)
             {
                 book.price = "Not for sale";
@@ -205,7 +205,7 @@ namespace project
             tblkPublished.Text = "First Published: " + book.first_publish_year;
 
             description = await apiService.CheckForDescription(book);
-            tblkDescription.Text = "Description: " + description;
+            tblkDescription.Text = description;
 
             tblkEditions.Text = "Current Editions: " + book.edition_count;
 
@@ -565,10 +565,10 @@ namespace project
             string monthYear = users[userNumber].CardDate.ToString("MM / yy");
 
             tblkFullName.Text = users[userNumber].FirstName + " " + users[userNumber].LastName;
-            tbxAddressLine1.Text = users[userNumber].AddressLineOne;
-            tbxAddressLine2.Text = users[userNumber].AddressLineTwo;
-            tbxEircode.Text = users[userNumber].Eircode;
-            tbxCardNumber.Text = users[userNumber].CardNumber;
+            tbxAddressLine1.Text = currentUser.AddressLineOne;
+            tbxAddressLine2.Text = currentUser.AddressLineTwo;
+            tbxEircode.Text = currentUser.Eircode;
+            tbxCardNumber.Text = currentUser.CardNumber;
             tbxDate.Text = monthYear;
             tbxCVV.Text = users[userNumber].CVV.ToString();
         }
@@ -628,6 +628,11 @@ namespace project
             }
 
             return isCorrect;
+        }
+
+        private void RatingBar_ColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color> e)
+        {
+
         }
     }
 }

@@ -19,11 +19,12 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50"/>
-        <Label Name="lblUsername" Content="Username" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Label Name="lblPassword" Content="Password" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBox Name="tbxUsername" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300"></TextBox>
-        <TextBox Name="tbxPassword" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300"></TextBox>
-        <Button Name="btnLogin" Content="Login" Grid.Row="3" Grid.Column="1" Click="btnLogin_Click"></Button>
+        <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="30" Width="50" Height="50"/>
+        <Label Name="lblAppName" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" FontSize="20" VerticalAlignment="Center"></Label>
+        <Label Name="lblUsername" Content="Username" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+        <Label Name="lblPassword" Content="Password" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+        <TextBox Name="tbxUsername" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Background="GhostWhite"></TextBox>
+        <TextBox Name="tbxPassword" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300"  Background="GhostWhite"></TextBox>
+        <Button Name="btnLogin" Content="Login" Grid.Row="3" Grid.Column="1" Click="btnLogin_Click" Width="200"></Button>
     </Grid>
 </Window>
