@@ -34,6 +34,22 @@
                     <ColumnDefinition Width="300*"></ColumnDefinition>
                     <ColumnDefinition Width="300*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="1" Grid.Column="0" Grid.RowSpan="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Name="lblAuthors"  HorizontalAlignment="Left" Grid.Row="0"  Content="Authors" VerticalAlignment="Top" FontWeight="Bold" ></Label>
+                    <ScrollViewer Grid.Row="1">
+                        <ListBox x:Name="lbxAuthor" ItemsSource="{Binding AuthorNames}" Grid.Row="1" Background="GhostWhite" SelectionChanged="FilterAuthors"/>
+                    </ScrollViewer>
+                   
+                    
+                </Grid>
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
                 <TextBlock x:Name="tblkCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <TextBox x:Name="tbxSearch" Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxSearch_GotFocus" KeyDown="tbxSearch_KeyDown"/>
@@ -41,8 +57,7 @@
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="50" Height="50"/>
                 <Label Name="lblAppNameHome" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></Label>
 
-                <ListBox x:Name="lbxAuthor" ItemsSource="{Binding AuthorNames}" Margin="23,33,21,10" Grid.Row="1" Background="GhostWhite" SelectionChanged="FilterAuthors"/>
-                <TextBlock x:Name="tblkAuthor" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Author" VerticalAlignment="Top" FontWeight="Bold" Height="16" Width="40"/>
+               
 
 
                 <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
@@ -101,6 +116,28 @@
                     <ColumnDefinition Width="300*"></ColumnDefinition>
                     <ColumnDefinition Width="300*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Name="lblShelfNames" FontWeight="Bold" HorizontalAlignment="Left"  Grid.Row="0"  Content="My Shelves" VerticalAlignment="Top"></Label>
+                    <ScrollViewer Grid.Row="1" Grid.RowSpan="2">
+                        <ListBox x:Name="lbxShelves" ItemsSource="{Binding AllShelves}"  Grid.Row="1" Grid.RowSpan="2" DisplayMemberPath="ShelfName" Background="GhostWhite" SelectionChanged="lbxShelves_SelectionChanged"/>
+                        
+                    </ScrollViewer>
+                    
+                    <Button Name="btnAddShelf" Content="Add Shelf" Grid.Row="3" Width="150" Click="btnAddShelf_Click" ></Button>
+                    <Button Name="btnRemoveShelf" Content="Remove Shelf" Grid.Row="4" Width="150"  Click="btnRemoveShelf_Click"></Button>
+                </Grid>
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"></materialDesign:PackIcon>
 
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="50" Height="50"/>
@@ -109,15 +146,14 @@
                 <materialDesign:PackIcon Kind="Magnify" Grid.Column="2" Margin="51,0,0,0" VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxShelfSearch"  Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxShelfSearch_GotFocus" KeyUp="tbxShelfSearch_KeyUp" />
 
-                <ListBox x:Name="lbxShelves" ItemsSource="{Binding AllShelves}" Margin="23,33,5,131" Grid.Row="1" Grid.RowSpan="2" DisplayMemberPath="ShelfName" Background="GhostWhite" SelectionChanged="lbxShelves_SelectionChanged"/>
+                
 
 
 
 
-                <TextBlock x:Name="tblkShelfNames" FontWeight="Bold" HorizontalAlignment="Left" Margin="18,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="My Shelves" VerticalAlignment="Top"/>
+                
 
-                <Button Name="btnAddShelf" Content="Add Shelf" Grid.Row="2" Width="150" Click="btnAddShelf_Click"></Button>
-                <Button Name="btnRemoveShelf" Content="Remove Shelf" Grid.Row="2" Width="150" Margin="0,80,0,0" Click="btnRemoveShelf_Click"></Button>
+               
                 <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
                     <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ShelfFilter}">
                         <ItemsControl.ItemsPanel>
@@ -162,62 +198,108 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
-                    <RowDefinition Height="170"></RowDefinition>
-                    <RowDefinition Height="170"></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition>
+                    </ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
-                <Label Name="lblAddress" Content="Delivery Details" Height="25" Grid.Row="1" Grid.Column="1" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Top"/>
 
-                <Label Name="lblFullName" Content="Full Name:" Grid.Row="1" Grid.Column="1" Height="25" Margin="0,25,0,0" VerticalAlignment="Top"/>
-                <TextBlock Name="tblkFullName" Grid.Row="1" Grid.Column="1" Height="25" Width="160" Margin="145,24,85,0" VerticalAlignment="Top" Background="GhostWhite"/>
-                <Label Name="lblAddressLine1"  Content="Address Line 1:" Grid.Row="1" Grid.Column="1" Height="25" Margin="0,55,0,0" VerticalAlignment="Top"/>
-                <TextBox Name="tbxAddressLine1"  Grid.Row="1" Grid.Column="1" Height="25" Width="160" Margin="145,54,85,0" BorderThickness="1" VerticalAlignment="Top" Background="GhostWhite"/>
-                <Label Name="lblAddressLine2" Content="County:" Grid.Row="1" Grid.Column="1" Height="25" Margin="0,85,0,0" VerticalAlignment="Top"/>
-                <TextBox Name="tbxAddressLine2" Grid.Row="1" Grid.Column="1" Height="25" Width="160" Margin="145,84,85,61" BorderThickness="1" Background="GhostWhite"/>
-                <Label Name="lblEircode" Content="Eircode:" Grid.Row="1" Grid.Column="1" Height="25" Margin="0,115,0,0" VerticalAlignment="Top"/>
-                <TextBox Name="tbxEircode" Grid.Row="1" Grid.Column="1" Height="25" Width="160" Margin="145,114,85,31" BorderThickness="1" Background="GhostWhite"/>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition>
+                        </RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                <Label Name="lblPayment" Content="Payment Details" Grid.Row="2" Grid.Column="1" FontWeight="Bold"/>
-                <Label Name="lblCardNumber" Content="Card Number: " Grid.Row="2" Grid.Column="1" Height="25" Margin="0,25,0,0" VerticalAlignment="Top"/>
-                <TextBox Name="tbxCardNumber" Grid.Row="2" Grid.Column="1" Height="25" Width="160" Margin="145,25,85,120" BorderThickness="1" Background="GhostWhite"></TextBox>
-                <Label Name="lblDate" Content="Date:" Grid.Row="2" Grid.Column="1" Height="25" Margin="0,55,0,0" VerticalAlignment="Top"/>
-                <TextBox Name="tbxDate" Grid.Row="2" Grid.Column="1" Height="25" Width="160" Margin="145,55,85,90" BorderThickness="1" Background="GhostWhite"></TextBox>
-                <Label Name="lblCVV" Content="CVV:" Grid.Row="2" Grid.Column="1" Height="25" Margin="0,85,0,0" VerticalAlignment="Top"/>
-                <TextBox Name="tbxCVV" Grid.Row="2" Grid.Column="1" Height="25" Width="160" Margin="145,85,85,60" BorderThickness="1" Background="GhostWhite"></TextBox>
+                    <Label Name="lblAddress" Content="Delivery Details" Height="25" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Top"/>
 
-                <Button Name="btnBuyNow" Content="Buy Now" Grid.Row="2" Grid.Column="1" Margin="60,100,60,0" Click="btnBuyNow_Click" />
+                    <Label Name="lblFullName" Content="Full Name:" Grid.Row="1" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
+                    <TextBlock Name="tblkFullName" Grid.Row="1" Grid.Column="1" Height="25" Width="160"  VerticalAlignment="Center" Background="GhostWhite"/>
+                    <Label Name="lblAddressLine1"  Content="Address Line 1:" Grid.Row="2" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
+                    <TextBox Name="tbxAddressLine1"  Grid.Row="2" Grid.Column="1" Height="25" Width="160" BorderThickness="1" VerticalAlignment="Center" Background="GhostWhite"/>
+                    <Label Name="lblAddressLine2" Content="County:" Grid.Row="3" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
+                    <TextBox Name="tbxAddressLine2" Grid.Row="3" Grid.Column="1" Height="25" Width="160"  BorderThickness="1" Background="GhostWhite" VerticalAlignment="Center"/>
+                    <Label Name="lblEircode" Content="Eircode:" Grid.Row="4" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
+                    <TextBox Name="tbxEircode" Grid.Row="4" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"/>
 
+                </Grid>
 
-                <Label Name="lblTotal" Content="Total: €" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Height="30" Width="75" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-                <TextBlock Name="tblkTotalCost" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Height="30"/>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
-                    <ItemsControl Name="cartBooks" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" ItemsSource="{Binding Cart}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="1"></UniformGrid>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                    <Label Name="lblPayment" Content="Payment Details" Grid.Row="0" Grid.Column="0" FontWeight="Bold"/>
+                    <Label Name="lblCardNumber" Content="Card Number: " Grid.Row="1" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
+                    <TextBox Name="tbxCardNumber" Grid.Row="1" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
+                    <Label Name="lblDate" Content="Date:" Grid.Row="2" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
+                    <TextBox Name="tbxDate" Grid.Row="2" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
+                    <Label Name="lblCVV" Content="CVV:" Grid.Row="3" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
+                    <TextBox Name="tbxCVV" Grid.Row="3" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
 
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
+                    <Button Name="btnBuyNow" Content="Buy Now" Grid.Row="4" Grid.Column="1" Click="btnBuyNow_Click" />
+                </Grid>
 
-                                <StackPanel Name="spBook" Background="GhostWhite">
-                                    <TextBlock Name="tblkBookTitle" Text ="{Binding title}" HorizontalAlignment="Center"></TextBlock>
-                                    <Image Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100" HorizontalAlignment="Center"></Image>
-                                    <TextBlock Name="tblkBookAuthor" Text="{Binding author_name[0]}" HorizontalAlignment="Center"></TextBlock>
-                                    <TextBlock Name="tblkPrice" Text="{Binding price, StringFormat=€ {0}}" HorizontalAlignment="Center"/>
-                                    <Button Name="btnRemoveCart" Content="Remove Book" Width="250" Click="btnRemoveCart_Click"/>
-                                </StackPanel>
+                <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                    <Label Name="lblTotal" Content="Total: €" FontWeight="Bold" Grid.Row="0" Grid.Column="0"  VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                    <TextBlock Name="tblkTotalCost" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Height="30" Width="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,-2,0,0"/>
+
+                    <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+
+                        <ItemsControl Name="cartBooks"  ItemsSource="{Binding Cart}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="1"></UniformGrid>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
+                                        <StackPanel Name="spBook" >
+                                            <TextBlock Name="tblkBookTitle" Text ="{Binding title}" HorizontalAlignment="Center"></TextBlock>
+                                            <Image Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100" HorizontalAlignment="Center"></Image>
+                                            <TextBlock Name="tblkBookAuthor" Text="{Binding author_name[0]}" HorizontalAlignment="Center"></TextBlock>
+                                            <TextBlock Name="tblkPrice" Text="{Binding price, StringFormat=€ {0}}" HorizontalAlignment="Center"/>
+                                            <Button Name="btnRemoveCart" Content="Remove Book" Width="250" Click="btnRemoveCart_Click"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+
+               
+
+                
 
 
             </Grid>
@@ -239,10 +321,22 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
+                <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Name="lblRate" Content="Add a rating?" FontSize="16" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
+                    <materialDesign:RatingBar Grid.Row="1" Grid.Column="0" ></materialDesign:RatingBar>
+                </Grid>
+
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"></materialDesign:PackIcon>
                 <TextBlock Name="tblkCount"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"></TextBlock>
-                <Label Name="lblRate" Content="Add a rating?" FontSize="16" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
-                <materialDesign:RatingBar Grid.Row="1" Grid.Column="1" Margin="0,75,100,0" ></materialDesign:RatingBar>
+               
                 <Button Name="btnShelve" Content="Add to Bookshelf" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0" Width="200" Click="btnShelve_Click"></Button>
                 <Button Name="btnRemove" Content="Remove from Bookshelf" Grid.Row="2" Grid.Column="1" Margin="0,70,10,0"  Width="200" Click="btnRemove_Click"></Button>
                 <Button Name="btnAddtoCart" Content="Add to Cart" Grid.Row="2" Grid.Column="1" Margin="0,140,10,0"  Width="200" Click="btnAddtoCart_Click"></Button>
