@@ -25,7 +25,7 @@ namespace project
         private void btnAddTo_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
-            Book selectedBook = main.selectedBook;
+            Book selectedBook = main.SelectedBook;
 
             //If no shelf has been selected
             if (selectedShelf == null)
@@ -53,7 +53,7 @@ namespace project
         {
             MainWindow main = this.Owner as MainWindow;
             List<Shelf> potentialShelves = new List<Shelf>();
-            Book selectedBook = main.selectedBook;
+            Book selectedBook = main.SelectedBook;
 
             //if a shelf does not contain this book
             //it is added to the dropdown of shelves that the user can add the selectedBook to

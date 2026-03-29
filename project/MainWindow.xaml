@@ -51,7 +51,7 @@
                     
                 </Grid>
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
-                <TextBlock x:Name="tblkCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
+                <TextBlock x:Name="tblkCartCount" Text="{Binding CartCount}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <TextBox x:Name="tbxSearch" Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxSearch_GotFocus" KeyDown="tbxSearch_KeyDown"/>
                 <materialDesign:PackIcon Kind="Magnify" Grid.Column="2" Margin="51,0,0,0" VerticalAlignment="Center"/>
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="50" Height="50"/>
@@ -142,7 +142,7 @@
 
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="50" Height="50"/>
                 <Label Name="lblAppNameShelf" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></Label>
-                <TextBlock x:Name="tblkShelfCartCount"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
+                <TextBlock x:Name="tblkShelfCartCount" Text="{Binding CartCount}"  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
                 <materialDesign:PackIcon Kind="Magnify" Grid.Column="2" Margin="51,0,0,0" VerticalAlignment="Center"/>
                 <TextBox x:Name="tbxShelfSearch"  Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxShelfSearch_GotFocus" KeyUp="tbxShelfSearch_KeyUp" />
 
@@ -206,7 +206,7 @@
                     </ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Row="0" Grid.Column="1" DataContext="{Binding CurrentUserAlt}">
+                <Grid Grid.Row="0" Grid.Column="1" DataContext="{Binding CurrentUser}">
                 <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
@@ -232,7 +232,7 @@
 
                 </Grid>
 
-                <Grid Grid.Row="1" Grid.Column="1" DataContext="{Binding CurrentUserAlt}">
+                <Grid Grid.Row="1" Grid.Column="1" DataContext="{Binding CurrentUser}">
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
@@ -268,7 +268,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Name="lblTotal" Content="Total: €" FontWeight="Bold" Grid.Row="0" Grid.Column="0"  VerticalAlignment="Top" HorizontalAlignment="Right"/>
-                    <TextBlock Name="tblkTotalCost" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Height="30" Width="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,-2,0,0"/>
+                    <TextBlock Name="tblkTotalCost" Text="{Binding Total}" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Height="30" Width="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,-2,0,0"/>
 
                     <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
 
@@ -335,21 +335,21 @@
                 </Grid>
 
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"></materialDesign:PackIcon>
-                <TextBlock Name="tblkCount"  Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"></TextBlock>
+                <TextBlock Name="tblkCount" Text="{Binding CartCount}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"></TextBlock>
                
                 <Button Name="btnShelve" Content="Add to Bookshelf" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0" Width="200" Click="btnShelve_Click"></Button>
                 <Button Name="btnRemove" Content="Remove from Bookshelf" Grid.Row="2" Grid.Column="1" Margin="0,70,10,0"  Width="200" Click="btnRemove_Click"></Button>
                 <Button Name="btnAddtoCart" Content="Add to Cart" Grid.Row="2" Grid.Column="1" Margin="0,140,10,0"  Width="200" Click="btnAddtoCart_Click"></Button>
 
 
-                <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" >
+                <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" DataContext="{Binding SelectedBook}">
                     <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
                         <StackPanel Background="GhostWhite" Margin="5,5,5,5">
-                            <TextBlock Name="tblkTitle"  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock Name="tblkTitle" Text="{Binding title}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
                             <Image Name="imgCover" Grid.Row="1" Grid.Column="0" Width="100px" Height="100px" HorizontalAlignment="Center"></Image>
                             <TextBlock Name="tblkBookInfo" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
                             <TextBlock Name="tblkPrice" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="0,15,0,0"></TextBlock>
-                            <TextBlock Name="tblkPublished" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock Name="tblkPublished" Text="{Binding first_publish_year}" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
                             <TextBlock Name="tblkEditions" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
                             <TextBlock Name="tblkLanguages" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"></TextBlock>
                             <TextBlock Name="tblkDescription" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="0,15,0,0" MaxWidth="500" TextWrapping="Wrap"></TextBlock>

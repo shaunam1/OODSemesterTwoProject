@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
+using System.Data.SqlTypes;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,18 +17,15 @@ namespace project
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         //Variables
-        int cartCount = 0;
         public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
-        public Book selectedBook;
+        public Book selectedBookAlt;
         List<Book> allBookRecords = new List<Book>();
         string selectedAuthor = "";
         public bool isSearchAuthors = false;
         public List<Book> searchResults = new List<Book>();
         string description = "";
-        decimal total = 0;
         public bool isUserOne = true;
         public bool isLoggedIn = false;
-        User currentUser;
         DataAccess dataAccess = new DataAccess();
         APIService apiService = new APIService();
         public int userID;
@@ -59,17 +58,55 @@ namespace project
 
         private ObservableCollection<Book> shelfFilter;
 
-
-        public User currentUserAlt;
-        public User CurrentUserAlt
+        public decimal total;
+        public decimal Total
         {
-            get { return currentUserAlt; }
+            get { return total; }
+            set
+            {
+                total = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int cartCount;
+        public int CartCount
+        {
+            get { return cartCount; }
+            set
+            {
+                cartCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Book selectedBook;
+
+        public Book SelectedBook
+        {
+            get { return selectedBook;  }
+            set
+            {
+                selectedBook = value;
+                OnPropertyChanged();
+            }
+        }
+        
+
+        public User currentUser;
+        public User CurrentUser
+        {
+            get { return currentUser; }
             set 
             { 
-                currentUserAlt = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUserAlt"));
+                currentUser = value;
+                OnPropertyChanged();
             }
-            //OnPropertyChanged();
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public ObservableCollection<Book> ShelfFilter
@@ -152,7 +189,7 @@ namespace project
                 ShowDatabaseBooks();
 
                 //Set cart counts on each tab
-                RefreshCartCountsAndTotal();
+                CartCount = 0;
 
                 //All Books shelf automatically created so that books can be shelved
                 Shelf allBooks = new Shelf("All Books", ShelvedEntries);
@@ -188,13 +225,12 @@ namespace project
 
         private async void ShowInfo(Book book)
         {
-            selectedBook = book;
+            SelectedBook = book;
 
             //Change tab to TabBookInfo
             MyControl.SelectedItem = TabBookInfo;
 
             //Display information about the selected book
-            tblkTitle.Text = book.title;
             imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
 
             if (book.author != null)
@@ -218,7 +254,6 @@ namespace project
                 tblkPrice.Text = tblkPrice.Text.TrimEnd('€');
             }
             tblkPrice.Text += book.price;
-            tblkPublished.Text = "First Published: " + book.first_publish_year;
 
             description = await apiService.CheckForDescription(book);
             tblkDescription.Text = description;
@@ -237,8 +272,7 @@ namespace project
             else
             {
                 //if the book was
-                //
-                //ed for the languages are in book.language
+                //searched for the languages are in book.language
                 foreach (string l in book.language)
                 {
                     languages += l + ", ";
@@ -252,22 +286,21 @@ namespace project
 
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {   //When add to cart is clicked increase the cart count on all tabs
-            if (selectedBook.price != "Not for sale")
+            if (SelectedBook.price != "Not for sale")
             {
-                if (!Cart.Contains(selectedBook))
+                if (!Cart.Contains(SelectedBook))
                 {
                     //Increase the cart count
-                    cartCount++;
-                    decimal cost = decimal.Parse(selectedBook.price);
-                    total += cost;
-                    RefreshCartCountsAndTotal();
+                    CartCount++;
+                    decimal cost = decimal.Parse(SelectedBook.price);
+                    Total += cost;
 
                     //add chosen books to JSON file of books in the cart
                     //SHOULD I REMOVE JSON???
-                    string jsonString = JsonConvert.SerializeObject(selectedBook, Formatting.Indented);
+                    string jsonString = JsonConvert.SerializeObject(SelectedBook, Formatting.Indented);
                     System.IO.File.AppendAllText("cartItems.json", jsonString);
                     //Add the selected book to the ObservableCollection Cart
-                    Cart.Add(selectedBook);
+                    Cart.Add(SelectedBook);
                 }
                 else
                 {
@@ -293,9 +326,9 @@ namespace project
             }
             else
             {
-                if (!ShelvedEntries.Contains(selectedBook))
+                if (!ShelvedEntries.Contains(SelectedBook))
                 {
-                    ShelvedEntries.Add(selectedBook);
+                    ShelvedEntries.Add(SelectedBook);
                 }
                 else
                 {
@@ -444,9 +477,9 @@ namespace project
             else
             {
                 //If there is only one shelf
-                if (ShelvedEntries.Contains(selectedBook))
+                if (ShelvedEntries.Contains(SelectedBook))  
                 {
-                    ShelvedEntries.Remove(selectedBook);
+                    ShelvedEntries.Remove(SelectedBook);
                 }
                 else
                 {
@@ -541,12 +574,11 @@ namespace project
             Cart.Remove(book);
 
             //Decrease cart count
-            cartCount--;
+            CartCount--;
 
             //Remove the cost of the removed book from the total and refresh counts
             decimal cost = decimal.Parse(book.price);
-            total -= cost;
-            RefreshCartCountsAndTotal();
+            Total -= cost;
 
         }
 
@@ -565,14 +597,14 @@ namespace project
             //If current user = UserOne
             if (isUserOne == true)
             {
-                CurrentUserAlt = users[0];
+                CurrentUser = users[0];
                 userID = 1;
                 userNumber = 0;
             }
             //If current user = UserTwo
             else
             {
-                CurrentUserAlt = users[1];
+                CurrentUser= users[1];
                 userID = 2;
                 userNumber = 1;
             }
@@ -597,9 +629,8 @@ namespace project
                 {
                     UpdateOrdersDatabase();
                     Cart.Clear();
-                    total = 0;
-                    cartCount = 0;
-                    RefreshCartCountsAndTotal();
+                    Total = 0;
+                    CartCount = 0;
                     MessageBox.Show("Thank you for your order! You will receive an email with delivery details shortly.");
                 }
                 else
@@ -618,19 +649,10 @@ namespace project
             
             List<Book> cartBooks = new List<Book>();
             cartBooks = Cart.ToList();
-            //might need to be currentUserAlt
-            int userID = CurrentUserAlt.UserID;
-            dataAccess.UpdateOrders(cartBooks, total, userID);
+            int userID = CurrentUser.UserID;
+            dataAccess.UpdateOrders(cartBooks, Total, userID);
         }
-
-        private void RefreshCartCountsAndTotal()
-        {
-            tblkCartCount.Text = cartCount.ToString();
-            tblkShelfCartCount.Text = cartCount.ToString();
-            tblkCount.Text = cartCount.ToString();
-            tblkTotalCost.Text = total.ToString();
-        }
-
+        
         private bool CheckUserDetailsCorrect()
         {
             bool isCorrect = false;
