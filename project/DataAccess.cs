@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,18 @@ namespace project
             Order order1 = new Order(total, userID, booksInCart);
             db.Orders.Add(order1);
             db.SaveChanges();
+        }
+
+
+        public IQueryable<User> ValidateCheckout(int userID)
+        {
+            UserData db = new UserData();
+
+            var query = from u in db.Users
+                        where u.UserID.Equals(userID)
+                        select u;
+
+            return query;
         }
     }
 }

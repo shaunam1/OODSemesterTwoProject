@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,6 +29,9 @@ namespace project
         User currentUser;
         DataAccess dataAccess = new DataAccess();
         APIService apiService = new APIService();
+        public int userID;
+        List<User> users = new List<User>();
+        List<User> usersCompare = new List<User>();
 
         public MainWindow()
         {
@@ -41,7 +45,6 @@ namespace project
             cart = new ObservableCollection<Book>();
             allShelves = new ObservableCollection<Shelf>();
             authorNames = new ObservableCollection<string>();
-            
             InitializeComponent();
 
             ;
@@ -55,6 +58,19 @@ namespace project
         public event PropertyChangedEventHandler PropertyChanged;
 
         private ObservableCollection<Book> shelfFilter;
+
+
+        public User currentUserAlt;
+        public User CurrentUserAlt
+        {
+            get { return currentUserAlt; }
+            set 
+            { 
+                currentUserAlt = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUserAlt"));
+            }
+            //OnPropertyChanged();
+        }
 
         public ObservableCollection<Book> ShelfFilter
         {
@@ -537,7 +553,7 @@ namespace project
         private void PopulateCheckout()
         {
             int userNumber = 0;
-            List<User> users = new List<User>();
+            
             var query = dataAccess.GetUserData();
 
             //Add users to list
@@ -549,28 +565,24 @@ namespace project
             //If current user = UserOne
             if (isUserOne == true)
             {
-                currentUser = users[0];
+                CurrentUserAlt = users[0];
+                userID = 1;
                 userNumber = 0;
             }
             //If current user = UserTwo
             else
             {
-                currentUser = users[1];
+                CurrentUserAlt = users[1];
+                userID = 2;
                 userNumber = 1;
             }
 
 
             //Display Checkout details for the currentUser
-            //I'm not using Binding here because of monthYear and FullName
+            //I'm not using Binding here for Date and FullName
             string monthYear = users[userNumber].CardDate.ToString("MM / yy");
-
             tblkFullName.Text = users[userNumber].FirstName + " " + users[userNumber].LastName;
-            tbxAddressLine1.Text = currentUser.AddressLineOne;
-            tbxAddressLine2.Text = currentUser.AddressLineTwo;
-            tbxEircode.Text = currentUser.Eircode;
-            tbxCardNumber.Text = currentUser.CardNumber;
             tbxDate.Text = monthYear;
-            tbxCVV.Text = users[userNumber].CVV.ToString();
         }
 
         private void btnBuyNow_Click(object sender, RoutedEventArgs e)
@@ -606,7 +618,8 @@ namespace project
             
             List<Book> cartBooks = new List<Book>();
             cartBooks = Cart.ToList();
-            int userID = currentUser.UserID;
+            //might need to be currentUserAlt
+            int userID = CurrentUserAlt.UserID;
             dataAccess.UpdateOrders(cartBooks, total, userID);
         }
 
@@ -621,18 +634,20 @@ namespace project
         private bool CheckUserDetailsCorrect()
         {
             bool isCorrect = false;
+            var query = dataAccess.ValidateCheckout(userID);
+
+            //Add users to list
+            foreach (var user in query)
+            {
+                usersCompare.Add(user);
+            }
             //If the details in the checkout match the details in the database
-            if(tbxAddressLine1.Text == currentUser.AddressLineOne && tbxAddressLine2.Text == currentUser.AddressLineTwo && tbxEircode.Text == currentUser.Eircode && tbxCardNumber.Text == currentUser.CardNumber && tbxDate.Text == currentUser.CardDate.ToString("MM / yy") && tbxCVV.Text == currentUser.CVV.ToString())
+            if (tbxAddressLine1.Text == usersCompare[0].AddressLineOne && tbxAddressLine2.Text == usersCompare[0].AddressLineTwo && tbxEircode.Text == usersCompare[0].Eircode && tbxCardNumber.Text == usersCompare[0].CardNumber && tbxDate.Text == usersCompare[0].CardDate.ToString("MM / yy") && tbxCVV.Text.ToString() == usersCompare[0].CVV.ToString())
             {
                 isCorrect = true;
             }
 
             return isCorrect;
-        }
-
-        private void RatingBar_ColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color> e)
-        {
-
         }
     }
 }

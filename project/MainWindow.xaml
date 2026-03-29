@@ -206,10 +206,9 @@
                     </ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Row="0" Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition>
-                        </RowDefinition>
+                <Grid Grid.Row="0" Grid.Column="1" DataContext="{Binding CurrentUserAlt}">
+                <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
@@ -219,21 +218,21 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-
                     <Label Name="lblAddress" Content="Delivery Details" Height="25" Grid.Row="0" Grid.Column="0" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Top"/>
-
-                    <Label Name="lblFullName" Content="Full Name:" Grid.Row="1" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
-                    <TextBlock Name="tblkFullName" Grid.Row="1" Grid.Column="1" Height="25" Width="160"  VerticalAlignment="Center" Background="GhostWhite"/>
+                    <Label Name="lblFullName" Content="Full Name:" Grid.Row="1" Grid.Column="0" Height="25" HorizontalAlignment="Left"/>
                     <Label Name="lblAddressLine1"  Content="Address Line 1:" Grid.Row="2" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
-                    <TextBox Name="tbxAddressLine1"  Grid.Row="2" Grid.Column="1" Height="25" Width="160" BorderThickness="1" VerticalAlignment="Center" Background="GhostWhite"/>
                     <Label Name="lblAddressLine2" Content="County:" Grid.Row="3" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
-                    <TextBox Name="tbxAddressLine2" Grid.Row="3" Grid.Column="1" Height="25" Width="160"  BorderThickness="1" Background="GhostWhite" VerticalAlignment="Center"/>
                     <Label Name="lblEircode" Content="Eircode:" Grid.Row="4" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
-                    <TextBox Name="tbxEircode" Grid.Row="4" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"/>
+                    <TextBlock Name="tblkFullName" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Height="25" Width="160" Background="GhostWhite"/>
+                    <TextBox Name="tbxAddressLine1"  Text="{Binding AddressLineOne}" Grid.Row="2" Grid.Column="1" Height="25" Width="160" BorderThickness="1" VerticalAlignment="Center" Background="GhostWhite"/>
+                    <TextBox Name="tbxAddressLine2" Text="{Binding AddressLineTwo}" Grid.Row="3"  Grid.Column="1" Height="25" Width="160"  BorderThickness="1" Background="GhostWhite" VerticalAlignment="Center"/>
+                    <TextBox Name="tbxEircode" Text="{Binding Eircode}" Grid.Row="4" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"/>
+
+
 
                 </Grid>
 
-                <Grid Grid.Row="1" Grid.Column="1">
+                <Grid Grid.Row="1" Grid.Column="1" DataContext="{Binding CurrentUserAlt}">
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
@@ -248,11 +247,12 @@
 
                     <Label Name="lblPayment" Content="Payment Details" Grid.Row="0" Grid.Column="0" FontWeight="Bold"/>
                     <Label Name="lblCardNumber" Content="Card Number: " Grid.Row="1" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
-                    <TextBox Name="tbxCardNumber" Grid.Row="1" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
                     <Label Name="lblDate" Content="Date:" Grid.Row="2" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
-                    <TextBox Name="tbxDate" Grid.Row="2" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
                     <Label Name="lblCVV" Content="CVV:" Grid.Row="3" Grid.Column="0" Height="25" VerticalAlignment="Center"/>
-                    <TextBox Name="tbxCVV" Grid.Row="3" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
+                    
+                    <TextBox Name="tbxCardNumber" Text="{Binding CardNumber}" Grid.Row="1" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
+                    <TextBox Name="tbxDate" Grid.Row="2" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
+                    <TextBox Name="tbxCVV" Text="{Binding CVV}" Grid.Row="3" Grid.Column="1" Height="25" Width="160" BorderThickness="1" Background="GhostWhite"></TextBox>
 
                     <Button Name="btnBuyNow" Content="Buy Now" Grid.Row="4" Grid.Column="1" Click="btnBuyNow_Click" />
                 </Grid>
