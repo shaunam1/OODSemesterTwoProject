@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
-using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -18,7 +16,6 @@ namespace project
     {
         //Variables
         public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
-        public Book selectedBookAlt;
         List<Book> allBookRecords = new List<Book>();
         string selectedAuthor = "";
         public bool isSearchAuthors = false;
@@ -34,8 +31,7 @@ namespace project
 
         public MainWindow()
         {
-
-            //this - main window
+            //this = main window
             DataContext = this;
             homeBooks = new ObservableCollection<Book>();
             shelfFilter = new ObservableCollection<Book>();
@@ -45,7 +41,6 @@ namespace project
             allShelves = new ObservableCollection<Shelf>();
             authorNames = new ObservableCollection<string>();
             InitializeComponent();
-
             ;
         }
 
@@ -55,8 +50,11 @@ namespace project
         //Could Enums be used to filter?
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-        private ObservableCollection<Book> shelfFilter;
 
         public decimal total;
         public decimal Total
@@ -104,11 +102,7 @@ namespace project
             }
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+        private ObservableCollection<Book> shelfFilter;
         public ObservableCollection<Book> ShelfFilter
         {
             get { return shelfFilter; }
@@ -167,9 +161,6 @@ namespace project
 
         //For the authors of the books of the current book results
         public ObservableCollection<string> authorNames;
-
-        
-
         public ObservableCollection<string> AuthorNames
         {
             get { return authorNames; }
@@ -397,8 +388,6 @@ namespace project
             isSearchAuthors = true;
         }
 
-
-
         private void lbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
@@ -539,9 +528,6 @@ namespace project
             }
         }
 
-
-
-
         private void ShowDatabaseBooks()
         {
             var query = dataAccess.GetHomeBooksFromDatabase();
@@ -646,11 +632,10 @@ namespace project
 
         private void UpdateOrdersDatabase()
         {
-            
             List<Book> cartBooks = new List<Book>();
             cartBooks = Cart.ToList();
-            int userID = CurrentUser.UserID;
-            dataAccess.UpdateOrders(cartBooks, Total, userID);
+            int userOrderID = CurrentUser.UserID;
+            dataAccess.UpdateOrders(cartBooks, Total, userOrderID);
         }
         
         private bool CheckUserDetailsCorrect()
@@ -668,8 +653,20 @@ namespace project
             {
                 isCorrect = true;
             }
-
             return isCorrect;
+        }
+
+        private void tblkLogin_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (isLoggedIn == true)
+            {
+                MessageBoxResult result = MessageBox.Show("Would you like to logout and close the app?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    this.Close();
+                }
+            }
         }
     }
 }

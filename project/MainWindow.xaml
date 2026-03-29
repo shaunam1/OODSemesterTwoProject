@@ -51,17 +51,14 @@
                     
                 </Grid>
                 <materialDesign:PackIcon Kind="Cart" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Margin="0,10,20,0" MouseUp="PackIcon_MouseUp"/>
-                <TextBlock x:Name="tblkCartCount" Text="{Binding CartCount}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
-                <TextBox x:Name="tbxSearch" Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxSearch_GotFocus" KeyDown="tbxSearch_KeyDown"/>
+                <TextBlock Name="tblkCartCount" Text="{Binding CartCount}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,9,41,0"/>
+                <TextBlock Name="tblkLogin" Text="Logout" Grid.Row="0" Grid.Column="2" Width="80" Height="25" PreviewMouseDown="tblkLogin_PreviewMouseDown"/>
+                <TextBox Name="tbxSearch" Background="GhostWhite" Foreground="Black" Grid.Column="1" HorizontalAlignment="Left" Margin="70,0,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Center" Width="276" Grid.ColumnSpan="2" GotFocus="tbxSearch_GotFocus" KeyDown="tbxSearch_KeyDown"/>
                 <materialDesign:PackIcon Kind="Magnify" Grid.Column="2" Margin="51,0,0,0" VerticalAlignment="Center"/>
                 <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="50" Height="50"/>
                 <Label Name="lblAppNameHome" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></Label>
 
-               
-
-
                 <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
-
                     <ItemsControl Name="selectedBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding Entries}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
