@@ -19,6 +19,7 @@ namespace project
         public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
         List<Book> allBookRecords = new List<Book>();
         public List<Book> searchResults = new List<Book>();
+        List<Book> homeBooksList = new List<Book>();
         public List<User> users = new List<User>();
         List<User> usersCompare = new List<User>();
         string selectedAuthor = "", description = "";
@@ -307,11 +308,9 @@ namespace project
                     {
                         authorNames.Add(s);
                     }
-                    Entries.Clear();
-                    foreach (Book b in HomeBooks)
-                    {
-                        Entries.Add(b);
-                    }
+                    
+                    DetermineEntries(homeBooksList);
+
                     isSearchAuthors = false;
                 }
             }
@@ -335,12 +334,7 @@ namespace project
                     }
                 }
             }
-            Entries.Clear();
-            //Display the new results
-            foreach(Book b in searchResults)
-            {
-                Entries.Add(b);
-            }
+            DetermineEntries(searchResults);
             isSearchAuthors = true;
         }
 
@@ -480,7 +474,7 @@ namespace project
                 authorNames.Add(book.author.ToString());
             }
 
-            List<Book> homeBooksList = HomeBooks.ToList<Book>();
+            homeBooksList = HomeBooks.ToList();
             DetermineEntries(homeBooksList);
         }
 
