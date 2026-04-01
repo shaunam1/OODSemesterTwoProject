@@ -433,7 +433,7 @@ namespace project
             List<Book> bookList = new List<Book>();
             selectedAuthor = lbxAuthor.SelectedItem as string;
 
-            DetermineBookList(bookList);
+            bookList = DetermineBookList();
 
             if (selectedAuthor != null && selectedAuthor != "All")
             {
@@ -586,25 +586,22 @@ namespace project
 
         private void DeterminePrice(Book book)
         {
-            tblkPrice.Text = "€";
             if (book.price is null)
             {
                 book.price = "Not for sale";
-                tblkPrice.Text = tblkPrice.Text.TrimEnd('€');
             }
-            tblkPrice.Text += book.price;
+            tblkPrice.Text = $"€{book.price}";
         }
 
         private void DetermineLanguages(Book book)
         {
-            tblkLanguages.Text = "Available in: ";
             string languages = "";
             if (book.LanguageData != null)
             {
                 //if the book is coming from the HomeBooksv7 database the languages are in Language data
                 languages = book.LanguageData.ToString();
                 languages = languages.Replace(";", ", ");
-                tblkLanguages.Text += languages;
+                tblkLanguages.Text = $"Available in: {languages}";
             }
             else
             {
@@ -620,18 +617,18 @@ namespace project
             }
         }
 
-        private void DetermineBookList(List<Book> bookList)
+        private List<Book> DetermineBookList()
         {
             //If this is for home page books
             if (isSearchAuthors == false)
             {
-                bookList = HomeBooks.ToList();
+                return HomeBooks.ToList();
             }
             //If this is for search results
             //The list of books is the books returned in the search
             else
             {
-                bookList = searchResults;
+               return searchResults;
             }
         }
 
