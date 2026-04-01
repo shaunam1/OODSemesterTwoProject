@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -25,6 +26,7 @@ namespace project
         string selectedAuthor = "", description = "";
         public bool isSearchAuthors = false, isUserOne = true, isLoggedIn = false;
         public int userID, userNumber = 0;
+        string searchTerm = "";
 
         public MainWindow()
         {
@@ -98,6 +100,10 @@ namespace project
                 OnPropertyChanged();
             }
         }
+
+        //public ICollectionView BooksCollectionView { get; set; }
+
+        
 
         private ObservableCollection<Book> shelfFilter;
         public ObservableCollection<Book> ShelfFilter
@@ -182,8 +188,21 @@ namespace project
                 //All Books shelf automatically created so that books can be shelved
                 Shelf allBooks = new Shelf("All Books", ShelvedEntries);
                 AllShelves.Add(allBooks);
+                //var collectionViewSource = new CollectionViewSource { Source = Entries };
+                //BooksCollectionView = collectionViewSource.View;
+                //BooksCollectionView.Filter = FilterBooks;
             }
         }
+
+//        private bool FilterBooks(object item)
+//        {
+//            if (item is Book book)
+//            {
+//                return book.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase);
+//;
+//            }
+//            return false;
+//        }
 
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -291,11 +310,12 @@ namespace project
             //If the enter key is pressed
             if (e.Key == Key.Enter)
             {
-                string searchTerm = tbxSearch.Text;
+                searchTerm = tbxSearch.Text;
                 searchTerm = searchTerm.Replace(" ", "+");
                 //Display the search result or home books if there are no search results
                 searchResults.Clear();
                 allBookRecords = await apiService.GetBookSearchResults(searchTerm);
+               // BooksCollectionView.Refresh();
                 if (allBookRecords.Count > 0)
                 {
                     DisplaySearchResults();
