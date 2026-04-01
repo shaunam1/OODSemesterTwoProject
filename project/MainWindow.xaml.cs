@@ -14,20 +14,16 @@ namespace project
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         //Variables
-        public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
-        List<Book> allBookRecords = new List<Book>();
-        string selectedAuthor = "";
-        public bool isSearchAuthors = false;
-        public List<Book> searchResults = new List<Book>();
-        string description = "";
-        public bool isUserOne = true;
-        public bool isLoggedIn = false;
         DataAccess dataAccess = new DataAccess();
         APIService apiService = new APIService();
-        public int userID;
+        public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
+        List<Book> allBookRecords = new List<Book>();
+        public List<Book> searchResults = new List<Book>();
         public List<User> users = new List<User>();
         List<User> usersCompare = new List<User>();
-        public int userNumber = 0;
+        string selectedAuthor = "", description = "";
+        public bool isSearchAuthors = false, isUserOne = true, isLoggedIn = false;
+        public int userID, userNumber = 0;
 
         public MainWindow()
         {
@@ -173,21 +169,21 @@ namespace project
             Login loginWindow = new Login();
             loginWindow.Owner = this;
             loginWindow.ShowDialog();
-            //display the books from HomeBooksDatav7 database
+            //if logged in display the books from the HomeBooks database and populate checkout
             if (isLoggedIn == true)
             {
                 PopulateCheckout();
                 ShowDatabaseBooks();
 
-                //Set cart counts on each tab
+                //Set cart count
                 CartCount = 0;
 
                 //All Books shelf automatically created so that books can be shelved
                 Shelf allBooks = new Shelf("All Books", ShelvedEntries);
                 AllShelves.Add(allBooks);
             }
-            
         }
+
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {
             //if the user clicks the cart icon they are brough to the checkout tab
@@ -196,14 +192,18 @@ namespace project
 
         private void tbxSearch_GotFocus(object sender, RoutedEventArgs e)
         {
-            //Clear search bar when clicked
-            tbxSearch.Text = "";
+            ClearSearchBar(sender);
         }
 
         private void tbxShelfSearch_GotFocus(object sender, RoutedEventArgs e)
         {
-            //Clear search bar when clicked on BookShelf Tab
-            tbxShelfSearch.Text = "";
+            ClearSearchBar(sender);
+        }
+        private void ClearSearchBar(object sender)
+        {
+            //sender is the object that called the method (either tbxSearch or tbxShelfSearch)
+            TextBox searchBar = sender as TextBox;
+            searchBar.Text = "";
         }
 
         private void spBook_MouseUp(object sender, MouseButtonEventArgs e)
