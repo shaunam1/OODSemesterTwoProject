@@ -22,7 +22,7 @@
 
         <Label Name="lblTitle" Content="Add Shelf" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Grid.Row="0" Grid.Column="0"></Label>
         <Label Name="lblShelfName" Content="Shelf Name:" Grid.Row="1" Grid.Column="0" Height="25px" Width="100px" ></Label>
-        <TextBox Name="tbxShelfName" Grid.Row="1" Grid.Column="1" Height="25px" Width="200px"></TextBox>
+        <TextBox Name="tbxShelfName" Background="GhostWhite" Grid.Row="1" Grid.Column="1" Height="25px" Width="200px"></TextBox>
         <Button Name="btnAdd" Content="Add Shelf" Grid.Row="2" Grid.Column="1" Click="btnAdd_Click"></Button>
     </Grid>
 </Window>

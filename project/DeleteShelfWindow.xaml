@@ -20,7 +20,7 @@
 
         <Label Name="lblDeleteTitle" Content="Remove a Shelf" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Grid.Row="0" Grid.Column="0"></Label>
         <Label Name="lblShelfNameDelete" Content="Select Shelf:" Grid.Row="1" Grid.Column="0" Height="25px" Width="100px" ></Label>
-        <ComboBox Name="cbxDeleteShelves" Grid.Row="1" Grid.Column="1" Height="30" Width="200" SelectionChanged="cbxDeleteShelves_SelectionChanged"></ComboBox>
+        <ComboBox Name="cbxDeleteShelves" Background="GhostWhite" Grid.Row="1" Grid.Column="1" Height="30" Width="200" SelectionChanged="cbxDeleteShelves_SelectionChanged"></ComboBox>
         <Button Name="btnDelete" Content="Delete Shelf" Grid.Row="2" Grid.Column="1" Click="btnDelete_Click"></Button>
 
     </Grid>

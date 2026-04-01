@@ -566,31 +566,6 @@ namespace project
 
         private void PopulateCheckout()
         {
-            //var query = dataAccess.GetUserData();
-
-            ////Add users to list
-            //foreach (var user in query)
-            //{
-            //    users.Add(user);
-            //}
-
-
-            ////If current user = UserOne
-            //if (isUserOne == true)
-            //{
-            //    //CurrentUser = users[0];
-            //    userID = 1;
-            //    //userNumber = 0;
-            //}
-            ////If current user = UserTwo
-            //else
-            //{
-            //    //CurrentUser= users[1];
-            //    userID = 2;
-            //    //userNumber = 1;
-            //}
-
-
             //Display Checkout details for the currentUser
             //I'm not using Binding here for Date and FullName
             string monthYear = users[userNumber].CardDate.ToString("MM / yy");
