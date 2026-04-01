@@ -1,24 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace project
 {
-    /// <summary>
-    /// Interaction logic for Login.xaml
-    /// </summary>
     public partial class Login : Window
     {
+        DataAccess dataAccess = new DataAccess();
         public Login()
         {
             InitializeComponent();
@@ -28,47 +15,71 @@ namespace project
         {
             MainWindow main = this.Owner as MainWindow;
             bool isCorrect = false;
-
-            UserData db = new UserData();
-
-            var query = from u in db.Users
-                        select u;
-
             List<User> users = new List<User>();
+            int userNo = 0, userId = 1;
+            string incorrectMessage = "Username or password is incorrect.";
+
+            //Get users from db
+            var query = dataAccess.GetUserData();
+
+            //add users to list of users
             foreach  (var user in query)
             {
                 users.Add(user);
+                main.users.Add(user);
             }
 
+            //If the username matches either of the two users
             if (tbxUsername.Text == users[0].Username || tbxUsername.Text == users[1].Username)
             {
-                int userNo = 0;
-
+                //if user 2 assign the userNo as 1
                 if(tbxUsername.Text == users[1].Username)
                 {
                     userNo = 1;
+                    userId = 2;
                     main.isUserOne = false;
                 }
-                if (BCrypt.Net.BCrypt.EnhancedVerify(tbxPassword.Text, users[userNo].Password) == true)
-                {
-                    isCorrect = true;
-                }
-                if (tbxUsername.Text == users[userNo].Username && isCorrect == true)
+
+                //populate values in mainwindow.xaml.cs
+                PopulateMainWindowValues(userNo, users, userId);
+
+                //check if password matched encrypted password in db
+                isCorrect = CheckPasswordCorrect(users, userNo);
+               
+                if (isCorrect == true)
                 {
                    this.Close();
-                    main.isLoggedIn = true;
+                   main.isLoggedIn = true;
                 }
                 else
                 {
-                    MessageBox.Show("Username or password is incorrect.");
+                    MessageBox.Show(incorrectMessage);
                     main.isLoggedIn = false;
                 }
             }
             else
             {
-                MessageBox.Show("Username or password is incorrect.");
+                MessageBox.Show(incorrectMessage);
                 main.isLoggedIn = false;
             }
+        }
+
+        private void PopulateMainWindowValues(int userNo, List<User>users, int userId)
+        {
+            MainWindow main = this.Owner as MainWindow;
+            main.userNumber = userNo;
+            main.CurrentUser = users[userNo];
+            main.userID = userId;
+        }
+
+        private bool CheckPasswordCorrect(List<User>users, int userNo)
+        {
+            bool isCorrect = false;
+            if (BCrypt.Net.BCrypt.EnhancedVerify(tbxPassword.Text, users[userNo].Password) == true)
+            {
+                isCorrect = true;
+            }
+            return isCorrect;
         }
     }
 }

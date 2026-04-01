@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace project
 {
@@ -11,6 +7,7 @@ namespace project
     {
         public IQueryable<Book> GetHomeBooksFromDatabase()
         {
+            //return homebooks in database as a query
             BookData db = new BookData();
 
             var query = from b in db.HomeBooks
@@ -21,6 +18,7 @@ namespace project
 
         public IQueryable<User> GetUserData()
         {
+            //return users in database as a query
             UserData db = new UserData();
 
             var query = from u in db.Users
@@ -62,6 +60,7 @@ namespace project
 
         public IQueryable<User> ValidateCheckout(int userID)
         {
+            //Return the user with the correct UserID from the database
             UserData db = new UserData();
 
             var query = from u in db.Users

@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json;
 
 namespace project
 {
@@ -26,8 +25,9 @@ namespace project
         DataAccess dataAccess = new DataAccess();
         APIService apiService = new APIService();
         public int userID;
-        List<User> users = new List<User>();
+        public List<User> users = new List<User>();
         List<User> usersCompare = new List<User>();
+        public int userNumber = 0;
 
         public MainWindow()
         {
@@ -286,10 +286,6 @@ namespace project
                     decimal cost = decimal.Parse(SelectedBook.price);
                     Total += cost;
 
-                    //add chosen books to JSON file of books in the cart
-                    //SHOULD I REMOVE JSON???
-                    string jsonString = JsonConvert.SerializeObject(SelectedBook, Formatting.Indented);
-                    System.IO.File.AppendAllText("cartItems.json", jsonString);
                     //Add the selected book to the ObservableCollection Cart
                     Cart.Add(SelectedBook);
                 }
@@ -570,30 +566,29 @@ namespace project
 
         private void PopulateCheckout()
         {
-            int userNumber = 0;
-            
-            var query = dataAccess.GetUserData();
+            //var query = dataAccess.GetUserData();
 
-            //Add users to list
-            foreach (var user in query)
-            {
-                users.Add(user);
-            }
+            ////Add users to list
+            //foreach (var user in query)
+            //{
+            //    users.Add(user);
+            //}
 
-            //If current user = UserOne
-            if (isUserOne == true)
-            {
-                CurrentUser = users[0];
-                userID = 1;
-                userNumber = 0;
-            }
-            //If current user = UserTwo
-            else
-            {
-                CurrentUser= users[1];
-                userID = 2;
-                userNumber = 1;
-            }
+
+            ////If current user = UserOne
+            //if (isUserOne == true)
+            //{
+            //    //CurrentUser = users[0];
+            //    userID = 1;
+            //    //userNumber = 0;
+            //}
+            ////If current user = UserTwo
+            //else
+            //{
+            //    //CurrentUser= users[1];
+            //    userID = 2;
+            //    //userNumber = 1;
+            //}
 
 
             //Display Checkout details for the currentUser

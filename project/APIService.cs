@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using Newtonsoft.Json;
 
 namespace project
@@ -14,10 +10,7 @@ namespace project
     {
         public async Task<List<Book>> GetBookSearchResults(string bookSearch)
         {
-
             List<Book> allBookRecords = new List<Book>();
-
-
             //Get API response
             var bookClient = new HttpClient();
             var bookRequest = new HttpRequestMessage
@@ -115,5 +108,5 @@ namespace project
 
 
     }
-    }
+ }
 

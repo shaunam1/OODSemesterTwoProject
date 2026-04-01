@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace project
 {
@@ -26,6 +16,7 @@ namespace project
         {
             MainWindow main = this.Owner as MainWindow;
             //Populate combobox with all shelves apart from All books
+            //as All Books shelf cannot be deleted
             List<Shelf> deletableShelves = new List<Shelf>();
             for (int i = 1; i< main.AllShelves.Count; i++)
             {
@@ -34,9 +25,7 @@ namespace project
                     deletableShelves.Add(main.AllShelves[i]);
                 }
             }
-            
             cbxDeleteShelves.ItemsSource = deletableShelves;
-
         }
 
         private void cbxDeleteShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -58,7 +47,6 @@ namespace project
                 //Remove shelf from observable collection and close window
                 main.AllShelves.Remove(selectedShelf);
                 this.Close();
-
             }
         }
     }
