@@ -224,54 +224,14 @@ namespace project
             //Display information about the selected book
             imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
 
-            if (book.author != null)
-            {
-                //If the book is from HomeBooksDatav7 the author is in author
-                string author = "";
-                author = book.author.ToString();
-                tblkBookInfo.Text = author;
-            }
-            else
-            {
-                //if the book was searched for the author is in book.author_name
-                tblkBookInfo.Text = book.author_name[0];
-
-            }
-
-            tblkPrice.Text = "€";
-            if (book.price is null)
-            {
-                book.price = "Not for sale";
-                tblkPrice.Text = tblkPrice.Text.TrimEnd('€');
-            }
-            tblkPrice.Text += book.price;
+            DetermineAuthor(book);
+            DeterminePrice(book);
+            DetermineLanguages(book);
 
             description = await apiService.CheckForDescription(book);
             tblkDescription.Text = description;
 
-            tblkEditions.Text = "Current Editions: " + book.edition_count;
-
-            tblkLanguages.Text = "Available in: ";
-            string languages = "";
-            if (book.LanguageData != null)
-            {
-                //if the book is coming from the HomeBooksv7 database the languages are in Language data
-                languages = book.LanguageData.ToString();
-                languages = languages.Replace(";", ", ");
-                tblkLanguages.Text += languages;
-            }
-            else
-            {
-                //if the book was
-                //searched for the languages are in book.language
-                foreach (string l in book.language)
-                {
-                    languages += l + ", ";
-                }
-
-                languages = languages.Trim();
-                tblkLanguages.Text += languages.TrimEnd(',');
-            }
+            tblkEditions.Text = "Current Editions: " + book.edition_count;  
         }
 
 
@@ -299,6 +259,7 @@ namespace project
                 MessageBox.Show("Sorry this book is not for sale");
             }
         }
+
         private void btnShelve_Click(object sender, RoutedEventArgs e)
         {   //When Add to Bookshelf is clicked 
             //The book is added to the observable collection ShevedEntries so that it will be displayed
@@ -330,9 +291,8 @@ namespace project
             if (e.Key == Key.Enter)
             {
                 string searchTerm = tbxSearch.Text;
-                //Replace spaces with +
                 searchTerm = searchTerm.Replace(" ", "+");
-                //Display the search result 
+                //Display the search result or home books if there are no search results
                 searchResults.Clear();
                 allBookRecords = await apiService.GetBookSearchResults(searchTerm);
                 if (allBookRecords.Count > 0)
@@ -471,7 +431,6 @@ namespace project
                     MessageBox.Show("This book hasn't been added to a shelf");
                 }
             }
-
         }
 
         private void FilterAuthors(object sender, SelectionChangedEventArgs e)
@@ -480,17 +439,7 @@ namespace project
             List<Book> bookList = new List<Book>();
             selectedAuthor = lbxAuthor.SelectedItem as string;
 
-            //If this is for home page books
-            if (isSearchAuthors == false)
-            {
-                bookList = HomeBooks.ToList();
-            }
-            //If this is for search results
-            //The list of books is the books returned in the search
-            else
-            {
-                bookList = searchResults;
-            }
+            DetermineBookList(bookList);
 
             if (selectedAuthor != null && selectedAuthor != "All")
             {
@@ -505,22 +454,12 @@ namespace project
                         authorResults.Add(b);
                     }
                 }
-                Entries.Clear();
-                //set this filtered list as the ItemsSource
-                foreach(Book b in authorResults)
-                {
-                    Entries.Add(b);
-                }
+                DetermineEntries(authorResults);
             }
             else
             {
-                //If "All" or no author is selected Entries is the ItemsSource
-                //Display all search results
-                Entries.Clear();
-                foreach (Book b in bookList)
-                {
-                    Entries.Add(b);
-                }
+                //If "All" or no author is selected
+                DetermineEntries(bookList);
             }
         }
 
@@ -528,7 +467,7 @@ namespace project
         {
             var query = dataAccess.GetHomeBooksFromDatabase();
             
-            //Add each book in the db to Entries
+            //Add each book in the db to HomeBooks
             foreach (var book in query)
             {
                 HomeBooks.Add(book);
@@ -541,10 +480,8 @@ namespace project
                 authorNames.Add(book.author.ToString());
             }
 
-            foreach(Book b in HomeBooks)
-            {
-                Entries.Add(b);
-            }
+            List<Book> homeBooksList = HomeBooks.ToList<Book>();
+            DetermineEntries(homeBooksList);
         }
 
         private void btnRemoveCart_Click(object sender, RoutedEventArgs e)
@@ -561,7 +498,6 @@ namespace project
             //Remove the cost of the removed book from the total and refresh counts
             decimal cost = decimal.Parse(book.price);
             Total -= cost;
-
         }
 
         private void PopulateCheckout()
@@ -578,8 +514,7 @@ namespace project
             //If there's something in the cart
             if(Cart.Count > 0)
             {
-                bool isCorrect;
-                isCorrect = CheckUserDetailsCorrect();
+                bool isCorrect = CheckUserDetailsCorrect();
                 //If user details in checkout match the database
                 if (isCorrect == true)
                 {
@@ -636,6 +571,82 @@ namespace project
                 {
                     this.Close();
                 }
+            }
+        }
+
+        private void DetermineAuthor(Book book)
+        {
+            if (book.author != null)
+            {
+                //If the book is from HomeBooksDatav7 the author is in author
+                string author = "";
+                author = book.author.ToString();
+                tblkBookInfo.Text = author;
+            }
+            else
+            {
+                //if the book was searched for the author is in book.author_name
+                tblkBookInfo.Text = book.author_name[0];
+            }
+        }
+
+        private void DeterminePrice(Book book)
+        {
+            tblkPrice.Text = "€";
+            if (book.price is null)
+            {
+                book.price = "Not for sale";
+                tblkPrice.Text = tblkPrice.Text.TrimEnd('€');
+            }
+            tblkPrice.Text += book.price;
+        }
+
+        private void DetermineLanguages(Book book)
+        {
+            tblkLanguages.Text = "Available in: ";
+            string languages = "";
+            if (book.LanguageData != null)
+            {
+                //if the book is coming from the HomeBooksv7 database the languages are in Language data
+                languages = book.LanguageData.ToString();
+                languages = languages.Replace(";", ", ");
+                tblkLanguages.Text += languages;
+            }
+            else
+            {
+                //if the book was
+                //searched for the languages are in book.language
+                foreach (string l in book.language)
+                {
+                    languages += l + ", ";
+                }
+
+                languages = languages.Trim();
+                tblkLanguages.Text += languages.TrimEnd(',');
+            }
+        }
+
+        private void DetermineBookList(List<Book> bookList)
+        {
+            //If this is for home page books
+            if (isSearchAuthors == false)
+            {
+                bookList = HomeBooks.ToList();
+            }
+            //If this is for search results
+            //The list of books is the books returned in the search
+            else
+            {
+                bookList = searchResults;
+            }
+        }
+
+        private void DetermineEntries(List<Book> listOfBooks)
+        {
+            Entries.Clear();
+            foreach (Book b in listOfBooks)
+            {
+                Entries.Add(b);
             }
         }
     }
