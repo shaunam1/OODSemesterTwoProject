@@ -26,7 +26,8 @@ namespace project
         string selectedAuthor = "", description = "";
         public bool isSearchAuthors = false, isUserOne = true, isLoggedIn = false;
         public int userID, userNumber = 0;
-        string searchTerm = "";
+        string searchTerm = "", filterShelfSearch = "";
+        Shelf selectedShelf;
 
         public MainWindow()
         {
@@ -40,6 +41,11 @@ namespace project
             allShelves = new ObservableCollection<Shelf>();
             authorNames = new ObservableCollection<string>();
             InitializeComponent();
+
+            var collectionViewSource = new CollectionViewSource { Source = shelvedEntries };
+            ShelfCollectionView = collectionViewSource.View;
+            ShelfCollectionView.Filter = FilterShelfBooks;
+
             ;
         }
 
@@ -54,6 +60,7 @@ namespace project
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public ICollectionView ShelfCollectionView { get; set; }
 
         public decimal total;
         public decimal Total
@@ -103,8 +110,6 @@ namespace project
 
         //public ICollectionView BooksCollectionView { get; set; }
 
-        
-
         private ObservableCollection<Book> shelfFilter;
         public ObservableCollection<Book> ShelfFilter
         {
@@ -132,7 +137,6 @@ namespace project
             get { return entries; }
             set { entries = value; }
         }
-
 
         //For all the books that have been shelved
         private ObservableCollection<Book> shelvedEntries;
@@ -176,6 +180,8 @@ namespace project
             Login loginWindow = new Login();
             loginWindow.Owner = this;
             loginWindow.ShowDialog();
+
+            shelfBooks.ItemsSource = ShelfCollectionView;
             //if logged in display the books from the HomeBooks database and populate checkout
             if (isLoggedIn == true)
             {
@@ -189,7 +195,7 @@ namespace project
                 Shelf allBooks = new Shelf("All Books", ShelvedEntries);
                 AllShelves.Add(allBooks);
                 //var collectionViewSource = new CollectionViewSource { Source = Entries };
-                //BooksCollectionView = collectionViewSource.View;
+                //ShelvesCollectionView = CollectionViewSource.GetDefaultView(ShelvedEntries);
                 //BooksCollectionView.Filter = FilterBooks;
             }
         }
@@ -251,7 +257,7 @@ namespace project
             description = await apiService.CheckForDescription(book);
             tblkDescription.Text = description;
 
-            tblkEditions.Text = "Current Editions: " + book.edition_count;  
+            tblkEditions.Text = $"Current Editions: {book.edition_count}";  
         }
 
 
@@ -360,11 +366,12 @@ namespace project
 
         private void lbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
+            selectedShelf = lbxShelves.SelectedItem as Shelf;
             //If the selected shelf has books in it show the books
             if (selectedShelf.Books != null)
             {
-                ShelfFilter = selectedShelf.Books;
+                ShelfCollectionView.Refresh();
+                //ShelfFilter = selectedShelf.Books;
             }
         }
 
@@ -405,24 +412,28 @@ namespace project
 
        private void tbxShelfSearch_KeyUp(object sender, KeyEventArgs e)
         {
-            Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
+            selectedShelf = lbxShelves.SelectedItem as Shelf;
             //if no shelf is selected search All Books shelf
             if (selectedShelf is null)
             {
                 selectedShelf = AllShelves[0];
             }
-            string searchTerm = tbxShelfSearch.Text.ToLower();
-            List<Book> filteredList = new List<Book>();
-            for (int i = 0; i < selectedShelf.Books.Count; i++)
-            {
-                //if a book contains the search term add it to search results
-                if (selectedShelf.Books[i].title.ToLower().Contains(searchTerm))
-                {
-                    filteredList.Add(selectedShelf.Books[i]);
-                }
-            }
+            filterShelfSearch = tbxShelfSearch.Text.ToLower();
 
-            ShelfFilter = new ObservableCollection<Book>(filteredList);
+            ShelfCollectionView.Refresh();
+
+            //List<Book> filteredList = new List<Book>();
+            //for (int i = 0; i < selectedShelf.Books.Count; i++)
+            //{
+            //    //if a book contains the search term add it to search results
+            //    if (selectedShelf.Books[i].title.ToLower().Contains(searchTerm))
+            //    {
+            //        filteredList.Add(selectedShelf.Books[i]);
+            //    }
+            //}
+
+            //ShelfFilter = new ObservableCollection<Book>(filteredList);
+            filterShelfSearch = "";
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -519,7 +530,7 @@ namespace project
             //Display Checkout details for the currentUser
             //I'm not using Binding here for Date and FullName
             string monthYear = users[userNumber].CardDate.ToString("MM / yy");
-            tblkFullName.Text = users[userNumber].FirstName + " " + users[userNumber].LastName;
+            tblkFullName.Text = $"{users[userNumber].FirstName} {users[userNumber].LastName}";
             tbxDate.Text = monthYear;
         }
 
@@ -609,8 +620,12 @@ namespace project
             if (book.price is null)
             {
                 book.price = "Not for sale";
+                tblkPrice.Text = $"{book.price}";
             }
-            tblkPrice.Text = $"€{book.price}";
+            else
+            {
+                tblkPrice.Text = $"€{book.price}";
+            }
         }
 
         private void DetermineLanguages(Book book)
@@ -659,6 +674,49 @@ namespace project
             {
                 Entries.Add(b);
             }
+        }
+
+        private bool FilterShelfBooks(object item)
+        {
+            if (item is Book book)
+            {
+                if (filterShelfSearch != "")
+                {
+                    if (selectedShelf.Books.Contains(book))
+                    {
+                        if (book.title.ToLower().Contains(filterShelfSearch))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                       
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (selectedShelf.Books.Contains(book))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+               
+            }
+            else
+            {
+                return false;
+            }
+                
         }
     }
 }

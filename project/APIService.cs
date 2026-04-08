@@ -92,7 +92,7 @@ namespace project
                     while (i < allWorks.Count && isDescription == false);
                     if (isDescription == false)
                     {
-                        description = "unavailable";
+                        description = "Description unavailable";
                     }
                     isDescription = false;
                 }

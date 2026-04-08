@@ -152,7 +152,7 @@
 
                
                 <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                    <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ShelfFilter}">
+                    <ItemsControl Name="shelfBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="2"></UniformGrid>
