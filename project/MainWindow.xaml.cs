@@ -19,8 +19,7 @@ namespace project
         APIService apiService = new APIService();
         public string[] originalAuthors = { "All", "Madeline Miller", "Stephen King", "Suzanne Collins", "R.F. Kuang", "S.E. Hinton", "Donna Tartt" };
         List<Book> allBookRecords = new List<Book>();
-        public List<Book> searchResults = new List<Book>();
-        List<Book> homeBooksList = new List<Book>();
+        List<Book> homeBooksFromDatabase = new List<Book>();
         public List<User> users = new List<User>();
         List<User> usersCompare = new List<User>();
         string selectedAuthor = "", description = "";
@@ -28,18 +27,23 @@ namespace project
         public int userID, userNumber = 0;
         string searchTerm = "", filterShelfSearch = "";
         Shelf selectedShelf;
+        bool isHome = false;
 
         public MainWindow()
         {
             //this = main window
             DataContext = this;
-            homeBooks = new ObservableCollection<Book>();
             entries = new ObservableCollection<Book>();
             shelvedEntries = new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
             allShelves = new ObservableCollection<Shelf>();
             authorNames = new ObservableCollection<string>();
             InitializeComponent();
+
+            var homeCollectionViewSource = new CollectionViewSource { Source = Entries };
+            HomeCollectionView = homeCollectionViewSource.View;
+            HomeCollectionView.Filter = FilterHomeBooks;
+            selectedBooks.ItemsSource = HomeCollectionView;
 
             var collectionViewSource = new CollectionViewSource { Source = shelvedEntries };
             ShelfCollectionView = collectionViewSource.View;
@@ -49,17 +53,14 @@ namespace project
         }
 
         #region
-        //ADVICE FROM KEITH:
-        //Instead of all the observable collections
-        //Could Enums be used to filter?
+        public ICollectionView ShelfCollectionView { get; set; }
+        public ICollectionView HomeCollectionView { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public ICollectionView ShelfCollectionView { get; set; }
 
         public decimal total;
         public decimal Total
@@ -94,7 +95,6 @@ namespace project
                 OnPropertyChanged();
             }
         }
-        
 
         public User currentUser;
         public User CurrentUser
@@ -105,14 +105,6 @@ namespace project
                 currentUser = value;
                 OnPropertyChanged();
             }
-        }
-
-        private ObservableCollection<Book> homeBooks;
-
-        public ObservableCollection<Book> HomeBooks
-        {
-            get { return homeBooks; }
-            set { homeBooks = value; }
         }
 
         //Used for books being displayed on screen in Home tab
@@ -142,10 +134,8 @@ namespace project
             set { allShelves = value; }
         }
 
-
         //For all books added to the cart
         private ObservableCollection<Book> cart;
-
         public ObservableCollection<Book> Cart
         {
             get { return cart; }
@@ -260,10 +250,7 @@ namespace project
         }
 
         private void btnShelve_Click(object sender, RoutedEventArgs e)
-        {   //When Add to Bookshelf is clicked 
-            //The book is added to the observable collection ShevedEntries so that it will be displayed
-            //on the Bookshelf tab
-
+        {   
             //if the user has more than one shelf
             if (allShelves.Count > 1)
             {
@@ -289,40 +276,39 @@ namespace project
             //If the enter key is pressed
             if (e.Key == Key.Enter)
             {
-                searchTerm = tbxSearch.Text;
-                searchTerm = searchTerm.Replace(" ", "+");
+                isHome = false;
+                searchTerm = tbxSearch.Text.Replace(" ", "+");
                 //Display the search result or home books if there are no search results
-                searchResults.Clear();
                 allBookRecords = await apiService.GetBookSearchResults(searchTerm);
-               // BooksCollectionView.Refresh();
                 if (allBookRecords.Count > 0)
                 {
-                    DisplaySearchResults();
+                    Entries.Clear();
+                    AddToEntries(allBookRecords);
+                    AddToEntries(homeBooksFromDatabase);
+                    UpdateAuthorsListbox();
                 }
                 else
                 {
+                    isHome = true;
                     MessageBox.Show("No results found");
                     authorNames.Clear();
                     foreach (string s in originalAuthors)
                     {
                         authorNames.Add(s);
                     }
-                    
-                    DetermineEntries(homeBooksList);
-
                     isSearchAuthors = false;
                 }
+                HomeCollectionView.Refresh();
             }
         }
 
-        private void DisplaySearchResults()
+        private void UpdateAuthorsListbox()
         {
             authorNames.Clear();
             authorNames.Add("All");
 
             for (int j = 0; j < allBookRecords.Count; j++)
             {
-                searchResults.Add(allBookRecords[j]);
                 //if there is an author
                 if (allBookRecords[j].author_name.Count > 0)
                 {
@@ -333,7 +319,6 @@ namespace project
                     }
                 }
             }
-            DetermineEntries(searchResults);
             isSearchAuthors = true;
         }
 
@@ -422,50 +407,30 @@ namespace project
             List<Book> authorResults = new List<Book>();
             List<Book> bookList = new List<Book>();
             selectedAuthor = lbxAuthor.SelectedItem as string;
-
-            bookList = DetermineBookList();
-
-            if (selectedAuthor != null && selectedAuthor != "All")
-            {
-                //If one author is selected
-                //Add books by that author to authorResults
-                foreach (Book b in bookList)
-                {
-                    //If the book has a list of authors and the first author is the selected author
-                    //Or the book has one author 
-                    if ((b.author_name.Count > 0 && b.author_name[0] == selectedAuthor) || b.author != null && b.author == selectedAuthor)
-                    {
-                        authorResults.Add(b);
-                    }
-                }
-                DetermineEntries(authorResults);
-            }
-            else
-            {
-                //If "All" or no author is selected
-                DetermineEntries(bookList);
-            }
+            HomeCollectionView.Refresh();
         }
 
         private void ShowDatabaseBooks()
         {
+            isHome = true;
             var query = dataAccess.GetHomeBooksFromDatabase();
             
             //Add each book in the db to HomeBooks
             foreach (var book in query)
             {
-                HomeBooks.Add(book);
+                //HomeBooks.Add(book);
+                homeBooksFromDatabase.Add(book);
+                Entries.Add(book);
             }
 
             authorNames.Add("All");
             //Add each author to authorNames
-            foreach (var book in HomeBooks)
+            foreach (var book in homeBooksFromDatabase)
             {
                 authorNames.Add(book.author.ToString());
             }
 
-            homeBooksList = HomeBooks.ToList();
-            DetermineEntries(homeBooksList);
+            HomeCollectionView.Refresh();
         }
 
         private void btnRemoveCart_Click(object sender, RoutedEventArgs e)
@@ -610,31 +575,6 @@ namespace project
                 tblkLanguages.Text += languages.TrimEnd(',');
             }
         }
-
-        private List<Book> DetermineBookList()
-        {
-            //If this is for home page books
-            if (isSearchAuthors == false)
-            {
-                return HomeBooks.ToList();
-            }
-            //If this is for search results
-            //The list of books is the books returned in the search
-            else
-            {
-               return searchResults;
-            }
-        }
-
-        private void DetermineEntries(List<Book> listOfBooks)
-        {
-            Entries.Clear();
-            foreach (Book b in listOfBooks)
-            {
-                Entries.Add(b);
-            }
-        }
-
         private bool FilterShelfBooks(object item)
         {
             if (item is Book book && selectedShelf != null)
@@ -669,5 +609,78 @@ namespace project
             }
                 
         }
+
+        private bool FilterHomeBooks(object item)
+        {
+            if(item is Book book)
+            {
+                if(isHome == true)
+                {
+                    if (selectedAuthor != "" && selectedAuthor != null && selectedAuthor != "All")
+                    {
+                        if (homeBooksFromDatabase.Contains(book) && ((book.author_name.Count > 0 && book.author_name[0] == selectedAuthor) || book.author != null && book.author == selectedAuthor))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (homeBooksFromDatabase.Contains(book))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                            
+                    }
+                }
+                else
+                {
+                    if (selectedAuthor != "" && selectedAuthor != null && selectedAuthor != "All")
+                    {
+                        if (allBookRecords.Contains(book) && ((book.author_name.Count > 0 && book.author_name[0] == selectedAuthor) || book.author != null && book.author == selectedAuthor))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (allBookRecords.Contains(book))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                        
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void AddToEntries(List<Book> books)
+        {
+            foreach (Book b in books)
+            {
+                Entries.Add(b);
+            }
+        }
     }
 }
+
+

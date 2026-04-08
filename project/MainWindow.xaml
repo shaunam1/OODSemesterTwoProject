@@ -59,7 +59,7 @@
                 <Label Name="lblAppNameHome" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"></Label>
 
                 <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                    <ItemsControl Name="selectedBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding Entries}">
+                    <ItemsControl Name="selectedBooks" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="3"></UniformGrid>
