@@ -29,8 +29,7 @@ namespace project
         public bool public_scan_b { get; set; }
         public string subtitle { get; set; }
         public string title { get; set; }
-
-        public string price { get; set; }
+        public decimal price { get; set; }
 
         public ICollection<Order> Orders { get; set; }
         public string Cover_URL
@@ -144,7 +143,7 @@ namespace project
     {
         //public BookData() : base("HomeBooksData") { }
         //ADDED
-        public BookData() : base("AllOrderDetailsv6") { }
+        public BookData() : base("AllOrderDetailsv7") { }
         public DbSet<Book> HomeBooks { get; set; }
 
 

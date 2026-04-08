@@ -226,14 +226,13 @@ namespace project
 
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {   //When add to cart is clicked increase the cart count on all tabs
-            if (SelectedBook.price != "Not for sale")
+            if (SelectedBook.price.ToString() != "Not for sale")
             {
                 if (!Cart.Contains(SelectedBook))
                 {
                     //Increase the cart count
                     CartCount++;
-                    decimal cost = decimal.Parse(SelectedBook.price);
-                    Total += cost;
+                    Total += SelectedBook.price;
 
                     //Add the selected book to the ObservableCollection Cart
                     Cart.Add(SelectedBook);
@@ -445,8 +444,7 @@ namespace project
             CartCount--;
 
             //Remove the cost of the removed book from the total and refresh counts
-            decimal cost = decimal.Parse(book.price);
-            Total -= cost;
+            Total -= book.price;
         }
 
         private void PopulateCheckout()
@@ -541,10 +539,9 @@ namespace project
 
         private void DeterminePrice(Book book)
         {
-            if (book.price is null)
+            if (book.price.ToString() == "" || book.price.ToString() == null)
             {
-                book.price = "Not for sale";
-                tblkPrice.Text = $"{book.price}";
+                tblkPrice.Text = "Not for sale";
             }
             else
             {
@@ -601,13 +598,11 @@ namespace project
                         return false;
                     }
                 }
-               
             }
             else
             {
                 return false;
             }
-                
         }
 
         private bool FilterHomeBooks(object item)
@@ -664,7 +659,6 @@ namespace project
                             return false;
                         }
                     }
-                        
                 }
             }
             else
