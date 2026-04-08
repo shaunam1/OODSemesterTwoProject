@@ -34,7 +34,6 @@ namespace project
             //this = main window
             DataContext = this;
             homeBooks = new ObservableCollection<Book>();
-            shelfFilter = new ObservableCollection<Book>();
             entries = new ObservableCollection<Book>();
             shelvedEntries = new ObservableCollection<Book>();
             cart = new ObservableCollection<Book>();
@@ -45,7 +44,7 @@ namespace project
             var collectionViewSource = new CollectionViewSource { Source = shelvedEntries };
             ShelfCollectionView = collectionViewSource.View;
             ShelfCollectionView.Filter = FilterShelfBooks;
-
+            shelfBooks.ItemsSource = ShelfCollectionView;
             ;
         }
 
@@ -105,19 +104,6 @@ namespace project
             { 
                 currentUser = value;
                 OnPropertyChanged();
-            }
-        }
-
-        //public ICollectionView BooksCollectionView { get; set; }
-
-        private ObservableCollection<Book> shelfFilter;
-        public ObservableCollection<Book> ShelfFilter
-        {
-            get { return shelfFilter; }
-            set 
-            { 
-                shelfFilter = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ShelfFilter"));
             }
         }
 
@@ -181,7 +167,6 @@ namespace project
             loginWindow.Owner = this;
             loginWindow.ShowDialog();
 
-            shelfBooks.ItemsSource = ShelfCollectionView;
             //if logged in display the books from the HomeBooks database and populate checkout
             if (isLoggedIn == true)
             {
@@ -194,21 +179,9 @@ namespace project
                 //All Books shelf automatically created so that books can be shelved
                 Shelf allBooks = new Shelf("All Books", ShelvedEntries);
                 AllShelves.Add(allBooks);
-                //var collectionViewSource = new CollectionViewSource { Source = Entries };
-                //ShelvesCollectionView = CollectionViewSource.GetDefaultView(ShelvedEntries);
-                //BooksCollectionView.Filter = FilterBooks;
+                
             }
         }
-
-//        private bool FilterBooks(object item)
-//        {
-//            if (item is Book book)
-//            {
-//                return book.title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase);
-//;
-//            }
-//            return false;
-//        }
 
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -371,7 +344,6 @@ namespace project
             if (selectedShelf.Books != null)
             {
                 ShelfCollectionView.Refresh();
-                //ShelfFilter = selectedShelf.Books;
             }
         }
 
@@ -421,19 +393,6 @@ namespace project
             filterShelfSearch = tbxShelfSearch.Text.ToLower();
 
             ShelfCollectionView.Refresh();
-
-            //List<Book> filteredList = new List<Book>();
-            //for (int i = 0; i < selectedShelf.Books.Count; i++)
-            //{
-            //    //if a book contains the search term add it to search results
-            //    if (selectedShelf.Books[i].title.ToLower().Contains(searchTerm))
-            //    {
-            //        filteredList.Add(selectedShelf.Books[i]);
-            //    }
-            //}
-
-            //ShelfFilter = new ObservableCollection<Book>(filteredList);
-            filterShelfSearch = "";
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
@@ -678,21 +637,13 @@ namespace project
 
         private bool FilterShelfBooks(object item)
         {
-            if (item is Book book)
+            if (item is Book book && selectedShelf != null)
             {
                 if (filterShelfSearch != "")
                 {
-                    if (selectedShelf.Books.Contains(book))
+                    if (selectedShelf.Books.Contains(book) && book.title.ToLower().Contains(filterShelfSearch))
                     {
-                        if (book.title.ToLower().Contains(filterShelfSearch))
-                        {
                             return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                       
                     }
                     else
                     {
