@@ -108,7 +108,6 @@
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Compile Include="Order.cs" />
-    <Compile Include="OrderBook.cs" />
     <Compile Include="RemoveFromShelfWindow.xaml.cs">
       <DependentUpon>RemoveFromShelfWindow.xaml</DependentUpon>
     </Compile>
@@ -151,7 +150,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

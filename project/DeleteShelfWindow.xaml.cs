@@ -15,6 +15,7 @@ namespace project
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
+
             //Populate combobox with all shelves apart from All books
             //as All Books shelf cannot be deleted
             List<Shelf> deletableShelves = new List<Shelf>();
@@ -37,6 +38,7 @@ namespace project
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = this.Owner as MainWindow;
+
             //If no shelf has been selected when button is pressed
             if (selectedShelf == null)
             {

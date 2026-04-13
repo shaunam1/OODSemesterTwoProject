@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace project
@@ -33,15 +28,12 @@ namespace project
 
         public Order(decimal total, int userID, HashSet<Book> books)
         {
-            
             Total = total;
             UserID = userID;
             this.Books = books;
-
         }
 
         public virtual ICollection<Book> Books { get; set; }
-
     }
 
     public class OrderData : DbContext
@@ -58,6 +50,8 @@ namespace project
         public DbSet<Order> Orders { get; set; }
         public DbSet<Book> Books { get; set; }
 
+        //Fluent API used to create a joining table name and column names
+        //for many-to-many relationship between orders and books
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -22,24 +22,18 @@ namespace project
         {
             ShelfName = shelfName;
             Books = new ObservableCollection<Book>();
-        }//Default constructor
+        }//Parameterised constructor
 
         public Shelf(string shelfName, ObservableCollection<Book> books)
         {
             ShelfName = shelfName;
             Books = books;
 
-        }//Default constructor
+        }//Parameterised constructor
 
         public override string ToString()
         {
             return ShelfName;
         }
-    }
-
-    public class ShelfData : DbContext
-    {
-        public ShelfData() : base("OrderDatav7") { }
-        public DbSet<Shelf> Shelves { get; set; }
     }
 }

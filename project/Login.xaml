@@ -6,7 +6,8 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:project"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800" MinHeight="400" MinWidth="600" WindowStartupLocation="CenterOwner" Background="RosyBrown">
+        Title="Login" Height="450" Width="800" MinHeight="400" MinWidth="600" 
+        WindowStartupLocation="CenterOwner" Background="RosyBrown">
    
     <Grid>
         <Grid.RowDefinitions>
@@ -19,6 +20,7 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        
         <materialDesign:PackIcon Kind="BookOpenPageVariantOutline" Foreground="Black" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="30" Width="50" Height="50"/>
         <Label Name="lblAppName" Content="My Little Library" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" FontSize="20" VerticalAlignment="Center"></Label>
         <Label Name="lblUsername" Content="Username" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>

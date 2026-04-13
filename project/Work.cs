@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
+﻿using System.Collections.Generic;
 
 namespace project
 {
     public class Entry
     {
-        
+        //There is a separate API needed to get a description for the book
+        //I need to get all the entries for a particular author by their key
+        //and find the title that matches the title of the relevant book
+
+        //Properties
         public string title { get; set; }
         public string key { get; set; }
         public int latest_revision { get; set; }
@@ -28,13 +27,10 @@ namespace project
 
     public class WorkRoot
     {
-        
         public List<Entry> entries { get; set; }
     }
 
-
 }
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 
 
 

@@ -47,6 +47,7 @@ namespace project
             }
             else
             {
+                //If the "All Books" shelf which contains all shelved books is selected
                 if (selectedShelf.ShelfName == "All Books")
                 {
                     selectedShelf.Books.Remove(selectedBook);
@@ -58,7 +59,7 @@ namespace project
                         }
                     }
                 }
-                //If the shelf contains the selected book
+                //If the selected shelf contains the selected book
                 else
                 {
                     //remove it from that shelf 

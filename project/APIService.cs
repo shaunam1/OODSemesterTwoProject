@@ -41,6 +41,7 @@ namespace project
             List<Entry> allWorks = new List<Entry>();
             string key = "", description = "";
             bool isDescription = false;
+
             //If a search result
             if (book.author_key != null)
             {
@@ -90,16 +91,17 @@ namespace project
                     }
                     //Stop when we get a description or we've gone through all works
                     while (i < allWorks.Count && isDescription == false);
+
+                    //if there's no description
                     if (isDescription == false)
                     {
                         description = "Description unavailable";
                     }
-                    isDescription = false;
                 }
+                //if there are no results returned
                 else
                 {
-                    isDescription = false;
-                    description = "unavailable";
+                    description = "Description unavailable";
                 }
             }
 

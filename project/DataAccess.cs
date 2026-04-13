@@ -39,6 +39,7 @@ namespace project
         public void UpdateOrders(List<Book> cartBooks, decimal total, int userID)
         {
             OrderBookDBContext db = new OrderBookDBContext();
+
             //HashSet prevents duplicates
             HashSet<Book> booksInCart = new HashSet<Book>();
             foreach (Book b in cartBooks)

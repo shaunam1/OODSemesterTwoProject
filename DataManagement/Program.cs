@@ -21,6 +21,7 @@ namespace DataManagement
                 string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
                 List<Book> books = await CreateBooks(chosenBooks);
 
+                //Create books
                 Book book1 = books[0];
                 book1.price = 11.95m;
                 book1.author =  "R.F. Kuang";
@@ -45,10 +46,9 @@ namespace DataManagement
                 book6.price = 11.90m;
                 book6.author = "Stephen King";
                 book6.authorKey = "OL19981A";
+                
 
-
-
-                //ADDED
+                //ADDED - code from Keith
                 book1.SyncListFields();
                 book2.SyncListFields();
                 book3.SyncListFields();
@@ -56,13 +56,7 @@ namespace DataManagement
                 book5.SyncListFields();
                 book6.SyncListFields();
 
-                book1.SyncListFields();
-                book2.SyncListFields();
-                book3.SyncListFields();
-                book4.SyncListFields();
-                book5.SyncListFields();
-                book6.SyncListFields();
-
+                //Add books to the database and save the changes
                 db.HomeBooks.Add(book1);
                 db.HomeBooks.Add(book2);
                 db.HomeBooks.Add(book3);
@@ -75,11 +69,9 @@ namespace DataManagement
                 db.SaveChanges();
 
                 Console.WriteLine("Changes saved to database");
-
-
-
             }
         }
+
         private static async Task<List<Book>> CreateBooks(string[] chosenBooks)
         {
             List<Book> allBookRecords = new List<Book>();
@@ -109,24 +101,10 @@ namespace DataManagement
                     allBookRecords = bookResult.docs;
                     if (allBookRecords.Count > 0)
                     {
-
-                        //add the first returned book to the selected observable collection
-                        //if (bookResult.docs[0].price == null)
-                        //{
-                        //    bookResult.docs[0].price = "";
-                        //}
-
                         books.Add(bookResult.docs[0]);
-
-                        
                     }
-
-
                 }
-
-
             }
-
             return books;
         }
     }

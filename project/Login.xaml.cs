@@ -75,6 +75,8 @@ namespace project
         private bool CheckPasswordCorrect(List<User>users, int userNo)
         {
             bool isCorrect = false;
+
+            //Check if the decrypted password from the database matches the password entered
             if (BCrypt.Net.BCrypt.EnhancedVerify(tbxPassword.Text, users[userNo].Password) == true)
             {
                 isCorrect = true;

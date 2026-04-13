@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace project
 {
     public class User
     {
+        //Properties
         [Key]
         public int UserID { get; set; }
         public string Username { get; set; }
@@ -27,7 +25,7 @@ namespace project
         public User()
         {
 
-        }
+        }//Default constructor
 
         public User(int userId, string username, string firstName, string lastName, string addressOne, string addressTwo, string eircode, string cardNumber, DateTime date, int cvv)
         {
@@ -41,10 +39,8 @@ namespace project
             CardNumber = cardNumber;
             CardDate = date;
             CVV = cvv;
-        }
+        }//Parameterised constructor
 
-
-        
     }
 
     public class UserData : DbContext

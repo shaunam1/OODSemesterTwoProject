@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-//Added
+//Added - code from Keith
 using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace project
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Book
     {
+        //Properties
         public List<string> author_key { get; set; }
         public List<string> author_name { get; set; }
         public string author { get; set; }
@@ -29,9 +26,9 @@ namespace project
         public bool public_scan_b { get; set; }
         public string subtitle { get; set; }
         public string title { get; set; }
+        
+        //Not from API
         public decimal price { get; set; }
-
-        public ICollection<Order> Orders { get; set; }
         public string Cover_URL
         {
             get
@@ -40,11 +37,11 @@ namespace project
             }
         }
 
-        //ADDED
-        // Stored in database
+        public ICollection<Order> Orders { get; set; }
+
+        //Added - code from Keith
         public string LanguageData { get; set; }
 
-        // Backing field
         private List<string> _language;
 
         [NotMapped]
@@ -69,62 +66,25 @@ namespace project
             }
         }
 
-        //public string AuthorData { get; set; }
-
-        //// Backing field
-        //private List<string> _author_name;
-
-        //[NotMapped]
-        //public List<string> author_name
-        //{
-        //    get
-        //    {
-        //        if (_author_name == null)
-        //        {
-        //            _author_name = string.IsNullOrEmpty(AuthorData)
-        //                ? new List<string>()
-        //                : AuthorData.Split(';').ToList();
-        //        }
-        //        return _author_name;
-        //    }
-        //    set
-        //    {
-        //        _author_name = value;
-        //        AuthorData = (value == null || !value.Any())
-        //            ? null
-        //            : string.Join(";", value);
-        //    }
-        //}
-
-
-        // Call before SaveChanges()
+        //Added - code from Keith
         public void SyncListFields()
         {
             LanguageData = (language == null || !language.Any())
                 ? null
                 : string.Join(";", language);
-            //AuthorData = (author_name == null || !author_name.Any())
-            //    ? null
-            //    : string.Join(";", author_name);
         }
 
-
-        //END
-
-        // Constructor
+        // Constructors
         public Book()
         {
-            
+            //Added - code from Keith
             author_name = new List<string>();
             languages = new List<string>(); // ensures setter runs on first use
+
             this.Orders = new HashSet<Order>();
         }
 
     }
-
-   
-
-
 
     public class BookRoot
     {
@@ -141,11 +101,7 @@ namespace project
 
     public class BookData : DbContext
     {
-        //public BookData() : base("HomeBooksData") { }
-        //ADDED
         public BookData() : base("AllOrderDetailsv7") { }
         public DbSet<Book> HomeBooks { get; set; }
-
-
     }
 }

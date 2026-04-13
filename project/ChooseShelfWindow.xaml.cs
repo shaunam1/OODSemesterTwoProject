@@ -28,8 +28,8 @@ namespace project
                 }
             }
             cbxShelves.ItemsSource = potentialShelves;
-
         }
+
         private void cbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectedShelf = cbxShelves.SelectedItem as Shelf;
@@ -51,7 +51,7 @@ namespace project
                 selectedShelf.Books.Add(selectedBook);
                 if (selectedShelf.ShelfName != "All Books")
                 {
-                    //add to Observable collection if not already added
+                    //add to Observable collection of all shelved books if not already added
                     if (!main.ShelvedEntries.Contains(selectedBook))
                     {
                         main.ShelvedEntries.Add(selectedBook);
