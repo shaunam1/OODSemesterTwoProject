@@ -574,39 +574,33 @@ namespace project
         }
         private bool FilterShelfBooks(object item)
         {
+            bool isShelfBook = false;
+
             if (item is Book book && selectedShelf != null)
             {
                 if (filterShelfSearch != "")
                 {
                     if (selectedShelf.Books.Contains(book) && book.title.ToLower().Contains(filterShelfSearch))
                     {
-                            return true;
-                    }
-                    else
-                    {
-                        return false;
+                        isShelfBook = true;
                     }
                 }
                 else
                 {
                     if (selectedShelf.Books.Contains(book))
                     {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
+                        isShelfBook = true;
                     }
                 }
             }
-            else
-            {
-                return false;
-            }
+            return isShelfBook;
         }
 
+        
         private bool FilterHomeBooks(object item)
         {
+            bool isHomeBook = false;
+
             if(item is Book book)
             {
                 if(isHome == true)
@@ -615,22 +609,14 @@ namespace project
                     {
                         if (homeBooksFromDatabase.Contains(book) && ((book.author_name.Count > 0 && book.author_name[0] == selectedAuthor) || book.author != null && book.author == selectedAuthor))
                         {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
+                            isHomeBook = true;
                         }
                     }
                     else
                     {
                         if (homeBooksFromDatabase.Contains(book))
                         {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
+                            isHomeBook = true;
                         }
                             
                     }
@@ -641,30 +627,19 @@ namespace project
                     {
                         if (allBookRecords.Contains(book) && ((book.author_name.Count > 0 && book.author_name[0] == selectedAuthor) || book.author != null && book.author == selectedAuthor))
                         {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
+                            isHomeBook = true;
                         }
                     }
                     else
                     {
                         if (allBookRecords.Contains(book))
                         {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
+                            isHomeBook = true;
                         }
                     }
                 }
             }
-            else
-            {
-                return false;
-            }
+            return isHomeBook;
         }
 
         private void AddToEntries(List<Book> books)

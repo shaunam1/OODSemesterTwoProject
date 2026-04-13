@@ -68,7 +68,7 @@ namespace project
                 {
                     bo.MapLeftKey("Order_OrderNumber");
                     bo.MapRightKey("Book_key");
-                    bo.ToTable("BookOrders");
+                    bo.ToTable("OrderBooks");
                 });
         }
         
