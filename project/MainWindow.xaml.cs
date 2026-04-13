@@ -52,7 +52,7 @@ namespace project
             ;
         }
 
-        #region
+        #region "Observable Collections and CollectionViewSource"
         public ICollectionView ShelfCollectionView { get; set; }
         public ICollectionView HomeCollectionView { get; set; }
 
@@ -169,7 +169,6 @@ namespace project
                 //All Books shelf automatically created so that books can be shelved
                 Shelf allBooks = new Shelf("All Books", ShelvedEntries);
                 AllShelves.Add(allBooks);
-                
             }
         }
 
@@ -222,7 +221,6 @@ namespace project
 
             tblkEditions.Text = $"Current Editions: {book.edition_count}";  
         }
-
 
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {   //When add to cart is clicked increase the cart count on all tabs
@@ -651,5 +649,4 @@ namespace project
         }
     }
 }
-
 
