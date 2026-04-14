@@ -171,7 +171,7 @@ namespace project
             {
                 PopulateCheckout();
                 ShowDatabaseBooks();
-               
+
                 //Set cart count
                 CartCount = 0;
 
@@ -212,7 +212,7 @@ namespace project
             {
                 authorNames.Add(book.author.ToString());
             }
-
+            
             HomeCollectionView.Refresh();
         }
 
@@ -257,8 +257,6 @@ namespace project
             MyControl.SelectedItem = TabBookInfo;
 
             //Display information about the selected book
-            imgCover.Source = new BitmapImage(new Uri($"{book.Cover_URL}", UriKind.Absolute));
-
             DetermineAuthor(book);
             DeterminePrice(book);
             DetermineLanguages(book);

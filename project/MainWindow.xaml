@@ -153,11 +153,9 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
-                                    <StackPanel x:Name="spBook" MaxHeight="180" MouseUp="spBook_MouseUp">
-                                        <TextBlock x:Name="tblkBookTitle" Text ="{Binding title}" TextWrapping="Wrap"></TextBlock>
-                                        <Image x:Name="imgBookImage" Source="{Binding Cover_URL}" Height="100" Width="100"></Image>
-                                        <TextBlock x:Name="tblkBookAuthor" Text="{Binding author_name[0]}"></TextBlock>
-
+                                    <StackPanel x:Name="spBook" MaxHeight="250" MouseUp="spBook_MouseUp">
+                                        <TextBlock x:Name="tblkBookTitleBookshelf" Text ="{Binding title}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"></TextBlock>
+                                        <Image Name="imgBookImageBookshelf" Source="{Binding Cover_URL}" MaxHeight="200" MaxWidth="200"></Image>
                                     </StackPanel>
                                 </Border>
 
@@ -272,9 +270,9 @@
                                 <DataTemplate>
                                     <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
                                         <StackPanel Name="spBook" >
-                                            <TextBlock Name="tblkBookTitle" Text ="{Binding title}" HorizontalAlignment="Center"></TextBlock>
-                                            <Image Name="imgBookImage" Source="{Binding Cover_URL }" Height="100" Width="100" HorizontalAlignment="Center"></Image>
-                                            <TextBlock Name="tblkBookAuthor" Text="{Binding author_name[0]}" HorizontalAlignment="Center"></TextBlock>
+                                            <TextBlock Name="tblkBookTitleCart" Text ="{Binding title}" HorizontalAlignment="Center"></TextBlock>
+                                            <Image Name="imgBookImageCart" Source="{Binding Cover_URL }" Height="100" Width="100" HorizontalAlignment="Center"></Image>
+                                            <TextBlock Name="tblkBookAuthorCart" Text="{Binding author}" HorizontalAlignment="Center"></TextBlock>
                                             <TextBlock Name="tblkPrice" Text="{Binding price, StringFormat=€ {0}}" HorizontalAlignment="Center"/>
                                             <Button Name="btnRemoveCart" Content="Remove Book" Width="250" Click="btnRemoveCart_Click"/>
                                         </StackPanel>
@@ -315,7 +313,7 @@
                         <Border BorderBrush="GhostWhite" BorderThickness="1" CornerRadius="8" Margin="5,5,5,5" Background="GhostWhite">
                             <StackPanel Background="GhostWhite" Margin="5,5,5,5">
                                 <TextBlock Name="tblkTitle" FontSize="16" Text="{Binding title}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
-                                <Image Name="imgCover" Grid.Row="1" Grid.Column="0" MaxWidth="200" MaxHeight="200" HorizontalAlignment="Center"></Image>
+                                <Image Name="imgCover" Source="{Binding Cover_URL}"  Grid.Row="1" Grid.Column="0" MaxWidth="200" MaxHeight="200" HorizontalAlignment="Center"></Image>
                                 <TextBlock Name="tblkBookInfo" FontSize="16" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center"></TextBlock>
                                 <TextBlock Name="tblkPrice" FontSize="16" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="0,15,0,0"></TextBlock>
                                 <TextBlock Name="tblkPublished" FontSize="16" Text="{Binding first_publish_year}" Grid.Row="2" Grid.Column="0" Margin="0,15,0,0" HorizontalAlignment="Center"></TextBlock>
