@@ -42,18 +42,18 @@ namespace project
             string key = "", description = "";
             bool isDescription = false;
 
-            //If a search result
+            //If a search result the author's key is in author_key
             if (book.author_key != null)
             {
                 key = book.author_key[0].ToString();
             }
-            //If a home page book
+            //If from the database the author's key is in authorKey
             else
             {
                 key = book.authorKey;
             }
 
-            //Get works by this author
+            //Get works (books) by this author
             var worksClient = new HttpClient();
             var worksRequest = new HttpRequestMessage
             {
@@ -71,7 +71,7 @@ namespace project
                 var workBody = await worksResponse.Content.ReadAsStringAsync();
                 var workResult = JsonConvert.DeserializeObject<WorkRoot>(workBody);
 
-                //add books with the selected title to allBookRecords
+                
                 allWorks = workResult.entries;
                 if (allWorks.Count > 0)
                 {
@@ -83,6 +83,7 @@ namespace project
                             //if this book has a description 
                             if (allWorks[i].description != null)
                             {
+                                //set this as the description for the selected book
                                 description = allWorks[i].description.ToString();
                                 isDescription = true;
                             }

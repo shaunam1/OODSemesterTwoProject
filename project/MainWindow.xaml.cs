@@ -23,11 +23,11 @@ namespace project
         public List<User> users = new List<User>();
         List<User> usersCompare = new List<User>();
         string selectedAuthor = "", description = "";
-        public bool isSearchAuthors = false, isUserOne = true, isLoggedIn = false;
+        public bool isUserOne = true, isLoggedIn = false;
         public int userID, userNumber = 0;
         string searchTerm = "", filterShelfSearch = "";
         Shelf selectedShelf;
-        bool isHome = false;
+        bool isDatabaseBooks = false;
 
         public MainWindow()
         {
@@ -43,25 +43,35 @@ namespace project
             var homeCollectionViewSource = new CollectionViewSource { Source = Entries };
             HomeCollectionView = homeCollectionViewSource.View;
             HomeCollectionView.Filter = FilterHomeBooks;
+            //Does not work when I bind in the xaml file
             selectedBooks.ItemsSource = HomeCollectionView;
 
             var collectionViewSource = new CollectionViewSource { Source = shelvedEntries };
             ShelfCollectionView = collectionViewSource.View;
             ShelfCollectionView.Filter = FilterShelfBooks;
+            //Does not work when I bind in the xaml file
             shelfBooks.ItemsSource = ShelfCollectionView;
             ;
         }
 
         #region "Observable Collections and CollectionViewSource"
-        public ICollectionView ShelfCollectionView { get; set; }
-        public ICollectionView HomeCollectionView { get; set; }
 
+        //PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        //CollectionView
+        //Used to filter books shown in the Bookshelf tab
+        public ICollectionView ShelfCollectionView { get; set; }
+        //Used to filter books shown on the Home tab
+        public ICollectionView HomeCollectionView { get; set; }
+
+        
+        //ObservableCollections
+        //Total value of books in the cart
         public decimal total;
         public decimal Total
         {
@@ -73,6 +83,7 @@ namespace project
             }
         }
 
+        //Total number of books in the cart
         public int cartCount;
         public int CartCount
         {
@@ -84,8 +95,8 @@ namespace project
             }
         }
 
+        //The book that has been selected by the user
         public Book selectedBook;
-
         public Book SelectedBook
         {
             get { return selectedBook;  }
@@ -96,6 +107,7 @@ namespace project
             }
         }
 
+        //Either UserOne or UserTwo from the database
         public User currentUser;
         public User CurrentUser
         {
@@ -109,32 +121,29 @@ namespace project
 
         //Used for books being displayed on screen in Home tab
         private ObservableCollection<Book> entries;
-
         public ObservableCollection<Book> Entries
         {
             get { return entries; }
             set { entries = value; }
         }
 
-        //For all the books that have been shelved
+        //All the books that have been shelved
         private ObservableCollection<Book> shelvedEntries;
-
         public ObservableCollection<Book> ShelvedEntries
         {
             get { return shelvedEntries; }
             set { shelvedEntries = value; }
         }
 
-        //For all the shelves that have been created
+        //All the shelves that have been created
         private ObservableCollection<Shelf> allShelves;
-
         public ObservableCollection<Shelf> AllShelves
         {
             get { return allShelves; }
             set { allShelves = value; }
         }
 
-        //For all books added to the cart
+        //All the books that have been added to the cart
         private ObservableCollection<Book> cart;
         public ObservableCollection<Book> Cart
         {
@@ -142,7 +151,7 @@ namespace project
             set { cart = value; }
         }
 
-        //For the authors of the books of the current book results
+        //For the names of the authors of the current books being displayed on the Home tab
         public ObservableCollection<string> authorNames;
         public ObservableCollection<string> AuthorNames
         {
@@ -172,6 +181,41 @@ namespace project
             }
         }
 
+        private void PopulateCheckout()
+        {
+            //Display Checkout details for the currentUser
+            //I'm not using Binding here for Date and FullName
+            string monthYear = users[userNumber].CardDate.ToString("MM / yy");
+            tblkFullName.Text = $"{users[userNumber].FirstName} {users[userNumber].LastName}";
+            tbxDate.Text = monthYear;
+        }
+
+        //Displays the books from the database
+        private void ShowDatabaseBooks()
+        {
+            //This bool is true if the books from the database are being displayed
+            isDatabaseBooks = true;
+
+            var query = dataAccess.GetHomeBooksFromDatabase();
+
+            //Add each book in the db to HomeBooks
+            foreach (var book in query)
+            {
+                //Added to both list and ObservableCollection to help with filtering
+                homeBooksFromDatabase.Add(book);
+                Entries.Add(book);
+            }
+
+            //Add each author to authorNames
+            authorNames.Add("All");
+            foreach (var book in homeBooksFromDatabase)
+            {
+                authorNames.Add(book.author.ToString());
+            }
+
+            HomeCollectionView.Refresh();
+        }
+
         private void PackIcon_MouseUp(object sender, MouseButtonEventArgs e)
         {
             //if the user clicks the cart icon they are brough to the checkout tab
@@ -187,15 +231,18 @@ namespace project
         {
             ClearSearchBar(sender);
         }
+
         private void ClearSearchBar(object sender)
         {
             //sender is the object that called the method (either tbxSearch or tbxShelfSearch)
             TextBox searchBar = sender as TextBox;
+            //Clear the search bar when it is clicked
             searchBar.Text = "";
         }
 
         private void spBook_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            //When the StackPanel (book) is clicked the user sees information about the book
             StackPanel button = sender as StackPanel;
             //the datacontext of the button is the object in the data template
             Book book = button.DataContext as Book;
@@ -222,8 +269,61 @@ namespace project
             tblkEditions.Text = $"Current Editions: {book.edition_count}";  
         }
 
+        private void DetermineAuthor(Book book)
+        {
+            if (book.author != null)
+            {
+                //If the book is from the database the author is in author
+                string author = "";
+                author = book.author.ToString();
+                tblkBookInfo.Text = author;
+            }
+            else
+            {
+                //if the book was searched for the author is in author_name
+                tblkBookInfo.Text = book.author_name[0];
+            }
+        }
+
+        private void DeterminePrice(Book book)
+        {
+            //Books that are not in the database do not have a price
+            if (book.price.ToString() == "" || book.price.ToString() == null)
+            {
+                tblkPrice.Text = "Not for sale";
+            }
+            else
+            {
+                tblkPrice.Text = $"€{book.price}";
+            }
+        }
+
+        private void DetermineLanguages(Book book)
+        {
+            string languages = "";
+            if (book.LanguageData != null)
+            {
+                //if the book is coming from the database the languages are in LanguageData
+                languages = book.LanguageData.ToString();
+                languages = languages.Replace(";", ", ");
+                tblkLanguages.Text = $"Available in: {languages}";
+            }
+            else
+            {
+                //if the book was searched for the languages are in language
+                foreach (string l in book.language)
+                {
+                    languages += l + ", ";
+                }
+
+                languages = languages.Trim();
+                tblkLanguages.Text += languages.TrimEnd(',');
+            }
+        }
+
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
-        {   //When add to cart is clicked increase the cart count on all tabs
+        {   
+            //The book can only be added to the cart if it is from the database
             if (SelectedBook.price.ToString() != "Not for sale")
             {
                 if (!Cart.Contains(SelectedBook))
@@ -248,7 +348,7 @@ namespace project
 
         private void btnShelve_Click(object sender, RoutedEventArgs e)
         {   
-            //if the user has more than one shelf
+            //if the user has more than one shelf open a new window to select a shelf
             if (allShelves.Count > 1)
             {
                 ChooseShelfWindow thirdWindow = new ChooseShelfWindow();
@@ -256,7 +356,7 @@ namespace project
                 thirdWindow.ShowDialog();
             }
             else
-            {
+            {   //If the book is not already shelved add it to the "All Books" shelf
                 if (!ShelvedEntries.Contains(SelectedBook))
                 {
                     ShelvedEntries.Add(SelectedBook);
@@ -270,40 +370,57 @@ namespace project
 
         private async void tbxSearch_KeyDown(object sender, KeyEventArgs e)
         {
-            //If the enter key is pressed
+            //If the enter key is pressed on the Home tab
             if (e.Key == Key.Enter)
             {
-                isHome = false;
+                //We are searching for books that are not in the database
+                isDatabaseBooks = false;
+
+                //Format searchTerm for the API 
                 searchTerm = tbxSearch.Text.Replace(" ", "+");
+
                 //Display the search result or home books if there are no search results
                 allBookRecords = await apiService.GetBookSearchResults(searchTerm);
                 if (allBookRecords.Count > 0)
                 {
+                    //Remove previously searched books from Entries
                     Entries.Clear();
+                    //Add the new results from the API
                     AddToEntries(allBookRecords);
+                    //Re-add the database books
                     AddToEntries(homeBooksFromDatabase);
+                    //Update the ObservableCollection of authors
                     UpdateAuthorsListbox();
                 }
                 else
                 {
-                    isHome = true;
+                    isDatabaseBooks = true;
                     MessageBox.Show("No results found");
                     authorNames.Clear();
                     foreach (string s in originalAuthors)
                     {
                         authorNames.Add(s);
                     }
-                    isSearchAuthors = false;
                 }
                 HomeCollectionView.Refresh();
             }
         }
 
+        private void AddToEntries(List<Book> books)
+        {   //Add each book in a list of books to the Entries ObservableCollection
+            foreach (Book b in books)
+            {
+                Entries.Add(b);
+            }
+        }
+
         private void UpdateAuthorsListbox()
-        {
+        {   //Populates the authors listbox when the books do not come from the database
+            //Clear the ObservableCollection and add "All"
             authorNames.Clear();
             authorNames.Add("All");
 
+            //For each book returned by t
             for (int j = 0; j < allBookRecords.Count; j++)
             {
                 //if there is an author
@@ -316,7 +433,6 @@ namespace project
                     }
                 }
             }
-            isSearchAuthors = true;
         }
 
         private void lbxShelves_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -325,20 +441,21 @@ namespace project
             //If the selected shelf has books in it show the books
             if (selectedShelf.Books != null)
             {
+                //Refresh what is displayed by filtering
                 ShelfCollectionView.Refresh();
             }
         }
 
         private void btnAddShelf_Click(object sender, RoutedEventArgs e)
         {
-            //Open AddShelfWindow
+            //If the user wants to add a new shelf, open AddShelfWindow
             AddShelfWindow secondWindow = new AddShelfWindow();
             secondWindow.Owner = this;
             secondWindow.ShowDialog();
         }
 
         private void btnRemoveShelf_Click(object sender, RoutedEventArgs e)
-        {
+        {   //If the user wants to remove a shelf
             Shelf selectedShelf = lbxShelves.SelectedItem as Shelf;
 
             //Can't delete a shelf if that shelf is currently selected
@@ -365,13 +482,16 @@ namespace project
         }
 
        private void tbxShelfSearch_KeyUp(object sender, KeyEventArgs e)
-        {
+        {   //If the user is searching for a book in the Bookshelf tab
+
             selectedShelf = lbxShelves.SelectedItem as Shelf;
-            //if no shelf is selected search All Books shelf
+            //if no shelf is selected search "All Books" shelf
             if (selectedShelf is null)
             {
                 selectedShelf = AllShelves[0];
             }
+
+            //The search term
             filterShelfSearch = tbxShelfSearch.Text.ToLower();
 
             ShelfCollectionView.Refresh();
@@ -379,6 +499,8 @@ namespace project
 
         private void btnRemove_Click(object sender, RoutedEventArgs e)
         {
+            //If the user wants to remove a book from a shelf
+            //If there is more than one shelf open RemoveFromShelfWindow to select a shelf
             if (allShelves.Count > 1)
             {
                 RemoveFromShelfWindow fourthWindow = new RemoveFromShelfWindow();
@@ -387,9 +509,9 @@ namespace project
             }
             else
             {
-                //If there is only one shelf
+                //If there is only one shelf and it contains the selectedBook
                 if (ShelvedEntries.Contains(SelectedBook))  
-                {
+                {   //Remove the book
                     ShelvedEntries.Remove(SelectedBook);
                 }
                 else
@@ -400,38 +522,16 @@ namespace project
         }
 
         private void FilterAuthors(object sender, SelectionChangedEventArgs e)
-        {
-            List<Book> authorResults = new List<Book>();
-            List<Book> bookList = new List<Book>();
+        {   //When there is a selection change in lbxAuthor
+
+            //selectedAuthor needed to filter books on the Home tab
             selectedAuthor = lbxAuthor.SelectedItem as string;
-            HomeCollectionView.Refresh();
-        }
-
-        private void ShowDatabaseBooks()
-        {
-            isHome = true;
-            var query = dataAccess.GetHomeBooksFromDatabase();
-            
-            //Add each book in the db to HomeBooks
-            foreach (var book in query)
-            {
-                //HomeBooks.Add(book);
-                homeBooksFromDatabase.Add(book);
-                Entries.Add(book);
-            }
-
-            authorNames.Add("All");
-            //Add each author to authorNames
-            foreach (var book in homeBooksFromDatabase)
-            {
-                authorNames.Add(book.author.ToString());
-            }
-
             HomeCollectionView.Refresh();
         }
 
         private void btnRemoveCart_Click(object sender, RoutedEventArgs e)
         {
+            //To remove a book from the cart
             Button btn = sender as Button;
             Book book = btn.DataContext as Book;
 
@@ -443,15 +543,6 @@ namespace project
 
             //Remove the cost of the removed book from the total and refresh counts
             Total -= book.price;
-        }
-
-        private void PopulateCheckout()
-        {
-            //Display Checkout details for the currentUser
-            //I'm not using Binding here for Date and FullName
-            string monthYear = users[userNumber].CardDate.ToString("MM / yy");
-            tblkFullName.Text = $"{users[userNumber].FirstName} {users[userNumber].LastName}";
-            tbxDate.Text = monthYear;
         }
 
         private void btnBuyNow_Click(object sender, RoutedEventArgs e)
@@ -480,24 +571,19 @@ namespace project
             }
         }
 
-        private void UpdateOrdersDatabase()
-        {
-            List<Book> cartBooks = new List<Book>();
-            cartBooks = Cart.ToList();
-            int userOrderID = CurrentUser.UserID;
-            dataAccess.UpdateOrders(cartBooks, Total, userOrderID);
-        }
-        
         private bool CheckUserDetailsCorrect()
         {
             bool isCorrect = false;
+            //Get the user with the correct userID from the database
             var query = dataAccess.ValidateCheckout(userID);
 
-            //Add users to list
+            //Add users to usersCompare list which will be used to compare
+            //what's in the database to whats on the screen
             foreach (var user in query)
             {
                 usersCompare.Add(user);
             }
+
             //If the details in the checkout match the details in the database
             if (tbxAddressLine1.Text == usersCompare[0].AddressLineOne && tbxAddressLine2.Text == usersCompare[0].AddressLineTwo && tbxEircode.Text == usersCompare[0].Eircode && tbxCardNumber.Text == usersCompare[0].CardNumber && tbxDate.Text == usersCompare[0].CardDate.ToString("MM / yy") && tbxCVV.Text.ToString() == usersCompare[0].CVV.ToString())
             {
@@ -506,10 +592,20 @@ namespace project
             return isCorrect;
         }
 
+        private void UpdateOrdersDatabase()
+        {   //Create a list containing the books in the cart
+            List<Book> cartBooks = new List<Book>();
+            cartBooks = Cart.ToList();
+            //Update the database with the order
+            dataAccess.UpdateOrders(cartBooks, Total, userID);
+        }
+        
         private void tblkLogin_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
+        {   //If the user clicks "Logout"
+            //If the user is logged in
             if (isLoggedIn == true)
             {
+                //Ask user to confirm that they wish to logout
                 MessageBoxResult result = MessageBox.Show("Would you like to logout and close the app?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
@@ -519,65 +615,19 @@ namespace project
             }
         }
 
-        private void DetermineAuthor(Book book)
-        {
-            if (book.author != null)
-            {
-                //If the book is from HomeBooksDatav7 the author is in author
-                string author = "";
-                author = book.author.ToString();
-                tblkBookInfo.Text = author;
-            }
-            else
-            {
-                //if the book was searched for the author is in book.author_name
-                tblkBookInfo.Text = book.author_name[0];
-            }
-        }
-
-        private void DeterminePrice(Book book)
-        {
-            if (book.price.ToString() == "" || book.price.ToString() == null)
-            {
-                tblkPrice.Text = "Not for sale";
-            }
-            else
-            {
-                tblkPrice.Text = $"€{book.price}";
-            }
-        }
-
-        private void DetermineLanguages(Book book)
-        {
-            string languages = "";
-            if (book.LanguageData != null)
-            {
-                //if the book is coming from the HomeBooksv7 database the languages are in Language data
-                languages = book.LanguageData.ToString();
-                languages = languages.Replace(";", ", ");
-                tblkLanguages.Text = $"Available in: {languages}";
-            }
-            else
-            {
-                //if the book was
-                //searched for the languages are in book.language
-                foreach (string l in book.language)
-                {
-                    languages += l + ", ";
-                }
-
-                languages = languages.Trim();
-                tblkLanguages.Text += languages.TrimEnd(',');
-            }
-        }
         private bool FilterShelfBooks(object item)
         {
+            //If the user searches for a book on the Bookshelf tab ShelfCollectionView needs to be filtered
             bool isShelfBook = false;
 
+            //If a shelf has been selected
             if (item is Book book && selectedShelf != null)
             {
+                //If there is a search term
                 if (filterShelfSearch != "")
                 {
+                    //If a book appears on the selected shelf and its title contains the search term
+                    //It remains displayed
                     if (selectedShelf.Books.Contains(book) && book.title.ToLower().Contains(filterShelfSearch))
                     {
                         isShelfBook = true;
@@ -585,6 +635,7 @@ namespace project
                 }
                 else
                 {
+                    //If there is no search term and the shelf contains the book the book is displayed
                     if (selectedShelf.Books.Contains(book))
                     {
                         isShelfBook = true;
@@ -597,21 +648,27 @@ namespace project
         
         private bool FilterHomeBooks(object item)
         {
+            //if the books on the Home tab are being filtered by author
+            //HomeCollectionView needs to be filtered
             bool isHomeBook = false;
 
             if(item is Book book)
             {
-                if(isHome == true)
+                //If the books currently displayed are from the database
+                if(isDatabaseBooks == true)
                 {
+                    //If there is a selected author that is not "All"
                     if (selectedAuthor != "" && selectedAuthor != null && selectedAuthor != "All")
                     {
-                        if (homeBooksFromDatabase.Contains(book) && ((book.author_name.Count > 0 && book.author_name[0] == selectedAuthor) || book.author != null && book.author == selectedAuthor))
+                        //If a book is written by that author it is displayed
+                        if (homeBooksFromDatabase.Contains(book) &&  book.author == selectedAuthor)
                         {
                             isHomeBook = true;
                         }
                     }
                     else
                     {
+                        //If all or no authors are selected
                         if (homeBooksFromDatabase.Contains(book))
                         {
                             isHomeBook = true;
@@ -621,15 +678,19 @@ namespace project
                 }
                 else
                 {
+                    //If the books are from the API
+                    //If there is a selected author that is not "All"
                     if (selectedAuthor != "" && selectedAuthor != null && selectedAuthor != "All")
                     {
-                        if (allBookRecords.Contains(book) && ((book.author_name.Count > 0 && book.author_name[0] == selectedAuthor) || book.author != null && book.author == selectedAuthor))
+                        //If a book is written by that author it is displayed
+                        if (allBookRecords.Contains(book) && book.author_name.Count > 0 && book.author_name[0] == selectedAuthor)
                         {
                             isHomeBook = true;
                         }
                     }
                     else
                     {
+                        //If all or no authors are selected
                         if (allBookRecords.Contains(book))
                         {
                             isHomeBook = true;
@@ -640,13 +701,6 @@ namespace project
             return isHomeBook;
         }
 
-        private void AddToEntries(List<Book> books)
-        {
-            foreach (Book b in books)
-            {
-                Entries.Add(b);
-            }
-        }
     }
 }
 
