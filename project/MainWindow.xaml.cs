@@ -171,7 +171,7 @@ namespace project
             {
                 PopulateCheckout();
                 ShowDatabaseBooks();
-
+               
                 //Set cart count
                 CartCount = 0;
 
@@ -201,7 +201,7 @@ namespace project
             //Add each book in the db to HomeBooks
             foreach (var book in query)
             {
-                //Added to both list and ObservableCollection to help with filtering
+                //Added to both list and ObservableCollection to help with filtering HomeCollectionView
                 homeBooksFromDatabase.Add(book);
                 Entries.Add(book);
             }
