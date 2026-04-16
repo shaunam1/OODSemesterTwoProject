@@ -5,7 +5,7 @@ The user can log in with a username and password.
 On the Home tab the user will find the books available for purchase.  
 These books can be filtered by author.  
 The user can also search for books.  
-Clicking on a book will display information about that book and allow the user to give it a star rating, add it to cart, or add / remove it from a shelf.  
+Clicking on a book will display information about that book and allow the user to add it to cart, or add / remove it from a shelf.  
 On the Bookshelf tab the user can create bookshelves which allows them to do things such as keep track of the books they'd like to read or record books that they have read before.  
 The search bar at the top of the screen can be used to filter the books in the shelves. You can search within a specific shelf by selecting it from the listbox on the left side of the screen.  
 On the Checkout tab the user can purchase the books they have added to their cart or remove books from their cart.  
