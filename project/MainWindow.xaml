@@ -340,11 +340,10 @@
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
-                        <Label Name="lblRate" Content="Add a rating?" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0"></Label>
-                        <materialDesign:RatingBar Grid.Row="1"></materialDesign:RatingBar>
-                        <Button Name="btnShelve" Content="Add to Bookshelf" Grid.Row="2" Width="200" Click="btnShelve_Click"></Button>
-                        <Button Name="btnRemove" Content="Remove from Bookshelf" Grid.Row="3" Width="200" Click="btnRemove_Click"></Button>
-                        <Button Name="btnAddtoCart" Content="Add to Cart" Grid.Row="4" Width="200"  Click="btnAddtoCart_Click"></Button>
+        
+                        <Button Name="btnShelve" Content="Add to Bookshelf" Grid.Row="1" Width="200" Click="btnShelve_Click"></Button>
+                        <Button Name="btnRemove" Content="Remove from Bookshelf" Grid.Row="2" Width="200" Click="btnRemove_Click"></Button>
+                        <Button Name="btnAddtoCart" Content="Add to Cart" Grid.Row="3" Width="200"  Click="btnAddtoCart_Click"></Button>
                     </Grid>
                     
                     
