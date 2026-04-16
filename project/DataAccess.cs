@@ -27,23 +27,26 @@ namespace project
             return query;
         }
 
-        public void SaveToDatabase(decimal total, int userID, HashSet<Book> booksInCart)
-        {
-            OrderBookDBContext db = new OrderBookDBContext();
-            //add the order details to the Orders table
-            Order order1 = new Order(total, userID, booksInCart);
-            db.Orders.Add(order1);
-            db.SaveChanges();
-        }
-
         public void UpdateOrders(List<Book> cartBooks, decimal total, int userID)
         {
             OrderBookDBContext db = new OrderBookDBContext();
 
-            //HashSet prevents duplicates
+            //Need to add the books from cartBooks (a list made from Cart [ObservableCollection])
+            //to a HashSet (for the Order constructor)
             HashSet<Book> booksInCart = new HashSet<Book>();
+
             foreach (Book b in cartBooks)
             {
+                /*
+                 * I had to ask ChatGPT for help with this method
+                 * I did not orginally have Book book = db.Books.Find(b.key);
+                 * But I kept getting an error that duplicate keys cannot be inserted into dbo.Books
+                 * I was unable to find anything else online that worked
+                 * I added this line so that the book with that primary key is found in dbo.Books and so there is no attempt to add
+                 * the book to the table again
+                 * This resolved the issue
+                 */
+
                 //track the book in the database
                 Book book = db.Books.Find(b.key);
                 if (book != null)
@@ -52,7 +55,7 @@ namespace project
                 }
             }
 
-            //add the order details to the Orders table
+            //add the order details to the Orders table and save
             Order order1 = new Order(total, userID, booksInCart);
             db.Orders.Add(order1);
             db.SaveChanges();

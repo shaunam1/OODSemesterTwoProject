@@ -63,6 +63,11 @@ namespace project
                     bo.MapLeftKey("Order_OrderNumber");
                     bo.MapRightKey("Book_key");
                     bo.ToTable("OrderBooks");
+
+                    /*
+                     * If there is an error while trying to login change bo.ToTable("OrderBooks");
+                     * to bo.ToTable("BookOrders"); and run DataManagement and UserDataManagement2 again
+                     */
                 });
         }
         

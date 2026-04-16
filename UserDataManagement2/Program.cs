@@ -5,6 +5,15 @@ namespace UserDataManagement2
 {
     internal class Program
     {
+        /*
+         * Login credentials:
+         * username: UserOne
+         * password: useronepassword
+         * OR
+         * username: UserTwo
+         * password: usertwopassword
+         */
+
         static void Main(string[] args)
         {
             UserData db = new UserData();
