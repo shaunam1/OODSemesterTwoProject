@@ -320,7 +320,7 @@ namespace project
         private void btnAddtoCart_Click(object sender, RoutedEventArgs e)
         {   
             //The book can only be added to the cart if it is from the database
-            if (SelectedBook.price.ToString() != "Not for sale")
+            if (SelectedBook.price.ToString() != "0")
             {
                 if (!Cart.Contains(SelectedBook))
                 {
@@ -356,6 +356,7 @@ namespace project
                 if (!ShelvedEntries.Contains(SelectedBook))
                 {
                     ShelvedEntries.Add(SelectedBook);
+                    MessageBox.Show("Book shelved");
                 }
                 else
                 {
@@ -497,24 +498,26 @@ namespace project
         {
             //If the user wants to remove a book from a shelf
             //If there is more than one shelf open RemoveFromShelfWindow to select a shelf
-            if (allShelves.Count > 1)
+            if (ShelvedEntries.Contains(selectedBook))
             {
-                RemoveFromShelfWindow fourthWindow = new RemoveFromShelfWindow();
-                fourthWindow.Owner = this;
-                fourthWindow.ShowDialog();
-            }
-            else
-            {
-                //If there is only one shelf and it contains the selectedBook
-                if (ShelvedEntries.Contains(SelectedBook))  
-                {   //Remove the book
-                    ShelvedEntries.Remove(SelectedBook);
+                if (allShelves.Count > 1)
+                {
+                    RemoveFromShelfWindow fourthWindow = new RemoveFromShelfWindow();
+                    fourthWindow.Owner = this;
+                    fourthWindow.ShowDialog();
                 }
                 else
                 {
-                    MessageBox.Show("This book hasn't been added to a shelf");
+                    //If there is only one shelf and it contains the selectedBook
+                    ShelvedEntries.Remove(SelectedBook);
+                    MessageBox.Show("Book removed");
                 }
             }
+            else
+            {
+                MessageBox.Show("This book hasn't been added to a shelf");
+            }
+
         }
 
         private void FilterAuthors(object sender, SelectionChangedEventArgs e)
