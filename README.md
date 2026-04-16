@@ -1,6 +1,6 @@
 # My Little Library
 ## Description
-My Little Library is an application for book lovers.
+My Little Library is an application for book lovers.  
 The user can log in with a username and password.
 On the Home tab the user will find the books available for purchase.
 These books can be filtered by author.
