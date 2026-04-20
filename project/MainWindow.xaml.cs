@@ -32,12 +32,10 @@ namespace project
          * I used the following resources to help me with this project
          * 1. How to Hash Passwords with BCrypt in C# - Claudio Bernasconi : https://youtu.be/UNLl4kCpwGo?si=naNR0iHKxX_0F3OA 
          * 2. Entity Framework Tutorial: https://www.entityframeworktutorial.net/code-first/what-is-code-first.aspx 
-         * 3.C WPF Tutorial Playlist - Kampa Plays: https://youtube.com/playlist?list=PLih2KERbY1HHOOJ2C6FOrVXIwg4AZ-hk1&si=PZSSTrZszOdFLYjl 
+         * 3.C# WPF Tutorial Playlist - Kampa Plays: https://youtube.com/playlist?list=PLih2KERbY1HHOOJ2C6FOrVXIwg4AZ-hk1&si=PZSSTrZszOdFLYjl 
          *   ->particularly tutorials 8, 13, 14, 17, and 19
-         * 4. Task asynchronous programming model - Microsoft https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/task-asynchronous-programming-model 
-         * 5. CollectionViewSource
-         * 
-         
+         * 4. Task asynchronous programming model - Microsoft: https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/task-asynchronous-programming-model 
+         * 5. How to Filter DataGrid ItemSource via MVVM: Setting CollectionViewSource Filter for DataGrid in WPF - CodeGenes.net: https://www.codegenes.net/blog/how-to-set-a-filter-for-a-datagrid-itemsource-via-mvvm/ 
         */
 
         public MainWindow()
