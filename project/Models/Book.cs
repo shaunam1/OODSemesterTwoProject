@@ -40,6 +40,11 @@ namespace project
         public ICollection<Order> Orders { get; set; }
 
         //Added - code from Keith
+        /*
+        * This code was added because the list of authors and languages being returned from the API were
+        * not being added to the database
+        */
+
         public string LanguageData { get; set; }
 
         private List<string> _language;

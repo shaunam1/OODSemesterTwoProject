@@ -27,6 +27,19 @@ namespace project
         Shelf selectedShelf;
         bool isDatabaseBooks = false;
 
+        /*
+         * HELPFUL RESOURCES
+         * I used the following resources to help me with this project
+         * 1. How to Hash Passwords with BCrypt in C# - Claudio Bernasconi : https://youtu.be/UNLl4kCpwGo?si=naNR0iHKxX_0F3OA 
+         * 2. Entity Framework Tutorial: https://www.entityframeworktutorial.net/code-first/what-is-code-first.aspx 
+         * 3.C WPF Tutorial Playlist - Kampa Plays: https://youtube.com/playlist?list=PLih2KERbY1HHOOJ2C6FOrVXIwg4AZ-hk1&si=PZSSTrZszOdFLYjl 
+         *   ->particularly tutorials 8, 13, 14, 17, and 19
+         * 4. Task asynchronous programming model - Microsoft https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/task-asynchronous-programming-model 
+         * 5. CollectionViewSource
+         * 
+         
+        */
+
         public MainWindow()
         {
             //this = main window

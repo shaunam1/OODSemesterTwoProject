@@ -47,6 +47,11 @@ namespace DataManagement
                 
 
                 //ADDED - code from Keith
+                /*
+                * This code was added because the list of authors and languages being returned from the API were
+                * not being added to the database
+                */
+
                 book1.SyncListFields();
                 book2.SyncListFields();
                 book3.SyncListFields();

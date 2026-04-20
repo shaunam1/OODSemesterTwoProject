@@ -36,6 +36,8 @@ namespace project
             }
         }
 
+
+        //A separate API call is needed to get the a book's description
         public async Task<string> CheckForDescription(Book book)
         {
             List<Entry> allWorks = new List<Entry>();
