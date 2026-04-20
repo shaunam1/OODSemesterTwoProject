@@ -13,65 +13,71 @@ namespace DataManagement
         {
             BookData db = new BookData();
 
-
-            using (db)
+            try
             {
-                string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
-                List<Book> books = await CreateBooks(chosenBooks);
+                using (db)
+                {
+                    string[] chosenBooks = { "babel+or+the+necessity+of+violence", "the+song+of+achilles", "the+secret+history", "ballad+of+songbirds+and+snakes", "the+outsiders", "mr.+mercedes" };
+                    List<Book> books = await CreateBooks(chosenBooks);
 
-                //Create books
-                Book book1 = books[0];
-                book1.price = 11.95m;
-                book1.author =  "R.F. Kuang";
-                book1.authorKey = "OL7486601A";
-                Book book2 = books[1];
-                book2.price = 12.00m;
-                book2.author = "Madeline Miller";
-                book2.authorKey = "OL1926056A";
-                Book book3 = books[2];
-                book3.price = 13.50m;
-                book3.author = "Donna Tartt";
-                book3.authorKey = "OL841112A";
-                Book book4 = books[3];
-                book4.price = 14.00m;
-                book4.author = "Suzanne Collins";
-                book4.authorKey = "OL1394359A";
-                Book book5 = books[4];
-                book5.price = 9.99m;
-                book5.author = "S.E. Hinton";
-                book5.authorKey = "OL397826A";
-                Book book6 = books[5];
-                book6.price = 11.90m;
-                book6.author = "Stephen King";
-                book6.authorKey = "OL19981A";
-                
+                    //Create books
+                    Book book1 = books[0];
+                    book1.price = 11.95m;
+                    book1.author = "R.F. Kuang";
+                    book1.authorKey = "OL7486601A";
+                    Book book2 = books[1];
+                    book2.price = 12.00m;
+                    book2.author = "Madeline Miller";
+                    book2.authorKey = "OL1926056A";
+                    Book book3 = books[2];
+                    book3.price = 13.50m;
+                    book3.author = "Donna Tartt";
+                    book3.authorKey = "OL841112A";
+                    Book book4 = books[3];
+                    book4.price = 14.00m;
+                    book4.author = "Suzanne Collins";
+                    book4.authorKey = "OL1394359A";
+                    Book book5 = books[4];
+                    book5.price = 9.99m;
+                    book5.author = "S.E. Hinton";
+                    book5.authorKey = "OL397826A";
+                    Book book6 = books[5];
+                    book6.price = 11.90m;
+                    book6.author = "Stephen King";
+                    book6.authorKey = "OL19981A";
 
-                //ADDED - code from Keith
-                /*
-                * This code was added because the list of authors and languages being returned from the API were
-                * not being added to the database
-                */
 
-                book1.SyncListFields();
-                book2.SyncListFields();
-                book3.SyncListFields();
-                book4.SyncListFields();
-                book5.SyncListFields();
-                book6.SyncListFields();
+                    //ADDED - code from Keith
+                    /*
+                    * This code was added because the list of authors and languages being returned from the API were
+                    * not being added to the database
+                    */
 
-                //Add books to the database and save the changes
-                db.HomeBooks.Add(book1);
-                db.HomeBooks.Add(book2);
-                db.HomeBooks.Add(book3);
-                db.HomeBooks.Add(book4);
-                db.HomeBooks.Add(book5);
-                db.HomeBooks.Add(book6);
+                    book1.SyncListFields();
+                    book2.SyncListFields();
+                    book3.SyncListFields();
+                    book4.SyncListFields();
+                    book5.SyncListFields();
+                    book6.SyncListFields();
 
-                Console.WriteLine("Books added to database");
+                    //Add books to the database and save the changes
+                    db.HomeBooks.Add(book1);
+                    db.HomeBooks.Add(book2);
+                    db.HomeBooks.Add(book3);
+                    db.HomeBooks.Add(book4);
+                    db.HomeBooks.Add(book5);
+                    db.HomeBooks.Add(book6);
 
-                db.SaveChanges();
+                    Console.WriteLine("Books added to database");
 
-                Console.WriteLine("Changes saved to database");
+                    db.SaveChanges();
+
+                    Console.WriteLine("Changes saved to database");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occured connecting to the database: {ex.Message}");
             }
         }
 
